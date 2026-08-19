@@ -58,14 +58,14 @@ subsequent feature track (Prayer Times, Quran, Log, Hijri, Daily) builds on this
   command handlers); presentational shell components exempt.
 
 ## Acceptance Criteria
-- [ ] `pnpm tauri dev` launches the shell window with sidebar nav + placeholders.
-- [ ] Locale switch EN ↔ ID updates UI instantly and persists across restarts.
-- [ ] SQLite created in app-data; `db_status` returns schema version; settings
+- [x] `pnpm tauri dev` launches the shell window with sidebar nav + placeholders.
+- [x] Locale switch EN ↔ ID updates UI instantly and persists across restarts.
+- [x] SQLite created in app-data; `db_status` returns schema version; settings
       survive restart.
-- [ ] Notification / single-instance / autostart plugins initialize cleanly.
+- [x] Notification / single-instance / autostart plugins initialize cleanly.
 - [ ] CI pipeline green on the repo (fmt, clippy, biome, typecheck, tests).
-- [ ] lefthook runs staged checks on commit.
-- [ ] Rust unit tests cover storage + command handlers (logic-bearing only).
+- [x] lefthook runs staged checks on commit.
+- [x] Rust unit tests cover storage + command handlers (logic-bearing only).
 
 ## Out of Scope (this track)
 - Prayer times, adhan, Quran content, prayer log UI, Hijri calendar, daily

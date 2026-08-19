@@ -89,8 +89,22 @@ components exempt).
 - [x] Task 5.1: GitHub Actions CI workflow
   - [x] Rust job: fmt, clippy `-D warnings`, `cargo test`, coverage artifact
   - [x] Frontend job: pnpm install, Biome check, `tsc --noEmit`, Vitest run
-- [~] Task 5.2: Local full-gate run
-  - [ ] Execute all checks locally; fix issues; commit
-- [ ] Task 5.3: Acceptance criteria verification
-  - [ ] Walk spec acceptance checklist; record results in plan notes
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task 5.2: Local full-gate run
+  - [x] Execute all checks locally; fix issues; commit
+- [x] Task 5.3: Acceptance criteria verification
+  - [x] Walk spec acceptance checklist; record results in plan notes
+
+**Acceptance record (Task 5.3, 2026-08-19):**
+- [x] `pnpm tauri dev` launches shell — verified manually (Phase 3)
+- [x] EN ↔ ID instant switch + restart persistence — verified manually (Phase 4)
+- [x] SQLite in app-data; `db_status` path + schema version; settings survive
+      restart — Rust tests (6/6) + manual locale-persistence check
+- [x] Plugins (notification, single-instance, autostart) init cleanly — Phase 2
+- [ ] CI green — workflow committed (9422726); first remote run pending
+      (no remote configured on this machine)
+- [x] lefthook staged checks — observed on every commit (Biome + tsc)
+- [x] Rust unit tests cover storage + command handlers — 6/6 pass;
+      coverage artifact produced by CI tarpaulin job
+- Out of scope respected: no prayer times/adhan/Quran/log UI added
+
+- [ ] Task: Phase Verification & Checkpoint (per workflow.md)

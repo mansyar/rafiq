@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from '@/components/layout';
-import PagePlaceholder from '@/pages/placeholder';
-import Settings from '@/pages/settings';
+import { Layout } from '@/components/layout';
+import { PagePlaceholder } from '@/pages/placeholder';
+import { Settings } from '@/pages/settings';
 
-export default function App() {
+export function App() {
   return (
     <BrowserRouter>
       <Routes>

@@ -1,16 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { type Locale, SUPPORTED_LOCALES } from '@/lib/locale';
+import { DEFAULT_LOCALE, isSupportedLocale, type Locale, SUPPORTED_LOCALES } from '@/lib/locale';
 import { setSetting } from '@/lib/tauri';
 
-export default function Settings() {
+export function Settings() {
   const { t, i18n } = useTranslation();
-  const current = (i18n.resolvedLanguage as Locale) ?? i18n.language;
+  const current = isSupportedLocale(i18n.resolvedLanguage) ? i18n.resolvedLanguage : DEFAULT_LOCALE;
 
   async function selectLocale(locale: Locale) {
     await i18n.changeLanguage(locale);
-    await setSetting('locale', locale);
+    try {
+      await setSetting('locale', locale);
+    } catch {
+      // Persistence unavailable (e.g. browser dev); in-app switch still applies.
+    }
   }
 
   return (

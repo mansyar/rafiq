@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { to: '/settings', icon: Settings, key: 'settings', end: false },
 ] as const;
 
-export default function Layout() {
+export function Layout() {
   const { t } = useTranslation();
 
   useEffect(() => {

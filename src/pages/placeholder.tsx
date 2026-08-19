@@ -5,7 +5,7 @@ interface PagePlaceholderProps {
   page: 'today' | 'quran' | 'log' | 'settings';
 }
 
-export default function PagePlaceholder({ page }: PagePlaceholderProps) {
+export function PagePlaceholder({ page }: PagePlaceholderProps) {
   const { t } = useTranslation();
 
   return (

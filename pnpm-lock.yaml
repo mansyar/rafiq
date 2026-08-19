@@ -50,9 +50,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.2
         version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      shadcn:
-        specifier: ^4.18.0
-        version: 4.18.0(typescript@7.0.2)
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
@@ -84,6 +81,9 @@ importers:
       lefthook:
         specifier: ^2.1.10
         version: 2.1.10
+      shadcn:
+        specifier: ^4.18.0
+        version: 4.18.0(typescript@7.0.2)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3

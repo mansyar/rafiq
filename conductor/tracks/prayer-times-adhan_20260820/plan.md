@@ -10,7 +10,7 @@ commands — presentational components exempt).
 
 *Goal: `adhan` crate integration with typed outputs and command handlers.*
 
-- [ ] Task 1.1: Add dependencies + write failing tests (Red)
+- [~] Task 1.1: Add dependencies + write failing tests (Red)
   - [ ] Add `adhan` + `chrono` crates to `Cargo.toml`
   - [ ] Create `src-tauri/src/prayer/mod.rs` with test-first spec: reference fixtures for a known city/date (MWL expected times within ±1 min); method enum (7 methods); serializable output struct (`PrayerTimes { fajr, sunrise, dhuhr, asr, maghrib, isha }`)
   - [ ] Run `cargo test` → confirm red (module/type unresolved)

@@ -3,6 +3,15 @@
 version = 4
 
 [[package]]
+name = "adhaan"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77d001996db3aafdac37eec31fd6dda61f43af2f7ee6b1c004461bb1d7f2ab8a"
+dependencies = [
+ "jiff",
+]
+
+[[package]]
 name = "adler2"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -471,8 +480,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1aa79e62e7697b8e29b513a68abacf485adcd1fe8284a4316c5ae868e6633327"
 dependencies = [
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "serde",
+ "wasm-bindgen",
  "windows-link 0.2.1",
 ]
 
@@ -2810,6 +2821,8 @@ checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 name = "rafiq"
 version = "0.1.0"
 dependencies = [
+ "adhaan",
+ "chrono",
  "rusqlite",
  "serde",
  "serde_json",

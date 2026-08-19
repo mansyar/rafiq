@@ -19,7 +19,9 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
 
 ## Backend (Rust core)
 - **Framework:** Tauri 2 (typed commands + events)
-- **Prayer times:** `adhan` Rust crate — all 7 standard methods, MWL default
+- **Prayer times:** the crates.io `adhaan` package (imported as `adhan`) — all
+  7 standard methods, MWL default
+- **Date handling:** `chrono` for command-facing calendar dates and serialization
 - **Hijri calendar:** Umm al-Qura conversion (crate or bespoke implementation)
 - **Storage:** SQLite via `rusqlite` behind Rust commands (prayer logs, streaks,
   settings, audio index)

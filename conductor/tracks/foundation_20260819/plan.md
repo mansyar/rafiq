@@ -69,11 +69,11 @@ components exempt).
 
 *Goal: i18next en/id catalogs with persisted, validated locale.*
 
-- [ ] Task 4.1: Write failing tests for locale resolution (Red)
-  - [ ] Tests: valid persisted locale accepted; invalid/missing → `en` fallback;
+- [x] Task 4.1: Write failing tests for locale resolution (Red) [359b188]
+  - [x] Tests: valid persisted locale accepted; invalid/missing → `en` fallback;
         supported locales (`en`, `id`) enumerated
-  - [ ] Run test → confirm red
-- [ ] Task 4.2: Implement locale resolver + i18next setup (Green)
+  - [x] Run test → confirm red (3 fail / 1 pass) then green (4/4)
+- [~] Task 4.2: Implement locale resolver + i18next setup (Green)
   - [ ] Resolver util passes tests
   - [ ] i18next + react-i18next init; en/id catalogs with shell keys
         (nav, settings, app title); fallback `en`

@@ -77,10 +77,10 @@ components exempt).
   - [x] Resolver util passes tests
   - [x] i18next + react-i18next init; en/id catalogs with shell keys
         (nav, settings, app title); fallback `en`
-- [~] Task 4.3: Locale switcher + persistence
-  - [ ] Settings control (EN/ID)
-  - [ ] Persist via `set_setting`; restore on startup via `get_setting`
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task 4.3: Locale switcher + persistence [bd4cc64]
+  - [x] Settings control (EN/ID)
+  - [x] Persist via `set_setting`; restore on startup via `get_setting`
+- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 5 — CI Pipeline & Track Completion
 

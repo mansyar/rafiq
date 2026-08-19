@@ -1,0 +1,7 @@
+Task 1.3: Configure Biome (frontend lint + format)
+
+Summary: Added biome.json with Google-style formatting rules (2-space indent, line width 100, single quotes, semicolons, trailing commas), recommended linter preset with noExplicitAny as error, VCS-aware file inclusion. Added package scripts: check (biome check .) and format (biome format --write .). Added pnpm-workspace.yaml. Reformatted existing scaffolded sources to conform.
+
+Files: biome.json, package.json, pnpm-lock.yaml, pnpm-workspace.yaml, src/App.css, src/App.tsx, src/main.tsx, src/vite-env.d.ts, tsconfig.json, tsconfig.node.json, vite.config.ts
+
+Why: Establish frontend lint + format baseline per Phase 1 tooling goal.

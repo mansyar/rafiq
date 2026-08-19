@@ -65,7 +65,7 @@ components exempt).
   - [x] `pnpm tauri dev` renders shell; Biome + typecheck pass
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 4 — i18n Foundation
+## Phase 4 — i18n Foundation [checkpoint: bd4cc64]
 
 *Goal: i18next en/id catalogs with persisted, validated locale.*
 
@@ -80,7 +80,7 @@ components exempt).
 - [x] Task 4.3: Locale switcher + persistence [bd4cc64]
   - [x] Settings control (EN/ID)
   - [x] Persist via `set_setting`; restore on startup via `get_setting`
-- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 5 — CI Pipeline & Track Completion
 

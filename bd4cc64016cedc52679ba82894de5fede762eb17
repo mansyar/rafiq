@@ -4,3 +4,9 @@ Task 4.3: Locale switcher + persistence
 - Change language updates UI instantly via i18n.changeLanguage and persists via set_setting('locale', ...)
 - Startup restore wired in main.tsx (loadPersistedLocale -> initI18n) from Phase 4.2
 - Native window title + document.title follow locale (set-title capability added)
+
+Phase 4 verification report (checkpoint bd4cc64)
+
+Automated: Biome check 28 files clean; Vitest 4/4 (locale resolver suite); pnpm build (tsc + vite) OK; cargo test 6/6. Frontend logic covered by locale.test.ts; UI presentational per project rule.
+
+Manual (user confirmed 2026-08-19): launched via pnpm tauri dev; UI renders; Settings -> Language switches EN <-> ID instantly (nav, tagline, page titles, window title); language persists across app restart via set_setting/get_setting SQLite store.

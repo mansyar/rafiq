@@ -14,7 +14,7 @@ commands — presentational components exempt).
   - [x] Add `adhan` + `chrono` crates to `Cargo.toml`
   - [x] Create `src-tauri/src/prayer/mod.rs` with test-first spec: reference fixtures for a known city/date (MWL expected times within ±1 min); method enum (7 methods); serializable output struct (`PrayerTimes { fajr, sunrise, dhuhr, asr, maghrib, isha }`)
   - [x] Run `cargo test` → confirm red (module/type unresolved)
-- [ ] Task 1.2: Implement prayer service (Green)
+- [~] Task 1.2: Implement prayer service (Green)
   - [ ] Wrapper around `adhan::PrayerTimes`; `CalculationMethod` mapping for all 7 methods, MWL default
   - [ ] Handle high-latitude edge cases per crate defaults
   - [ ] Run `cargo test` → green; `cargo clippy` clean

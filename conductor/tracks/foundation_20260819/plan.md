@@ -10,12 +10,13 @@ components exempt).
 
 *Goal: Tauri 2 + React + TS scaffold with pnpm; repo hygiene; tooling.*
 
-- [ ] Task 1.1: Bootstrap Tauri 2 + React + TS app (create-tauri-app)
-  - [ ] Generate scaffold (React-TS template, pnpm, Vite)
-  - [ ] Verify `pnpm install` and default window launches via `pnpm tauri dev`
-- [ ] Task 1.2: Configure repo hygiene
-  - [ ] Add `.editorconfig`
-  - [ ] Add/verify `.gitignore` for pnpm + Tauri stack
+- [x] Task 1.1: Bootstrap Tauri 2 + React + TS app (create-tauri-app) [bf81188]
+  - [x] Generate scaffold (React-TS template, pnpm, Vite)
+  - [~] Verify `pnpm install` and default window launches via `pnpm tauri dev`
+        (window launch begins at Phase 1 checkpoint — manual)
+- [x] Task 1.2: Configure repo hygiene [bf81188]
+  - [x] Add `.editorconfig`
+  - [x] Add/verify `.gitignore` for pnpm + Tauri stack
 - [ ] Task 1.3: Configure Biome (frontend lint + format)
   - [ ] `biome.json` + package scripts (`check`, `format`)
 - [ ] Task 1.4: Configure lefthook + Conventional Commits

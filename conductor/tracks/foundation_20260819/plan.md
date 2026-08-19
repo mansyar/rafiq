@@ -86,10 +86,10 @@ components exempt).
 
 *Goal: GitHub Actions quality gate; acceptance verification.*
 
-- [ ] Task 5.1: GitHub Actions CI workflow
-  - [ ] Rust job: fmt, clippy `-D warnings`, `cargo test`, coverage artifact
-  - [ ] Frontend job: pnpm install, Biome check, `tsc --noEmit`, Vitest run
-- [ ] Task 5.2: Local full-gate run
+- [x] Task 5.1: GitHub Actions CI workflow
+  - [x] Rust job: fmt, clippy `-D warnings`, `cargo test`, coverage artifact
+  - [x] Frontend job: pnpm install, Biome check, `tsc --noEmit`, Vitest run
+- [~] Task 5.2: Local full-gate run
   - [ ] Execute all checks locally; fix issues; commit
 - [ ] Task 5.3: Acceptance criteria verification
   - [ ] Walk spec acceptance checklist; record results in plan notes

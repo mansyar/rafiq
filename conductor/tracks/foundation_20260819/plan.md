@@ -54,13 +54,13 @@ components exempt).
 - [x] Task 3.1: Configure Tailwind design tokens [1e44f77]
   - [x] Gold / emerald / ink palette tokens; serif + Arabic-friendly fonts;
         CSS variables per product-guidelines
-- [ ] Task 3.2: Initialize shadcn/ui
-  - [ ] `components.json` + CLI init; minimal primitives (button, card,
+- [x] Task 3.2: Initialize shadcn/ui [c43e70ed]
+  - [x] `components.json` + CLI init; minimal primitives (button, card,
         separator)
-- [ ] Task 3.3: Build navigation shell
-  - [ ] React Router routes: Today, Quran, Log + Settings
-  - [ ] Sidebar with active states + ARIA labels
-  - [ ] Placeholder pages rendering per locale
+- [x] Task 3.3: Build navigation shell [d434f8f]
+  - [x] React Router routes: Today, Quran, Log + Settings
+  - [x] Sidebar with active states + ARIA labels
+  - [x] Placeholder pages rendering per locale
 - [ ] Task 3.4: Verify shell in dev
   - [ ] `pnpm tauri dev` renders shell; Biome + typecheck pass
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)

@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '@/components/layout';
 import PagePlaceholder from '@/pages/placeholder';
+import Settings from '@/pages/settings';
 
 export default function App() {
   return (
@@ -10,7 +11,7 @@ export default function App() {
           <Route index element={<PagePlaceholder page="today" />} />
           <Route path="quran" element={<PagePlaceholder page="quran" />} />
           <Route path="log" element={<PagePlaceholder page="log" />} />
-          <Route path="settings" element={<PagePlaceholder page="settings" />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,40 @@
+{
+  "appTitle": "Rafiq — Muslim Companion",
+  "brand": "Rafiq",
+  "tagline": "Muslim Companion",
+  "nav": {
+    "today": "Today",
+    "quran": "Quran",
+    "log": "Log",
+    "settings": "Settings"
+  },
+  "page": {
+    "today": {
+      "title": "Today",
+      "subtitle": "Your daily practice",
+      "body": "Prayer times, adhan, and your day at a glance will live here."
+    },
+    "quran": {
+      "title": "Quran",
+      "subtitle": "The noble Quran",
+      "body": "Read and listen to the Quran. This view is coming soon."
+    },
+    "log": {
+      "title": "Log",
+      "subtitle": "Your practice history",
+      "body": "Prayer logs and streaks will appear here."
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Preferences",
+      "body": "Language, calculation method, and notification settings will live here."
+    }
+  },
+  "settings": {
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "id": "Bahasa Indonesia"
+    }
+  }
+}

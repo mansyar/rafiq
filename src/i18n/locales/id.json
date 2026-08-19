@@ -1,0 +1,40 @@
+{
+  "appTitle": "Rafiq — Sahabat Muslim",
+  "brand": "Rafiq",
+  "tagline": "Sahabat Muslim",
+  "nav": {
+    "today": "Hari Ini",
+    "quran": "Al-Qur\u2019an",
+    "log": "Catatan",
+    "settings": "Pengaturan"
+  },
+  "page": {
+    "today": {
+      "title": "Hari Ini",
+      "subtitle": "Amalan harian Anda",
+      "body": "Waktu salat, azan, dan ringkasan hari Anda akan tampil di sini."
+    },
+    "quran": {
+      "title": "Al-Qur\u2019an",
+      "subtitle": "Al-Qur\u2019an yang mulia",
+      "body": "Baca dan dengarkan Al-Qur\u2019an. Tampilan ini segera hadir."
+    },
+    "log": {
+      "title": "Catatan",
+      "subtitle": "Riwayat amalan Anda",
+      "body": "Catatan salat dan konsistensi akan tampil di sini."
+    },
+    "settings": {
+      "title": "Pengaturan",
+      "subtitle": "Preferensi",
+      "body": "Bahasa, metode perhitungan, dan pengaturan notifikasi akan tampil di sini."
+    }
+  },
+  "settings": {
+    "language": "Bahasa",
+    "languages": {
+      "en": "English",
+      "id": "Bahasa Indonesia"
+    }
+  }
+}

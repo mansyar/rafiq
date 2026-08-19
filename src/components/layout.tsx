@@ -1,10 +1,8 @@
 import { BookOpenText, NotebookPen, Settings, Sun } from 'lucide-react';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet } from 'react-router-dom';
-import { DEFAULT_LOCALE, type Locale, stringsFor } from '@/lib/locale';
-
-interface LayoutProps {
-  locale?: Locale;
-}
+import { setWindowTitle } from '@/lib/tauri';
 
 const NAV_ITEMS = [
   { to: '/', icon: Sun, key: 'today', end: true },
@@ -13,8 +11,14 @@ const NAV_ITEMS = [
   { to: '/settings', icon: Settings, key: 'settings', end: false },
 ] as const;
 
-export default function Layout({ locale = DEFAULT_LOCALE }: LayoutProps) {
-  const strings = stringsFor(locale);
+export default function Layout() {
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const title = t('appTitle');
+    document.title = title;
+    void setWindowTitle(title);
+  }, [t]);
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
@@ -25,8 +29,8 @@ export default function Layout({ locale = DEFAULT_LOCALE }: LayoutProps) {
         <div className="flex items-center gap-3 px-5 py-5">
           <Sun aria-hidden="true" className="size-6 text-gold-500" strokeWidth={2} />
           <div>
-            <p className="font-heading text-lg font-semibold leading-tight">{strings.brand}</p>
-            <p className="text-xs text-muted-foreground">{strings.tagline}</p>
+            <p className="font-heading text-lg font-semibold leading-tight">{t('brand')}</p>
+            <p className="text-xs text-muted-foreground">{t('tagline')}</p>
           </div>
         </div>
 
@@ -40,7 +44,7 @@ export default function Layout({ locale = DEFAULT_LOCALE }: LayoutProps) {
                   className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors aria-[current=page]:bg-sidebar-accent aria-[current=page]:text-sidebar-accent-foreground hover:bg-sidebar-accent/60 focus-visible:outline-2 focus-visible:outline-ring"
                 >
                   <Icon aria-hidden="true" className="size-4" />
-                  <span>{strings.nav[key]}</span>
+                  <span>{t(`nav.${key}`)}</span>
                 </NavLink>
               </li>
             ))}

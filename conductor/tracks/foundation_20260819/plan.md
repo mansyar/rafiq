@@ -23,7 +23,7 @@ components exempt).
   - [x] Verify hook fires on a test commit (probe commits 1cebebd, cf05adc)
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 2 — Rust Backend Foundations (TDD)
+## Phase 2 — Rust Backend Foundations (TDD) [checkpoint: 7b5c379]
 
 *Goal: SQLite storage (migrations + settings), typed commands, system plugins.*
 
@@ -44,7 +44,7 @@ components exempt).
 - [x] Task 2.4: Register system plugins [7b5c379]
   - [x] `notification`, `single-instance`, `autostart` initialized in `lib.rs`;
         verify no startup errors
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 3 — Frontend Shell & Design Foundation
 

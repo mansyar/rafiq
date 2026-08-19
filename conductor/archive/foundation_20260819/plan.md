@@ -100,7 +100,7 @@ components exempt).
 - [x] SQLite in app-data; `db_status` path + schema version; settings survive
       restart — Rust tests (6/6) + manual locale-persistence check
 - [x] Plugins (notification, single-instance, autostart) init cleanly — Phase 2
-- [ ] CI green — workflow committed (9422726); first remote run pending
+- [x] CI green — verified on first remote run (run 32261480806, 2026-08-20)
       (no remote configured on this machine)
 - [x] lefthook staged checks — observed on every commit (Biome + tsc)
 - [x] Rust unit tests cover storage + command handlers — 6/6 pass;

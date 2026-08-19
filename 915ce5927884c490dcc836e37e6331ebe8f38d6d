@@ -1,0 +1,7 @@
+Task 1.4: Configure lefthook + Conventional Commits
+
+Summary: Added lefthook.yml with parallel pre-commit hooks: biome check --write with stage_fixed on staged {ts,tsx,js,jsx,json,css,html}, tsc --noEmit on staged {ts,tsx}, cargo fmt --check on staged .rs (root src-tauri). Hook firing verified via probe commits (1cebebd test probe, cf05adc probe removal).
+
+Files: lefthook.yml
+
+Why: Enforce lint/typecheck/format discipline at commit time per Phase 1 tooling goal.

@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "check": "biome check .",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.1",
@@ -16,10 +18,12 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.9",
     "@tauri-apps/cli": "^2.11.4",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
+    "lefthook": "^2.1.10",
     "typescript": "~7.0.2",
     "vite": "^8.2.1"
   }

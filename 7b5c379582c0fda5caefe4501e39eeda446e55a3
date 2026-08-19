@@ -1,0 +1,11 @@
+Task 2.4: Register system plugins
+
+Changes:
+- Cargo.toml: add tauri-plugin-notification 2, tauri-plugin-single-instance 2, tauri-plugin-autostart 2
+- lib.rs run(): register notification::init(), single-instance::init (focus main window on second launch), autostart::init (MacosLauncher::LaunchAgent)
+- capabilities/default.json: add notification:default, autostart:default permissions
+- biome.json: files.includes extended with **/*.json so nested JSON (e.g. capabilities) is linted; unblocked pre-commit hook
+
+Files: src-tauri/Cargo.toml, Cargo.lock, src-tauri/src/lib.rs, src-tauri/capabilities/default.json, biome.json
+Why: spec requirement 8 — notification, single-instance, autostart registered and initializing without errors; permissions needed for clean frontend access.
+Verification: cargo check exit 0, cargo test 12/12 pass, cargo clippy clean, cargo fmt clean.

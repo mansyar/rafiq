@@ -12,16 +12,15 @@ components exempt).
 
 - [x] Task 1.1: Bootstrap Tauri 2 + React + TS app (create-tauri-app) [bf81188]
   - [x] Generate scaffold (React-TS template, pnpm, Vite)
-  - [~] Verify `pnpm install` and default window launches via `pnpm tauri dev`
-        (window launch begins at Phase 1 checkpoint — manual)
+  - [x] Verify `pnpm install` (window launch deferred to Phase 1 checkpoint — manual)
 - [x] Task 1.2: Configure repo hygiene [bf81188]
   - [x] Add `.editorconfig`
   - [x] Add/verify `.gitignore` for pnpm + Tauri stack
-- [ ] Task 1.3: Configure Biome (frontend lint + format)
-  - [ ] `biome.json` + package scripts (`check`, `format`)
-- [ ] Task 1.4: Configure lefthook + Conventional Commits
-  - [ ] `lefthook.yml` with staged checks (Biome, `tsc` typecheck)
-  - [ ] Verify hook fires on a test commit
+- [x] Task 1.3: Configure Biome (frontend lint + format) [e88fd8c]
+  - [x] `biome.json` + package scripts (`check`, `format`)
+- [x] Task 1.4: Configure lefthook + Conventional Commits [915ce59]
+  - [x] `lefthook.yml` with staged checks (Biome, `tsc` typecheck)
+  - [x] Verify hook fires on a test commit (probe commits 1cebebd, cf05adc)
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 2 — Rust Backend Foundations (TDD)

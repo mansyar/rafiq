@@ -264,9 +264,14 @@ language, framework, and build tools.**
 
 ## Testing Requirements
 
+> **Project Rule (Rafiq):** Tests are required **only for logic-bearing code** —
+> calculation engines, storage, state transitions, parsers, and similar. UI
+> scaffolding, configuration, and presentational components do **not** require
+> tests. The requirements below apply to logic-bearing modules only.
+
 ### Unit Testing
 
--   Every module must have corresponding tests.
+-   Every logic-bearing module must have corresponding tests.
 -   Use appropriate test setup/teardown mechanisms (e.g., fixtures,
     beforeEach/afterEach).
 -   Mock external dependencies.

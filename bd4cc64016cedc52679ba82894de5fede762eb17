@@ -1,0 +1,6 @@
+Task 4.3: Locale switcher + persistence
+
+- Settings page with semantic fieldset/legend language control (EN / Bahasa Indonesia buttons, aria-pressed)
+- Change language updates UI instantly via i18n.changeLanguage and persists via set_setting('locale', ...)
+- Startup restore wired in main.tsx (loadPersistedLocale -> initI18n) from Phase 4.2
+- Native window title + document.title follow locale (set-title capability added)

@@ -1,0 +1,4 @@
+Task 5.1: GitHub Actions CI workflow
+
+- .github/workflows/ci.yml: rust job (ubuntu-latest, dtolnay/rust-toolchain stable with rustfmt+clippy, Swatinem/rust-cache, cargo fmt --check, cargo clippy --all-targets --all-features -- -D warnings, cargo test, taiki-e/install-action cargo-tarpaulin, cargo tarpaulin --out xml, upload-artifact cobertura.xml 7-day retention); frontend job (pnpm/action-setup@v4, setup-node 22 with pnpm cache, pnpm install --frozen-lockfile, pnpm check, pnpm exec tsc --noEmit, pnpm test).
+- package.json: added packageManager pnpm@11.21.0 (required by pnpm/action-setup).

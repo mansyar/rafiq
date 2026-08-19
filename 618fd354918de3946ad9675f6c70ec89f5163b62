@@ -1,0 +1,10 @@
+Task 2.1 + 2.2: Storage module (TDD R/G)
+
+Red: integration tests in src-tauri/tests/storage.rs define the public API contract (rafiq_lib::storage::{init_db, SettingsRepo, SCHEMA_VERSION}) — confirmed unresolved-import failure before implementation.
+Green: implemented src/storage module.
+
+Summary: rusqlite 0.40 (bundled SQLite) added. DB initialized in app-data dir (rafiq.db). Migration mechanism via meta.schema_version with ordered MIGRATIONS list; settings table with upsert semantics. SettingsRepo get/set API. All 6 tests pass (migrations apply, schema_version correct, idempotent re-init, set/get roundtrip, unknown key -> None, upsert overwrites). cargo fmt + clippy clean.
+
+Files: src-tauri/Cargo.toml, Cargo.lock, src/storage/{mod,db,settings}.rs, src/lib.rs, src-tauri/tests/storage.rs
+
+Why: Foundation layer — every later feature (prayer logs, streaks, settings, audio index) persists through this module.

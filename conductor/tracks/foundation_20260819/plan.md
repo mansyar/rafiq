@@ -36,11 +36,11 @@ components exempt).
   - [x] Migration mechanism (`meta.schema_version`) + `settings` table
   - [x] SettingsRepo API (get / set)
   - [x] Run `cargo test` → confirm green (6/6 pass)
-- [ ] Task 2.3: Implement command handlers (TDD)
-  - [ ] Failing tests for command logic (`get_setting`, `set_setting`,
+- [x] Task 2.3: Implement command handlers (TDD) [a0f5d8b]
+  - [x] Failing tests for command logic (`get_setting`, `set_setting`,
         `db_status` — validation + error cases)
-  - [ ] Implement commands; wire state into app; run tests → green
-  - [ ] `cargo clippy` clean
+  - [x] Implement commands; wire state into app; run tests → green (12 total)
+  - [x] `cargo clippy` clean
 - [ ] Task 2.4: Register system plugins
   - [ ] `notification`, `single-instance`, `autostart` initialized in `lib.rs`;
         verify no startup errors

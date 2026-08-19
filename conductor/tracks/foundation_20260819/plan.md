@@ -82,7 +82,7 @@ components exempt).
   - [x] Persist via `set_setting`; restore on startup via `get_setting`
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 5 — CI Pipeline & Track Completion
+## Phase 5 — CI Pipeline & Track Completion [checkpoint: 9422726]
 
 *Goal: GitHub Actions quality gate; acceptance verification.*
 
@@ -107,4 +107,8 @@ components exempt).
       coverage artifact produced by CI tarpaulin job
 - Out of scope respected: no prayer times/adhan/Quran/log UI added
 
-- [ ] Task: Phase Verification & Checkpoint (per workflow.md)
+- [x] Task: Phase Verification & Checkpoint (per workflow.md)
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions 2d3f0ea

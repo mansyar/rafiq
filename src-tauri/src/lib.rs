@@ -33,7 +33,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::get_setting,
             commands::set_setting,
-            commands::db_status
+            commands::db_status,
+            commands::get_prayer_times
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

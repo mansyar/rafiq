@@ -1,6 +1,8 @@
 //! Typed Tauri command handlers and their testable logic.
 
+use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates, PrayerTimes};
 use crate::storage::{schema_version, SettingsRepo};
+use chrono::NaiveDate;
 use rusqlite::Connection;
 use serde::Serialize;
 use std::path::Path;
@@ -22,6 +24,9 @@ pub struct DbStatus {
 
 const MAX_KEY_LEN: usize = 256;
 
+/// Settings key used for the persisted prayer calculation method.
+pub const PRAYER_METHOD_SETTING_KEY: &str = "prayer_calculation_method";
+
 /// Returns the stored value for `key`, or `None` when unset.
 pub fn get_setting_impl(conn: &Connection, key: &str) -> Result<Option<String>, String> {
     let key = validate_key(key)?;
@@ -42,6 +47,35 @@ pub fn db_status_impl(conn: &Connection, data_dir: &Path) -> Result<DbStatus, St
     Ok(DbStatus {
         path: data_dir.join("rafiq.db").to_string_lossy().into_owned(),
         version,
+    })
+}
+
+/// Parses a date, resolves the configured calculation method, and calculates
+/// prayer times without requiring a Tauri runtime.
+pub fn get_prayer_times_impl(
+    conn: &Connection,
+    date: &str,
+    coordinates: Coordinates,
+    method: Option<CalculationMethod>,
+) -> Result<PrayerTimes, String> {
+    let date = NaiveDate::parse_from_str(date, "%Y-%m-%d")
+        .map_err(|error| format!("invalid date '{date}', expected YYYY-MM-DD: {error}"))?;
+    let method = match method {
+        Some(method) => method,
+        None => resolve_prayer_method(conn)?,
+    };
+
+    calculate_prayer_times(date, coordinates, method)
+}
+
+fn resolve_prayer_method(conn: &Connection) -> Result<CalculationMethod, String> {
+    let value = SettingsRepo::new(conn)
+        .get(PRAYER_METHOD_SETTING_KEY)
+        .map_err(|error| format!("could not read prayer calculation method: {error}"))?;
+
+    value.map_or(Ok(CalculationMethod::default()), |value| {
+        serde_json::from_value(serde_json::Value::String(value.trim().to_string()))
+            .map_err(|_| format!("invalid prayer calculation method setting: {value}"))
     })
 }
 
@@ -84,9 +118,24 @@ pub fn db_status(state: State<'_, AppState>) -> Result<DbStatus, String> {
     db_status_impl(&conn, &state.data_dir)
 }
 
+#[tauri::command]
+pub fn get_prayer_times(
+    state: State<'_, AppState>,
+    date: String,
+    coordinates: Coordinates,
+    method: Option<CalculationMethod>,
+) -> Result<PrayerTimes, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_prayer_times_impl(&conn, &date, coordinates, method)
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::storage::{init_db, SCHEMA_VERSION};
+    use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates};
+    use crate::storage::{init_db, SettingsRepo, SCHEMA_VERSION};
     use rusqlite::Connection;
     use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -163,5 +212,112 @@ mod tests {
         let json = serde_json::to_value(&status).unwrap();
         assert!(json.get("path").is_some(), "missing path key");
         assert!(json.get("version").is_some(), "missing version key");
+    }
+
+    fn prayer_coordinates() -> Coordinates {
+        Coordinates {
+            latitude: 35.7750,
+            longitude: -78.6336,
+        }
+    }
+
+    #[test]
+    fn get_prayer_times_uses_mwl_when_method_setting_is_unset() {
+        let conn = conn("cmd-prayer-default");
+        let actual =
+            super::get_prayer_times_impl(&conn, "2015-07-12", prayer_coordinates(), None).unwrap();
+        let expected = calculate_prayer_times(
+            chrono::NaiveDate::from_ymd_opt(2015, 7, 12).unwrap(),
+            prayer_coordinates(),
+            CalculationMethod::MuslimWorldLeague,
+        )
+        .unwrap();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn get_prayer_times_uses_persisted_method_when_override_is_absent() {
+        let conn = conn("cmd-prayer-setting");
+        SettingsRepo::new(&conn)
+            .set(super::PRAYER_METHOD_SETTING_KEY, "tehran")
+            .unwrap();
+
+        let actual =
+            super::get_prayer_times_impl(&conn, "2015-07-12", prayer_coordinates(), None).unwrap();
+        let expected = calculate_prayer_times(
+            chrono::NaiveDate::from_ymd_opt(2015, 7, 12).unwrap(),
+            prayer_coordinates(),
+            CalculationMethod::Tehran,
+        )
+        .unwrap();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn get_prayer_times_method_override_takes_precedence_over_setting() {
+        let conn = conn("cmd-prayer-override");
+        SettingsRepo::new(&conn)
+            .set(super::PRAYER_METHOD_SETTING_KEY, "tehran")
+            .unwrap();
+
+        let actual = super::get_prayer_times_impl(
+            &conn,
+            "2015-07-12",
+            prayer_coordinates(),
+            Some(CalculationMethod::Karachi),
+        )
+        .unwrap();
+        let expected = calculate_prayer_times(
+            chrono::NaiveDate::from_ymd_opt(2015, 7, 12).unwrap(),
+            prayer_coordinates(),
+            CalculationMethod::Karachi,
+        )
+        .unwrap();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn get_prayer_times_rejects_invalid_coordinates() {
+        let conn = conn("cmd-prayer-invalid-coordinates");
+        let error = super::get_prayer_times_impl(
+            &conn,
+            "2015-07-12",
+            Coordinates {
+                latitude: 91.0,
+                longitude: 0.0,
+            },
+            None,
+        )
+        .unwrap_err();
+
+        assert!(error.contains("latitude"), "unexpected error: {error}");
+    }
+
+    #[test]
+    fn get_prayer_times_rejects_invalid_date() {
+        let conn = conn("cmd-prayer-invalid-date");
+        let error = super::get_prayer_times_impl(&conn, "12/07/2015", prayer_coordinates(), None)
+            .unwrap_err();
+
+        assert!(error.contains("YYYY-MM-DD"), "unexpected error: {error}");
+    }
+
+    #[test]
+    fn get_prayer_times_rejects_invalid_persisted_method() {
+        let conn = conn("cmd-prayer-invalid-method");
+        SettingsRepo::new(&conn)
+            .set(super::PRAYER_METHOD_SETTING_KEY, "not-a-method")
+            .unwrap();
+
+        let error = super::get_prayer_times_impl(&conn, "2015-07-12", prayer_coordinates(), None)
+            .unwrap_err();
+
+        assert!(
+            error.contains("calculation method"),
+            "unexpected error: {error}"
+        );
     }
 }

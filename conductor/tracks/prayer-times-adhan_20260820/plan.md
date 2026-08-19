@@ -18,9 +18,9 @@ commands — presentational components exempt).
   - [x] Wrapper around `adhan::PrayerTimes`; `CalculationMethod` mapping for all 7 methods, MWL default
   - [x] Handle high-latitude edge cases per crate defaults
   - [x] Run `cargo test` → green; `cargo clippy` clean
-- [~] Task 1.3: Prayer command handlers (TDD)
-  - [ ] Failing tests: `get_prayer_times(date, coordinates, method)` — valid input, invalid coordinates rejected, method overrides default, date parsing errors
-  - [ ] Implement commands + expose in `commands.rs`/`lib.rs`; wire method default from settings; tests green
+- [x] Task 1.3: Prayer command handlers (TDD) — 9e51393
+  - [x] Failing tests: `get_prayer_times(date, coordinates, method)` — valid input, invalid coordinates rejected, method overrides default, date parsing errors
+  - [x] Implement commands + expose in `commands.rs`/`lib.rs`; wire method default from settings; tests green
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 2 — Location & City Database (Rust, TDD)

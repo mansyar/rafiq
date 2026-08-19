@@ -2,3 +2,9 @@ Task 5.1: GitHub Actions CI workflow
 
 - .github/workflows/ci.yml: rust job (ubuntu-latest, dtolnay/rust-toolchain stable with rustfmt+clippy, Swatinem/rust-cache, cargo fmt --check, cargo clippy --all-targets --all-features -- -D warnings, cargo test, taiki-e/install-action cargo-tarpaulin, cargo tarpaulin --out xml, upload-artifact cobertura.xml 7-day retention); frontend job (pnpm/action-setup@v4, setup-node 22 with pnpm cache, pnpm install --frozen-lockfile, pnpm check, pnpm exec tsc --noEmit, pnpm test).
 - package.json: added packageManager pnpm@11.21.0 (required by pnpm/action-setup).
+
+Phase 5 verification report (checkpoint 9422726)
+
+Automated local full gate: Biome 28 files clean; tsc --noEmit pass; Vitest 4/4; pnpm build OK; cargo fmt --check clean; cargo clippy --all-targets --all-features -- -D warnings clean; cargo test 6/6. No fixes required.
+
+CI: .github/workflows/ci.yml committed (rust: fmt/clippy/test/tarpaulin coverage artifact; frontend: pnpm install --frozen-lockfile/biome/tsc/vitest). Acceptance criteria walked in spec.md + plan notes; CI green pending first remote run (no remote configured). Track acceptance: 6/7 verified locally, 1 pending remote.

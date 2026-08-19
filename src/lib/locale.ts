@@ -82,3 +82,13 @@ export const STRINGS: Record<Locale, Strings> = {
 export function stringsFor(locale: Locale): Strings {
   return STRINGS[locale] ?? STRINGS[DEFAULT_LOCALE];
 }
+
+/** True when `value` is an exact supported locale tag (e.g. `'en'`, `'id'`). */
+export function isSupportedLocale(value: unknown): value is Locale {
+  return typeof value === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(value);
+}
+
+/** Resolves a persisted (or otherwise untrusted) locale value to a supported locale. */
+export function resolveLocale(value: unknown): Locale {
+  return isSupportedLocale(value) ? value : DEFAULT_LOCALE;
+}

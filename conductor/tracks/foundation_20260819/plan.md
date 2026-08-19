@@ -46,7 +46,7 @@ components exempt).
         verify no startup errors
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 3 — Frontend Shell & Design Foundation
+## Phase 3 — Frontend Shell & Design Foundation [checkpoint: d434f8f]
 
 *Goal: Tailwind tokens, shadcn/ui, sidebar nav with placeholders. Presentational
 — no tests required (project rule).*
@@ -61,9 +61,9 @@ components exempt).
   - [x] React Router routes: Today, Quran, Log + Settings
   - [x] Sidebar with active states + ARIA labels
   - [x] Placeholder pages rendering per locale
-- [ ] Task 3.4: Verify shell in dev
-  - [ ] `pnpm tauri dev` renders shell; Biome + typecheck pass
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task 3.4: Verify shell in dev
+  - [x] `pnpm tauri dev` renders shell; Biome + typecheck pass
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 4 — i18n Foundation
 

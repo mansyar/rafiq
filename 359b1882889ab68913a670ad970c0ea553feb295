@@ -1,0 +1,6 @@
+Task 4.1: Write failing tests for locale resolution (Red) + resolveLocale (Green)
+
+Red: 3 failing tests (resolveLocale missing), 1 passing (SUPPORTED_LOCALES exists).
+Green: added isSupportedLocale + resolveLocale to src/lib/locale.ts; 4/4 passing.
+Tooling: vitest installed (devDependency), script 'pnpm test'.
+Deps: i18next + react-i18next added for Task 4.2.

@@ -1,0 +1,10 @@
+Task 4.2: Implement locale resolver + i18next setup (Green)
+
+- src/i18n/index.ts: initI18n with bundled en/id catalogs, persisted locale resolution, fallback en
+- src/i18n/locales/en.json + id.json: appTitle, brand, tagline, nav, page placeholders, settings language labels
+- src/lib/locale.ts: slimmed to Locale types + resolver (STRINGS removed; catalogs own the translations)
+- src/lib/tauri.ts: getSetting/setSetting/loadPersistedLocale wrappers + setWindowTitle (guarded, lazy import)
+- Layout + placeholder refactored to useTranslation; document.title + native window title track locale
+- main.tsx bootstraps i18n before render (restores persisted locale)
+- Capability core:window:allow-set-title added for native title updates
+- Added test scripts (pnpm test / test:watch)

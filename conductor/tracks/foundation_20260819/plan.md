@@ -41,8 +41,8 @@ components exempt).
         `db_status` — validation + error cases)
   - [x] Implement commands; wire state into app; run tests → green (12 total)
   - [x] `cargo clippy` clean
-- [ ] Task 2.4: Register system plugins
-  - [ ] `notification`, `single-instance`, `autostart` initialized in `lib.rs`;
+- [x] Task 2.4: Register system plugins [7b5c379]
+  - [x] `notification`, `single-instance`, `autostart` initialized in `lib.rs`;
         verify no startup errors
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 

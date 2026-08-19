@@ -4,3 +4,7 @@ Task 3.3: Build navigation shell
 - Sidebar (left) with brand header, lucide icons, NavLink active states via aria-[current=page], ARIA labels, focus-visible rings
 - Placeholder pages render per locale (en/id strings table in src/lib/locale.ts)
 - Removed scaffold greet demo (App.tsx no longer calls rust greet command)
+
+Phase 3 Verification Report — Frontend Shell & Design Foundation
+Automated checks: pnpm check (Biome, 22 files clean); pnpm build (tsc + vite) success; cargo test 6/6 pass; phase scope frontend/config only — no new tests required (project rule).
+Manual verification (user-confirmed 2026-08-19): pnpm tauri dev launches; window 'Rafiq — Muslim Companion'; sidebar Today/Quran/Log/Settings with active state; placeholder cards render per locale; gold/ink tokens + serif/Geist typography visible.

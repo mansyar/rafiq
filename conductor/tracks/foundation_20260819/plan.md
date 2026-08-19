@@ -73,11 +73,11 @@ components exempt).
   - [x] Tests: valid persisted locale accepted; invalid/missing → `en` fallback;
         supported locales (`en`, `id`) enumerated
   - [x] Run test → confirm red (3 fail / 1 pass) then green (4/4)
-- [~] Task 4.2: Implement locale resolver + i18next setup (Green)
-  - [ ] Resolver util passes tests
-  - [ ] i18next + react-i18next init; en/id catalogs with shell keys
+- [x] Task 4.2: Implement locale resolver + i18next setup (Green) [ca2c3a5]
+  - [x] Resolver util passes tests
+  - [x] i18next + react-i18next init; en/id catalogs with shell keys
         (nav, settings, app title); fallback `en`
-- [ ] Task 4.3: Locale switcher + persistence
+- [~] Task 4.3: Locale switcher + persistence
   - [ ] Settings control (EN/ID)
   - [ ] Persist via `set_setting`; restore on startup via `get_setting`
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)

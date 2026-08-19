@@ -1,0 +1,6 @@
+Task 3.2: Initialize shadcn/ui
+
+- components.json (radix-nova style, lucide icons, @/ alias) via shadcn CLI registry
+- Minimal primitives needed by the shell: button (cva variants), card, separator
+- cn() utility (clsx + tailwind-merge) under src/lib/utils
+- Deps: shadcn, radix-ui, class-variance-authority, tailwind-merge, tw-animate-css

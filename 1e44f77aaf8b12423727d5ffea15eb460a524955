@@ -1,0 +1,8 @@
+Task 3.1: Configure Tailwind design tokens
+
+- Tailwind v4 (@tailwindcss/vite) with gold/emerald/ink palette tokens per product-guidelines
+- Serif (Source Serif 4) + Arabic (Noto Naskh Arabic) + Geist sans font sources bundled locally (offline-first)
+- CSS variables mapped into shadcn theme (light/dark) with sidebar tokens; radius scale
+- Removed scaffold App.css/react.svg; wired index.css in main.tsx
+- Biome css parser enabled tailwindDirectives; vite/tsconfig @ alias added
+- Deps added: tailwindcss, shadcn, radix-ui, lucide-react, react-router-dom, cva, clsx, tailwind-merge, tw-animate-css, fontsource geist/source-serif-4/noto-naskh-arabic

@@ -51,8 +51,8 @@ components exempt).
 *Goal: Tailwind tokens, shadcn/ui, sidebar nav with placeholders. Presentational
 — no tests required (project rule).*
 
-- [ ] Task 3.1: Configure Tailwind design tokens
-  - [ ] Gold / emerald / ink palette tokens; serif + Arabic-friendly fonts;
+- [x] Task 3.1: Configure Tailwind design tokens [1e44f77]
+  - [x] Gold / emerald / ink palette tokens; serif + Arabic-friendly fonts;
         CSS variables per product-guidelines
 - [ ] Task 3.2: Initialize shadcn/ui
   - [ ] `components.json` + CLI init; minimal primitives (button, card,

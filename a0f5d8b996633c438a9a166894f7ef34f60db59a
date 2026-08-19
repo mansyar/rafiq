@@ -1,0 +1,10 @@
+Task 2.3: Command handlers (TDD)
+
+Red: inline unit tests in src/commands.rs referencing missing impl functions — confirmed compile errors (cannot find function).
+Green: implemented commands module.
+
+Summary: AppState (Mutex<Connection> + data_dir) managed by Tauri. Testable impl functions: get_setting_impl, set_setting_impl (with key validation: non-empty after trim, <=256 chars), db_status_impl returning serializable DbStatus { path, version }. Thin #[tauri::command] wrappers. lib.rs setup initializes DB in app-data dir and manages state; invoke_handler registers get_setting, set_setting, db_status. 6 command tests pass; storage tests still green (12 total). clippy clean.
+
+Files: src-tauri/src/commands.rs, src-tauri/src/lib.rs
+
+Why: Typed command boundary between frontend and SQLite storage; validation keeps the settings table clean.

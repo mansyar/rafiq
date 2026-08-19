@@ -27,15 +27,15 @@ components exempt).
 
 *Goal: SQLite storage (migrations + settings), typed commands, system plugins.*
 
-- [ ] Task 2.1: Write failing tests for storage module (Red)
-  - [ ] Tests: migrations apply; schema_version correct; settings set/get
+- [x] Task 2.1: Write failing tests for storage module (Red) [618fd35]
+  - [x] Tests: migrations apply; schema_version correct; settings set/get
         roundtrip; unknown key → None; upsert overwrites; `db_status` shape
-  - [ ] Run `cargo test` → confirm red
-- [ ] Task 2.2: Implement storage module (Green)
-  - [ ] `rusqlite` dependency; DB initialized in app-data dir
-  - [ ] Migration mechanism (`meta.schema_version`) + `settings` table
-  - [ ] SettingsRepo API (get / set)
-  - [ ] Run `cargo test` → confirm green
+  - [x] Run `cargo test` → confirm red (unresolved import `rafiq_lib::storage`)
+- [x] Task 2.2: Implement storage module (Green) [618fd35]
+  - [x] `rusqlite` dependency; DB initialized in app-data dir
+  - [x] Migration mechanism (`meta.schema_version`) + `settings` table
+  - [x] SettingsRepo API (get / set)
+  - [x] Run `cargo test` → confirm green (6/6 pass)
 - [ ] Task 2.3: Implement command handlers (TDD)
   - [ ] Failing tests for command logic (`get_setting`, `set_setting`,
         `db_status` — validation + error cases)

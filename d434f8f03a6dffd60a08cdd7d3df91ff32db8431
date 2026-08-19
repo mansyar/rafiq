@@ -1,0 +1,6 @@
+Task 3.3: Build navigation shell
+
+- BrowserRouter routes: Today (index), Quran, Log, Settings under a shared Layout
+- Sidebar (left) with brand header, lucide icons, NavLink active states via aria-[current=page], ARIA labels, focus-visible rings
+- Placeholder pages render per locale (en/id strings table in src/lib/locale.ts)
+- Removed scaffold greet demo (App.tsx no longer calls rust greet command)

@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob: "*.{ts,tsx,js,jsx,json,css,html}"
+      run: pnpm exec biome check --write {staged_files}
+      stage_fixed: true
+    tsc:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec tsc --noEmit
+    rustfmt:
+      root: "src-tauri/"
+      glob: "*.rs"
+      run: cargo fmt --check

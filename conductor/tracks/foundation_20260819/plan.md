@@ -6,7 +6,7 @@
 logic-bearing code (project rule: storage, state, commands — presentational
 components exempt).
 
-## Phase 1 — Scaffold & Dev Tooling
+## Phase 1 — Scaffold & Dev Tooling [checkpoint: 915ce59]
 
 *Goal: Tauri 2 + React + TS scaffold with pnpm; repo hygiene; tooling.*
 
@@ -21,7 +21,7 @@ components exempt).
 - [x] Task 1.4: Configure lefthook + Conventional Commits [915ce59]
   - [x] `lefthook.yml` with staged checks (Biome, `tsc` typecheck)
   - [x] Verify hook fires on a test commit (probe commits 1cebebd, cf05adc)
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 2 — Rust Backend Foundations (TDD)
 

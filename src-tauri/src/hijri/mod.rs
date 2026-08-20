@@ -6,6 +6,10 @@
 //! Saturday` for stable serialization to the frontend.
 
 use chrono::NaiveDate;
+use icu_calendar::cal::hijri::UmmAlQura;
+use icu_calendar::cal::Hijri;
+use icu_calendar::types::Weekday;
+use icu_calendar::{Date, Iso};
 use serde::{Deserialize, Serialize};
 
 /// A date in the Umm al-Qura Hijri calendar. `month` and `day` are 1-based.
@@ -50,9 +54,92 @@ pub struct MonthGrid {
     pub days: Vec<GridDay>,
 }
 
+/// A Umm al-Qura calendar instance.
+fn umm_al_qura() -> Hijri<UmmAlQura> {
+    Hijri::new_umm_al_qura()
+}
+
+/// Convert a Gregorian (ISO) date to an Umm al-Qura Hijri date.
+pub fn gregorian_to_hijri(year: i32, month: u8, day: u8) -> Result<HijriDate, String> {
+    let iso = Date::try_new_iso(year, month, day)
+        .map_err(|e| format!("invalid Gregorian date {year}-{month}-{day}: {e}"))?;
+    let h = iso.to_calendar(umm_al_qura());
+    Ok(HijriDate {
+        year: h.era_year().year,
+        month: h.month().ordinal,
+        day: h.day_of_month().0,
+    })
+}
+
+/// Convert an Umm al-Qura Hijri date to a Gregorian (ISO) date, including weekday.
+pub fn hijri_to_gregorian(year: i32, month: u8, day: u8) -> Result<GregorianDate, String> {
+    let h = Date::try_new_hijri_with_calendar(year, month, day, umm_al_qura())
+        .map_err(|e| format!("invalid Hijri date {year}-{month}-{day}: {e}"))?;
+    let g = h.to_calendar(Iso);
+    Ok(GregorianDate {
+        year: g.era_year().year,
+        month: g.month().ordinal,
+        day: g.day_of_month().0,
+        weekday: weekday_index(g.weekday()),
+    })
+}
+
+/// Number of days in a Hijri month (29 or 30 per Umm al-Qura).
+pub fn days_in_hijri_month(year: i32, month: u8) -> Result<u8, String> {
+    let first = Date::try_new_hijri_with_calendar(year, month, 1, umm_al_qura())
+        .map_err(|e| format!("invalid Hijri month {year}-{month}: {e}"))?;
+    Ok(first.days_in_month())
+}
+
+/// Build the full grid for one Hijri month. `today` is the local reference
+/// date used to flag the current day.
+pub fn month_grid(year: i32, month: u8, today: NaiveDate) -> Result<MonthGrid, String> {
+    let count = days_in_hijri_month(year, month)?;
+    let days = (1..=count)
+        .map(|d| {
+            let g = hijri_to_gregorian(year, month, d)?;
+            Ok(GridDay {
+                hijri_day: d,
+                gregorian_year: g.year,
+                gregorian_month: g.month,
+                gregorian_day: g.day,
+                weekday: g.weekday,
+                is_today: NaiveDate::from_ymd_opt(g.year, g.month as u32, g.day as u32)
+                    == Some(today),
+            })
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    Ok(MonthGrid {
+        hijri_year: year,
+        hijri_month: month,
+        day_count: count,
+        days,
+    })
+}
+
+/// Today's date in the OS local timezone (civil date, no time component).
+pub fn today() -> NaiveDate {
+    chrono::Local::now().date_naive()
+}
+
+/// Map an ICU4X weekday to `0 = Sunday .. 6 = Saturday`.
+fn weekday_index(w: Weekday) -> u8 {
+    use Weekday::*;
+    match w {
+        Sunday => 0,
+        Monday => 1,
+        Tuesday => 2,
+        Wednesday => 3,
+        Thursday => 4,
+        Friday => 5,
+        Saturday => 6,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Datelike;
 
     fn date(y: i32, m: u8, d: u8) -> NaiveDate {
         NaiveDate::from_ymd_opt(y, m as u32, d as u32).unwrap()

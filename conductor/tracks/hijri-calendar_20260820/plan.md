@@ -2,7 +2,7 @@
 
 **Track:** `hijri-calendar_20260820` · **Spec:** [./spec.md](./spec.md)
 
-## Phase 1 — Hijri Conversion Engine (Rust Core)
+## Phase 1 — Hijri Conversion Engine (Rust Core) [checkpoint: f66d10c]
 - [x] Task: Document tech-stack change and add `icu_calendar` dependency — 5418d78
   - [x] Add `icu_calendar` (ICU4X) to `src-tauri/Cargo.toml`; verify `cargo build`
   - [x] Update `conductor/tech-stack.md`: dated note recording the ICU4X Umm al-Qura choice (Workflow Principle 2 — stack changes documented *before* implementation)
@@ -21,7 +21,7 @@
 - [x] Task: Refactor and verify coverage — f66d10c
   - [x] Refactor for clarity (behavior unchanged), rerun tests — no changes needed; code already minimal and clippy-clean
   - [x] Verify >80% coverage on the new `hijri` module — cargo llvm-cov: 97.56% regions / 98.41% lines
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — f66d10c
 
 ## Phase 2 — Tauri Command Layer
 - [ ] Task: Expose commands and register them

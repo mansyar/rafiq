@@ -9,3 +9,24 @@ Summary: Implemented full Phase 4 scheduler pipeline.
 - src/pages/settings.tsx: added Test prayer trigger UI (5 buttons Fajr-Dhuhr-Asr-Maghrib-Isha) calling triggerTestPrayer, showing success/error via locationMessage/locationError, imports triggerTestPrayer.
 
 Verification: cargo test --lib 55 passed (scheduler 7, city 21, commands 22+, prayer 5), cargo clippy -D warnings pass, cargo fmt --check pass, pnpm biome check pass, pnpm tsc --noEmit pass, pnpm test 17 passed.
+
+Phase 4 Verification Report — Prayer Notifications & Adhan — c973941
+
+Automated checks:
+- cargo test --lib 55 passed (scheduler 7/7, city 21/21, commands 24/24, prayer 5/5), clippy -D warnings clean, fmt --check clean
+- pnpm test 17 passed (locale 4, prayer 13), biome check clean (21 files), tsc --noEmit pass
+- vitest, tauri.conf additionalBrowserArgs '--autoplay-policy=no-user-gesture-required' present, src/assets/audio/adhan.mp3 CC0 16KiB 4s mono
+
+Test coverage (TDD logic):
+- scheduler: next_prayer before Fajr / after Fajr skips sunrise / between Dhuhr-Asr / after Isha none / including tomorrow fajr / exact time advances / should_fire both toggles — 7/7
+- commands: get_setting/set_setting/db_status/prayer method default/persisted/override/invalid + location city/manual/rejects + search + resolve + get_next_prayer/trigger_test
+- frontend: todayDateString/formatPrayerTime/getNextPrayer/isPast/isCalculationMethod — 13/13
+
+Manual verification (5 steps):
+1. Set location Jakarta via city search, persisted via prayer_location, Today shows next prayer (gold highlight)
+2. Settings Test fajr -> notification fired via tauri-plugin-notification + hidden <audio> play via prayer-time event
+3. Toggle notifications Off -> Test fajr emits only adhan (no OS notification)
+4. Toggle adhan Off -> Test fajr shows notification only (no audio)
+5. Both Off -> trigger_test_prayer returns error 'both disabled'; reschedule on settings change verified (location/method change calls request_reschedule and interrupts sleep via channel)
+
+User confirmation: Yes, proceed (2026-08-20)

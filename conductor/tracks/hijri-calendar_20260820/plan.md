@@ -31,16 +31,16 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 1f079dd
 
 ## Phase 3 — Frontend: i18n, API Wrapper, Month View
-- [ ] Task: Add `hijri` i18n keys to `src/i18n/locales/en.json` and `id.json`
-  - [ ] `nav.calendar`, `page.calendar` title/subtitle
-  - [ ] 12 Hijri month names per locale (EN: Rabi al-Awwal… / ID: Rabiul Awal, Jumadil Awal, Dzulqa'dah, Dzulhijjah…) + locale-independent Arabic-script set (محرم، صفر، ربيع الأول، …)
-  - [ ] Weekday names, converter labels, ±1 day computed-date footnote
-- [ ] Task: Create `src/lib/hijri.ts` — typed Tauri invoke wrappers for the four commands
-- [ ] Task: Implement Calendar page and navigation
-  - [ ] `src/pages/calendar.tsx`: month grid with Hijri day + Gregorian overlay, header with locale month name, Hijri year, and Arabic-script secondary line
-  - [ ] Previous / Next month + Today button
-  - [ ] Today's cell highlighted (gold accent); ±1 day footnote
-  - [ ] Register route in `App.tsx` + nav item in `layout.tsx` (lucide `CalendarDays` icon)
+- [x] Task: Add `hijri` i18n keys to `src/i18n/locales/en.json` and `id.json` — 7f11f1e
+  - [x] `nav.calendar` + `calendar` namespace (title/subtitle, today, nav, loading/error, footnote)
+  - [x] 12 Hijri month names per locale (EN: Rabi al-Awwal… / ID: Rabiul Awal, Jumadil Awal, Dzulqa'dah, Dzulhijjah…) + locale-independent Arabic-script set (محرم، صفر، ربيع الأول، …)
+  - [x] Weekday names, Gregorian abbreviations, ±1 day computed-date footnote — converter labels deferred to Phase 4 (added with the converter)
+- [x] Task: Create `src/lib/hijri.ts` — typed Tauri invoke wrappers for the four commands — 7f11f1e
+- [x] Task: Implement Calendar page and navigation — 7f11f1e
+  - [x] `src/pages/calendar.tsx`: month grid with Hijri day + Gregorian overlay, header with locale month name, Hijri year, and Arabic-script secondary line
+  - [x] Previous / Next month + Today button
+  - [x] Today's cell highlighted (gold accent); ±1 day footnote
+  - [x] Register route in `App.tsx` + nav item in `layout.tsx` (lucide `CalendarDays` icon)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4 — Date Converter & Final Verification

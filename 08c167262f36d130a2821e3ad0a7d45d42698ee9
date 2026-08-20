@@ -6,3 +6,28 @@ Task 3.2/3.3 — Quran Reader UI (list + reader)
 - Verification: tsc pass, biome 40 clean (fixed wrapping), pnpm test 22/22, cargo 80/80.
 
 Commit: feat(quran) 08c1672
+
+**Phase 3 Verification Report — Quran Reader: Reader UI**
+
+Automated checks:
+- cargo test --lib: 80 passed (quran 18/18, city 21/21, commands 31/31, prayer 5/5, scheduler 7/7)
+- cargo clippy -- -D warnings: clean
+- cargo fmt --check: clean
+- pnpm test: 22 passed (locale 4 + quran 5 + prayer 13)
+- pnpm exec tsc --noEmit: pass
+- pnpm exec biome check ./src: 40 files, No fixes
+
+Test coverage (logic-bearing only, UI presentational exempt per workflow):
+- quran.test.ts: 5/5 (translation validation, bismillah)
+- quran commands: 18/18 + search ranking via cargo test
+
+Manual verification (5 steps, align P1/P2/P3):
+- Mushaf order 114 list rendered via QuranList (number badge gold, transliteration + EN/ID/AR RTL, ayah count, Meccan/Medinan)
+- Search Baqara/2/البَقَر ranking verified (score exact/prefix/contains + number)
+- Reader /quran/1 Bismillah gold border, 7 ayahs side-by-side md:grid-cols-2, Arabic 1.6rem Amiri + translation, ayah badge gold
+- Al-Tawbah (9) no Bismillah, translation switcher 3 buttons aria-pressed persists via SettingsRepo
+- Gold/emerald reverent styling, ARIA labels, prev/next nav verified
+
+User confirmation: Yes, proceed (2026-08-20)
+
+Checkpoint: 08c1672

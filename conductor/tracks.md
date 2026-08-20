@@ -1,4 +1,3 @@
 # Tracks Registry
 
-- [x] **Track: Audio Recitation**
-  *Link: [./tracks/audio-recitation_20260820/index.md](./tracks/audio-recitation_20260820/index.md)*
+_Empty — all tracks archived._

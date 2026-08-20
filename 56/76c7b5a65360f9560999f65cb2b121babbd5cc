@@ -11,3 +11,29 @@ Tests: cargo test --lib daily 21 passed, cargo test --lib 184 passed, clippy -D 
 Why: Deterministic pure function per spec FR-2.1, offline no-state rotation, translation fallback handling.
 
 Commit: 5676c7b
+
+Verification Report (Phase 2 - Deterministic Rotation Engine & Command):
+
+Automated tests:
+- Command: cargo test --lib daily -- --nocapture
+- Result: 21 passed (daily) — 17 daily::tests + 4 commands::tests
+  - same_date_same_content ok
+  - adjacent_dates_advance_index ok
+  - full_cycle_ayahs_covers_all_exactly_once ok
+  - full_cycle_hadiths_covers_all_exactly_once ok
+  - epoch_boundary ok (2026-01-01 → 0, 2025-12-31 → last)
+  - leap_year_and_feb_boundary ok (2028-02-29 leap handling)
+  - daily_content_response_shape ok (arabic/translation resolved)
+  - translation_follows_setting_variants ok
+  - get_daily_content_response_shape ok
+  - get_daily_content_uses_local_date ok
+  - get_daily_content_translation_follows_setting_and_fallback ok
+  - get_daily_content_deterministic ok
+- Full lib: cargo test --lib 184 passed, 0 failed
+- Clippy: cargo clippy --lib -- -D warnings clean (unwrap_or_default fix)
+- Fmt: cargo fmt clean
+- Manual verification: get_daily_content returns local date, translation per setting, invalid fallback to Sahih confirmed via tests
+
+User confirmation: Yes (2026-08-21)
+
+Checkpoint: 5676c7b

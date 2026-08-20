@@ -266,7 +266,7 @@ pub fn log_prayer_impl(
 
     let today = chrono::Local::now().date_naive();
     let age_days = (today - date).num_days();
-    if age_days < 0 || age_days > 7 {
+    if !(0..=7).contains(&age_days) {
         return Err(format!(
             "log_date '{log_date}' is outside the 7-day lookback window ({} to {})",
             today - chrono::TimeDelta::try_days(7).expect("7 days"),

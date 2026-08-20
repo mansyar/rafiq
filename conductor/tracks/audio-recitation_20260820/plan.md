@@ -32,14 +32,14 @@
 - [x] Task: Refactor & verify coverage >80% (0b098d8)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 0b098d8
 
-## Phase 4: Tauri Commands & Frontend API *(FR-2.2, FR-3 support)*
+## Phase 4: Tauri Commands & Frontend API *(FR-2.2, FR-3 support)* [checkpoint: 3c0e88e]
 - [x] Task: Write failing tests for player state logic *(Red)* — a1287eb
   - [x] Frontend tests: player state machine (idle → fetching(progress) → playing → paused → stopped), position persistence triggers, bounded lookahead requests
 - [x] Task: Implement Rust commands + frontend API *(Green)* — 3c0e88e
   - [x] Commands in `commands.rs`: `get_recitation_state(surah)` (cached ayahs, last-played ayah, availability), `fetch_ayah_audio(global_ayah)` → local path, `report_played_position(surah, ayah)`, local-file URL helper for `<audio>` (implemented frontend-side as `localAudioUrl` via `convertFileSrc` + `assetProtocol` scope — Tauri 2 idiom)
   - [x] Typed API + TanStack Query hooks + Zustand player store in `src/lib/`
 - [x] Task: Refactor & verify coverage >80% — 3c0e88e
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 3c0e88e
 
 ## Phase 5: Reader Player UI *(FR-3, FR-4, NFR-4, NFR-5)*
 - [ ] Task: Player footer & surah header controls

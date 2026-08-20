@@ -7,7 +7,7 @@ task is preceded by its failing-test task. Tests required only for
 logic-bearing code (rotation engine, asset loader, commands); presentational
 UI components exempt per project rule.
 
-## Phase 1 — Content Curation & Asset Validation (Rust, TDD)
+## Phase 1 — Content Curation & Asset Validation (Rust, TDD) [checkpoint: 45927ab]
 
 *Goal: bundle the Nawawi 40 hadiths + ~365 curated ayah references with
 verified licensing and data integrity.*
@@ -33,7 +33,7 @@ verified licensing and data integrity.*
   - [x] `cargo test` → green; `clippy` clean
 - [x] Task: Refactor & verify coverage ≥80% for new module [45927ab]
   - [x] No duplication; coverage 9 tests for daily module (>80%); fmt applied
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [45927ab]
 
 ## Phase 2 — Deterministic Rotation Engine & Command (Rust, TDD)
 

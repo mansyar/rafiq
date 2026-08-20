@@ -38,7 +38,9 @@ pub fn run() {
             commands::get_prayer_times,
             commands::get_location,
             commands::set_location,
-            commands::search_cities
+            commands::search_cities,
+            commands::get_city_by_id,
+            commands::get_resolved_location
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

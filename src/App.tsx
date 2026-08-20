@@ -1,19 +1,32 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from '@/components/layout';
 import { PagePlaceholder } from '@/pages/placeholder';
 import { Settings } from '@/pages/settings';
+import { Today } from '@/pages/today';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<PagePlaceholder page="today" />} />
-          <Route path="quran" element={<PagePlaceholder page="quran" />} />
-          <Route path="log" element={<PagePlaceholder page="log" />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Today />} />
+            <Route path="quran" element={<PagePlaceholder page="quran" />} />
+            <Route path="log" element={<PagePlaceholder page="log" />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }

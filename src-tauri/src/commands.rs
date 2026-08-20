@@ -271,6 +271,22 @@ pub fn search_cities(query: String, limit: Option<usize>) -> Result<Vec<City>, S
     Ok(search_cities_impl(&query, limit))
 }
 
+#[tauri::command]
+pub fn get_city_by_id(city_id: String) -> Result<Option<City>, String> {
+    Ok(find_city_by_id(&city_id))
+}
+
+#[tauri::command]
+pub fn get_resolved_location(
+    state: State<'_, AppState>,
+) -> Result<Option<crate::city::ResolvedLocation>, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    resolve_stored_location(&conn)
+}
+
 #[cfg(test)]
 mod tests {
     use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates};

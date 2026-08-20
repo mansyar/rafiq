@@ -126,7 +126,7 @@ pub fn find_city_by_id(city_id: &str) -> Option<City> {
 }
 
 /// Result of `resolve_location` — either a city-backed or manual coordinate.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ResolvedLocation {
     pub city: Option<City>,
     pub latitude: f64,

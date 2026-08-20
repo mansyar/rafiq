@@ -81,6 +81,21 @@ export async function searchCities(query: string, limit?: number): Promise<City[
   return invoke<City[]>('search_cities', { query, limit: limit ?? null });
 }
 
+export async function getCityById(cityId: string): Promise<City | null> {
+  return invoke<City | null>('get_city_by_id', { cityId });
+}
+
+export interface ResolvedLocation {
+  city: City | null;
+  latitude: number;
+  longitude: number;
+  timezone: string;
+}
+
+export async function getResolvedLocation(): Promise<ResolvedLocation | null> {
+  return invoke<ResolvedLocation | null>('get_resolved_location');
+}
+
 export async function getSetting(key: string): Promise<string | null> {
   return invoke<string | null>('get_setting', { key });
 }

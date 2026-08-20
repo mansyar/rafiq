@@ -80,6 +80,21 @@
     "cityNotFound": "Kota tersimpan tidak ditemukan — silakan pilih ulang.",
     "manualFallback": "Koordinat manual ({{lat}}, {{lon}})"
   },
+  "daily": {
+    "title": "Tadabbur Harian",
+    "subtitle": "Ayat & hadis hari ini",
+    "loading": "Memuat tadabbur harian…",
+    "error": "Gagal memuat tadabbur harian: {{message}}",
+    "ayahLabel": "Ayat Hari Ini",
+    "hadithLabel": "Hadis Hari Ini",
+    "openInQuran": "Buka di Al-Qur'an",
+    "ayahAriaLabel": "Buka {{surah}} {{reference}} di Al-Qur'an",
+    "hadithAriaLabel": "Hadis {{id}} — {{source}}",
+    "showMore": "Lihat selengkapnya",
+    "showLess": "Sembunyikan",
+    "dateLabel": "{{date}}",
+    "sourceLabel": "{{source}}"
+  },
   "quran": {
     "title": "Al-Qur'an",
     "subtitle": "114 surah — Uthmani + 3 terjemahan",

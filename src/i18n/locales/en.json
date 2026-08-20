@@ -80,6 +80,21 @@
     "cityNotFound": "Saved city not found — please reselect.",
     "manualFallback": "Manual coordinates ({{lat}}, {{lon}})"
   },
+  "daily": {
+    "title": "Daily Reflection",
+    "subtitle": "Ayah & hadith for today",
+    "loading": "Loading daily reflection…",
+    "error": "Could not load daily reflection: {{message}}",
+    "ayahLabel": "Ayah of the Day",
+    "hadithLabel": "Hadith of the Day",
+    "openInQuran": "Open in Quran",
+    "ayahAriaLabel": "Open {{surah}} {{reference}} in Quran reader",
+    "hadithAriaLabel": "Hadith {{id}} — {{source}}",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "dateLabel": "{{date}}",
+    "sourceLabel": "{{source}}"
+  },
   "quran": {
     "title": "Quran",
     "subtitle": "114 surahs — Uthmani + 3 translations",

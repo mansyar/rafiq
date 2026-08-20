@@ -1,0 +1,57 @@
+# Implementation Plan — Hijri Calendar
+
+**Track:** `hijri-calendar_20260820` · **Spec:** [./spec.md](./spec.md)
+
+**Phase 1: Hijri Conversion Engine (Rust Core)**
+- [ ] Task: Document tech-stack change and add `icu_calendar` dependency
+  - [ ] Add `icu_calendar` (ICU4X) to `src-tauri/Cargo.toml`; verify `cargo build`
+  - [ ] Update `conductor/tech-stack.md`: dated note recording the ICU4X Umm al-Qura choice (Workflow Principle 2 — stack changes documented *before* implementation)
+- [ ] Task: Write failing tests for the conversion engine (Red Phase)
+  - [ ] Gregorian→Hijri anchors: 2026-06-16 → 1 Muharram 1448; 2026-06-18 → 3 Muharram 1448
+  - [ ] Hijri→Gregorian anchor: 1447-12-10 → 2026-05-27
+  - [ ] Round-trip test: `hijri_to_gregorian(gregorian_to_hijri(d)) == d` sampled across 1444–1450 AH
+  - [ ] Month-length test: every month returns 29 or 30 days per Umm al-Qura
+  - [ ] Month-grid builder tests: day count, per-day Gregorian date + weekday, `is_today` flag (pure function of a reference date)
+  - [ ] Run `cargo test` and confirm the new tests **fail** (Red)
+- [ ] Task: Implement conversion engine to pass tests (Green Phase)
+  - [ ] `src-tauri/src/hijri/mod.rs`: `HijriDate` / `GregorianDate` / `MonthGrid` types (serde)
+  - [ ] `gregorian_to_hijri` / `hijri_to_gregorian` via `icu_calendar` Umm al-Qura
+  - [ ] Month-grid builder; `today` resolved via `chrono::Local` in a thin wrapper over the pure function
+  - [ ] Run `cargo test` and confirm **pass** (Green)
+- [ ] Task: Refactor and verify coverage
+  - [ ] Refactor for clarity (behavior unchanged), rerun tests
+  - [ ] Verify >80% coverage on the new `hijri` module
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+**Phase 2: Tauri Command Layer**
+- [ ] Task: Expose commands and register them
+  - [ ] Add `hijri_from_gregorian`, `hijri_to_gregorian`, `hijri_month_grid`, `today_hijri` to `src-tauri/src/commands.rs` following the existing `*_impl` + wrapper pattern
+  - [ ] Register in `lib.rs` `invoke_handler`
+  - [ ] `cargo fmt`, `cargo clippy`, `cargo test` all pass
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+**Phase 3: Frontend — i18n, API Wrapper, Month View**
+- [ ] Task: Add `hijri` i18n keys to `src/i18n/locales/en.json` and `id.json`
+  - [ ] `nav.calendar`, `page.calendar` title/subtitle
+  - [ ] 12 Hijri month names per locale (EN: Rabi al-Awwal… / ID: Rabiul Awal, Jumadil Awal, Dzulqa'dah, Dzulhijjah…) + locale-independent Arabic-script set (محرم، صفر، ربيع الأول، …)
+  - [ ] Weekday names, converter labels, ±1 day computed-date footnote
+- [ ] Task: Create `src/lib/hijri.ts` — typed Tauri invoke wrappers for the four commands
+- [ ] Task: Implement Calendar page and navigation
+  - [ ] `src/pages/calendar.tsx`: month grid with Hijri day + Gregorian overlay, header with locale month name, Hijri year, and Arabic-script secondary line
+  - [ ] Previous / Next month + Today button
+  - [ ] Today's cell highlighted (gold accent); ±1 day footnote
+  - [ ] Register route in `App.tsx` + nav item in `layout.tsx` (lucide `CalendarDays` icon)
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+**Phase 4: Date Converter & Final Verification**
+- [ ] Task: Implement bidirectional date converter
+  - [ ] Gregorian→Hijri and Hijri→Gregorian inputs reusing `src/lib/hijri.ts` (single conversion path)
+  - [ ] ±1 day footnote; locale-correct month names in both directions
+- [ ] Task: Final quality pass
+  - [ ] Arabic header rendering (bidi-safe), EN/ID locale switch, grid accuracy spot-check vs anchors
+  - [ ] Verify zero network activity for the feature (offline requirement)
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+*Notes: Per the project rule, tests are required for logic-bearing code only —
+the conversion engine (Rust) is fully TDD'd; the frontend components and thin
+invoke wrappers are presentational and need no tests.*

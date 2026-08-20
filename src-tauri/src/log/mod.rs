@@ -453,3 +453,150 @@ mod classify_tests {
         );
     }
 }
+
+#[cfg(test)]
+mod streak_tests {
+    use super::*;
+    use chrono::NaiveDate;
+
+    fn d(value: &str) -> NaiveDate {
+        NaiveDate::parse_from_str(value, "%Y-%m-%d").unwrap()
+    }
+
+    fn entry(log_date: &str, prayer: Prayer) -> LogEntry {
+        LogEntry {
+            log_date: log_date.to_string(),
+            prayer,
+            logged_at: format!("{log_date}T12:00:00Z"),
+            status: LogStatus::OnTime,
+        }
+    }
+
+    /// All five prayers for one day.
+    fn day(log_date: &str) -> Vec<LogEntry> {
+        Prayer::ALL.iter().map(|p| entry(log_date, *p)).collect()
+    }
+
+    #[test]
+    fn empty_history_has_no_streaks() {
+        assert_eq!(
+            compute_streaks(&[], d("2026-08-20")),
+            Streaks {
+                current: 0,
+                best: 0
+            }
+        );
+    }
+
+    #[test]
+    fn complete_today_gives_current_streak_of_one() {
+        let entries = day("2026-08-20");
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 1,
+                best: 1
+            }
+        );
+    }
+
+    #[test]
+    fn consecutive_complete_days_accumulate() {
+        let mut entries = day("2026-08-19");
+        entries.extend(day("2026-08-20"));
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 2,
+                best: 2
+            }
+        );
+    }
+
+    #[test]
+    fn incomplete_today_does_not_break_streak() {
+        // Today has only Fajr so far; the run ending yesterday still counts.
+        let mut entries = day("2026-08-18");
+        entries.extend(day("2026-08-19"));
+        entries.push(entry("2026-08-20", Prayer::Fajr));
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 2,
+                best: 2
+            }
+        );
+    }
+
+    #[test]
+    fn gap_day_breaks_current_streak() {
+        // 2026-08-17 complete, 18/19 empty, today incomplete -> no live streak.
+        let entries = day("2026-08-17");
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 0,
+                best: 1
+            }
+        );
+    }
+
+    #[test]
+    fn best_survives_across_multiple_gaps() {
+        let mut entries: Vec<LogEntry> = Vec::new();
+        for date in ["2026-08-01", "2026-08-02", "2026-08-03"] {
+            entries.extend(day(date));
+        }
+        for date in [
+            "2026-08-10",
+            "2026-08-11",
+            "2026-08-12",
+            "2026-08-13",
+            "2026-08-14",
+        ] {
+            entries.extend(day(date));
+        }
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 0,
+                best: 5
+            }
+        );
+    }
+
+    #[test]
+    fn qada_logs_still_count_toward_day_complete() {
+        let mut entries = day("2026-08-20");
+        entries[0] = LogEntry {
+            status: LogStatus::Qada,
+            ..entries[0].clone()
+        };
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 1,
+                best: 1
+            }
+        );
+    }
+
+    #[test]
+    fn incomplete_days_do_not_count() {
+        // Three prayers on the 19th, one on the 20th, interleaved:
+        // no complete day at all, regardless of entry order.
+        let entries = vec![
+            entry("2026-08-19", Prayer::Fajr),
+            entry("2026-08-20", Prayer::Fajr),
+            entry("2026-08-19", Prayer::Dhuhr),
+            entry("2026-08-19", Prayer::Asr),
+        ];
+        assert_eq!(
+            compute_streaks(&entries, d("2026-08-20")),
+            Streaks {
+                current: 0,
+                best: 0
+            }
+        );
+    }
+}

@@ -1,0 +1,9 @@
+Task: 2.2 Write failing tests for city store + resolution (Red)
+
+Summary: Added red-phase stubs and 12 new failing tests (9 of 21 still green) in src-tauri/src/city/mod.rs: search_cities (returns empty), find_city_by_id (returns None), parse_coordinate (not implemented), resolve_location (not implemented). Tests cover search by name/country substring case-insensitive ranked top-N, empty/not-found/limit handling, city lookup, coordinate parsing with friendly errors, and location resolution (city_id → coordinates or manual fallback with city precedence).
+
+Files: src-tauri/src/city/mod.rs
+
+Why: Define the contract for city search and location resolution before implementation, following TDD Red→Green→Refactor. Tests intentionally fail to drive the upcoming green implementation in Task 2.3.
+
+Verification: cargo test --lib city → 9 passed, 12 failed (red confirmed: search Jakarta, case-insensitive, ranking, country filter, limit, find by id, parse valid/invalid, resolve city/manual/precedence all fail as expected); cargo fmt clean.

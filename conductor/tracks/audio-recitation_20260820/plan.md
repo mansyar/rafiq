@@ -23,13 +23,13 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — f64b590
 
 ## Phase 3: On-Demand Download & Cache (Rust) *(FR-2.1–FR-2.3)*
-- [~] Task: Write failing tests for fetch/cache logic *(Red)*
-  - [ ] Tests: per-ayah CDN URL construction (128 kbps, edition, global number)
-  - [ ] Tests: cache state machine — missing → downloading → cached; valid cache never re-fetched; partial/corrupt files re-fetch; atomic writes (temp + rename)
-- [ ] Task: Implement on-demand fetch *(Green)*
-  - [ ] `reqwest` download to temp file, atomic rename into app-data `recitation/` directory
-  - [ ] Update `RecitationRepo` on success; failure leaves state as missing
-- [ ] Task: Refactor & verify coverage >80%
+- [x] Task: Write failing tests for fetch/cache logic *(Red)* (6cae9e3)
+  - [x] Tests: per-ayah CDN URL construction (128 kbps, edition, global number)
+  - [x] Tests: cache state machine — missing → downloading → cached; valid cache never re-fetched; partial/corrupt files re-fetch; atomic writes (temp + rename)
+- [x] Task: Implement on-demand fetch *(Green)* (0b098d8)
+  - [x] `reqwest` download to temp file, atomic rename into app-data `recitation/` directory
+  - [x] Update `RecitationRepo` on success; failure leaves state as missing
+- [x] Task: Refactor & verify coverage >80% (0b098d8)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4: Tauri Commands & Frontend API *(FR-2.2, FR-3 support)*

@@ -1,0 +1,8 @@
+Task 1.1 Red — failing Quran dataset tests (6 FAIL as expected)
+
+- Created src-tauri/src/quran/mod.rs with OnceLock loader reading include_str!(../../assets/quran/quran.json) expecting 114 surahs, 6236 ayahs, Uthmani + 3 translations aligned.
+- Tests: dataset_has_114, 6236, al_fatihah 7, every_ayah_has_arabic_and_translations (non-empty guard), ids_unique_ordered, names_and_type — all 6 failed on placeholder {surahs:[]} confirming Red.
+- Placeholder asset src-tauri/assets/quran/quran.json (empty) + ATTRIBUTION.md placeholder.
+- Registered pub mod quran in lib.rs.
+
+Verification: cargo test --lib quran 0 passed; 6 failed (Red) as expected; cargo fmt clean.

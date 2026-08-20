@@ -1,0 +1,16 @@
+Phase 4 follow-up - trigger_test_prayer mirrors the scheduler's prayer-fired event.
+
+The Settings "test prayer" triggers now also emit "prayer-fired" (always,
+whenever the command succeeds — i.e. at least one of the notification/adhan
+toggles is enabled, matching the existing Err path semantics). This mirrors
+fire_prayer, which emits the event unconditionally, and makes the prayer-time
+prompt verifiable end-to-end without waiting for a real prayer time:
+Settings -> test prayer -> prompt appears -> tap "Prayed" -> entry appears
+in the Log.
+
+payload.clone() keeps ownership intact across the two emits; single hoisted
+`use tauri::Emitter;`.
+
+Test-exempt per project rule: event emit glue requiring a live AppHandle.
+cargo test 119 unit + 6 integration pass; clippy -D warnings clean; fmt
+clean.

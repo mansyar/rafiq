@@ -71,15 +71,15 @@ required (project rule); logic helpers tested.*
 - [x] Task 4.1: Adhan audio asset — 10470c5
   - [x] Obtain small open-license (public-domain/CC0 or verified free) adhan audio; verify license; add `src/assets/audio/adhan.mp3` + `ATTRIBUTION`
   - [x] Playback helper component (`<audio>`), preloaded, no UI chrome
-- [~] Task 4.2: Scheduler logic (TDD)
+- [x] Task 4.2: Scheduler logic (TDD) — c973941
   - [x] Failing tests: `next_prayer_times(location, method, now)` — returns upcoming prayer + instant; fires only for enabled toggles; respects persisted settings — 7fba896
-  - [ ] Implement scheduler module: background thread sleeping until next prayer, fires notification via `tauri-plugin-notification`, emits `prayer-time` event to frontend; reschedules on settings change
-- [ ] Task 4.3: WebView autoplay enablement + event wiring
-  - [ ] Configure webview additional browser args (`--autoplay-policy=no-user-gesture-required`) so adhan plays without interaction (Tauri `with_additional_browser_args`)
-  - [ ] Frontend listens for `prayer-time` event → plays audio; toggles respected
-- [ ] Task 4.4: Manual verification
-  - [ ] Trigger at a temporarily adjusted time/test trigger → notification fires + adhan plays; toggles disable behavior
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+  - [x] Implement scheduler module: background thread sleeping until next prayer, fires notification via `tauri-plugin-notification`, emits `prayer-time` event to frontend; reschedules on settings change
+- [x] Task 4.3: WebView autoplay enablement + event wiring — c973941
+  - [x] Configure webview additional browser args (`--autoplay-policy=no-user-gesture-required`) so adhan plays without interaction (Tauri `with_additional_browser_args`)
+  - [x] Frontend listens for `prayer-time` event → plays audio; toggles respected
+- [x] Task 4.4: Manual verification — c973941
+  - [x] Trigger at a temporarily adjusted time/test trigger → notification fires + adhan plays; toggles disable behavior
+- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 5 — Integration Gate & Acceptance
 

@@ -65,9 +65,9 @@ command.*
 - [x] Task: Add `daily.*` i18n keys to `src/i18n/locales/en.json` + `id.json` [be7e94a]
   - [x] Card header, date label, ayah reference, hadith source line, "more"
         expansion, ARIA labels
-- [ ] Task: Create `src/lib/daily.ts` — typed invoke wrapper + TanStack Query
+- [x] Task: Create `src/lib/daily.ts` — typed invoke wrapper + TanStack Query
       hook (invalidated on `quran_translation` change, mirroring the reader's
-      pattern)
+      pattern) [90cc525]
 - [ ] Task: Build the Daily Reflection card + mount below today's prayer times
       on the Today page
   - [ ] Ayah block: surah name + reference, Arabic (RTL, Amiri, high-contrast),

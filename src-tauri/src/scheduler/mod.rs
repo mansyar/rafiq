@@ -33,11 +33,12 @@ pub fn next_prayer(times: &PrayerTimes, now: DateTime<Utc>) -> Option<(String, D
     best
 }
 
-/// Whether a prayer-time trigger should fire / emit given persisted toggles.
-/// Per spec toggles default enabled; trigger should fire only when *both*
-/// notification and adhan are enabled.
+/// Whether the scheduler should emit *any* signal (notification or adhan).
+/// Per spec FR-4.3 / FR-5.3 toggles are independent: a trigger should fire
+/// when *either* notification or adhan is enabled (fire_prayer checks each
+/// toggle independently to decide which channel to emit).
 pub fn should_fire(notification_enabled: bool, adhan_enabled: bool) -> bool {
-    notification_enabled && adhan_enabled
+    notification_enabled || adhan_enabled
 }
 
 /// Given today's and tomorrow's prayer times, returns the next prayer instant.
@@ -132,6 +133,8 @@ pub fn compute_next_prayer(
 /// `request_reschedule()` is called (e.g., after settings mutations) and
 /// recomputes. Runs only on native (not in `cargo test`).
 pub fn spawn_scheduler(app: tauri::AppHandle) {
+    // Detached background thread: intentionally never joined; process exit tears it down.
+    // In `cargo test` this function is never called, so the thread does not run during tests.
     let (tx, rx) = mpsc::channel::<()>();
     if let Ok(mut guard) = reschedule_sender().lock() {
         *guard = Some(tx);
@@ -335,10 +338,11 @@ mod tests {
     }
 
     #[test]
-    fn should_fire_requires_both_toggles() {
+    fn should_fire_requires_either_toggle() {
+        // Independent toggles per FR-4.3/FR-5.3 — fire when either is enabled.
         assert!(should_fire(true, true));
-        assert!(!should_fire(true, false));
-        assert!(!should_fire(false, true));
+        assert!(should_fire(true, false));
+        assert!(should_fire(false, true));
         assert!(!should_fire(false, false));
     }
 

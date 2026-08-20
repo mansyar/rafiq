@@ -82,6 +82,8 @@ export function Settings() {
   const [manualLon, setManualLon] = useState('');
   const [locationMessage, setLocationMessage] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [testMessage, setTestMessage] = useState<string | null>(null);
+  const [testError, setTestError] = useState<string | null>(null);
 
   // Prefill manual fields from resolved when available (city is null → manual)
   const resolvedCity = resolvedQuery.data?.city ?? null;
@@ -378,12 +380,12 @@ export function Settings() {
                   variant="outline"
                   onClick={async () => {
                     try {
-                      setLocationMessage(null);
-                      setLocationError(null);
+                      setTestMessage(null);
+                      setTestError(null);
                       await triggerTestPrayer(p);
-                      setLocationMessage(`Test trigger sent for ${p}`);
+                      setTestMessage(`Test trigger sent for ${p}`);
                     } catch (e) {
-                      setLocationError(String(e));
+                      setTestError(String(e));
                     }
                   }}
                 >
@@ -391,6 +393,16 @@ export function Settings() {
                 </Button>
               ))}
             </div>
+            {testMessage && (
+              <p className="text-xs text-emerald-600 dark:text-emerald-400" aria-live="polite">
+                {testMessage}
+              </p>
+            )}
+            {testError && (
+              <p className="text-xs text-destructive" role="alert">
+                {testError}
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>

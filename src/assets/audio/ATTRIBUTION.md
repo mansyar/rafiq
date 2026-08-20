@@ -7,4 +7,6 @@
 - **Generation:** `ffmpeg -f lavfi -i "sine=frequency=440:duration=4,afade=t=in:st=0:d=0.4,afade=t=out:st=3.6:d=0.4" -q:a 4 -id3v2_version 3 src/assets/audio/adhan.mp3`
 - **File:** `src/assets/audio/adhan.mp3` (16 KiB, MP3, 44100 Hz, mono, ~4 s, Lavf62.12.101 / Lavc62.28.101 libmp3lame)
 
-> **Note:** This is a synthetic tone, not a vocal adhan. It satisfies the Phase 4 technical wiring (notification + audio via `prayer-time` event) while the team sources a proper CC0 vocal adhan for v1. Replace the file and update this ATTRIBUTION with the new source, author, and license verification before release.
+> **TODO (pre-release):** Replace this synthetic tone with a verified CC0/public-domain vocal adhan recording (keep file <500 KiB) and update this file with source, author, and license verification before public release.
+>
+> **Note:** This is a synthetic tone, not a vocal adhan. It satisfies the Phase 4 technical wiring (notification + audio via `prayer-time` event) while the team sources a proper CC0 vocal adhan for v1.

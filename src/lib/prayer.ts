@@ -230,7 +230,10 @@ export function isPast(isoString: string, now = new Date()): boolean {
   return d.getTime() < now.getTime();
 }
 
-/** Lightweight runtime check for calculation method. */
+/**
+ * Lightweight runtime check for calculation method.
+ * Justification: persisted `prayer_calculation_method` is an untrusted string from storage; cast is required to narrow to `CalculationMethod`.
+ */
 export function isCalculationMethod(value: unknown): value is CalculationMethod {
   return typeof value === 'string' && (CALCULATION_METHODS as readonly string[]).includes(value);
 }

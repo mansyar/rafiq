@@ -239,20 +239,24 @@ fn fire_prayer(app: &tauri::AppHandle, prayer_name: &str, instant: DateTime<Utc>
         }
     }
 
+    let payload = serde_json::json!({
+        "prayer": prayer_name,
+        "time": instant.to_rfc3339(),
+    });
+
+    // In-app prayer-time prompt: always emitted, independent of the
+    // notification/adhan toggles — PrayerPrompt listens for "prayer-fired"
+    // and offers the one-tap "Prayed" action on any screen.
+    if let Err(e) = app.emit("prayer-fired", payload.clone()) {
+        eprintln!("[scheduler] emit prayer-fired failed: {e}");
+    }
+
     if adhan_enabled {
         // Emit to frontend for adhan audio playback (AdhanPlayer listens for "prayer-time").
-        let payload = serde_json::json!({
-            "prayer": prayer_name,
-            "time": instant.to_rfc3339(),
-        });
         if let Err(e) = app.emit("prayer-time", payload) {
             eprintln!("[scheduler] emit prayer-time failed: {e}");
         }
     }
-
-    // Also emit when both disabled? No — respect toggles. If notification disabled but
-    // adhan enabled, we still emit for audio; handled above.
-    // If both disabled, we do nothing (but still advance to next prayer on loop).
 }
 
 fn capitalize(s: &str) -> String {

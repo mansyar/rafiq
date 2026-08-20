@@ -1,0 +1,13 @@
+Task: Build Daily Reflection card + mount on Today page
+
+Summary: Created DailyReflectionCard component and mounted below prayer-times Card in Today page. Card shows header with daily.title/subtitle and localized date (Intl.DateTimeFormat), ayah block (surah name + reference, RTL Amiri high-contrast Arabic, translation per quran_translation, Link to /quran/:surahId with ayahAriaLabel, gold tokens, keyboard operable), hadith block (Arabic, locale-picked translation via getHadithTranslation, source line, line-clamp-4 with Show more/less toggle, emerald tokens, hadithAriaLabel), separator, loading/error states (daily.loading / daily.error), date-rollover via useDailyContent (todayDateString in queryKey) and translation invalidation.
+
+Files:
+- src/components/daily-reflection-card.tsx (new, 198 lines, gold/emerald, ARIA, RTL, line-clamp)
+- src/pages/today.tsx (modified, import + mount <DailyReflectionCard /> below prayer Card)
+
+Why: Implements FR-3 card chrome per spec (Arabic shaping, reverent palette, accessibility, deep-link) and FR-3.6 rollover/translation reactivity; reserves sacred text high-contrast per product-guidelines.
+
+Tests: tsc --noEmit clean, biome check clean (fixed aria-label role).
+
+Commit: f062e12

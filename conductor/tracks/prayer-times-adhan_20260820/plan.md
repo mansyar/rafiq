@@ -43,7 +43,7 @@ commands — presentational components exempt).
   - [x] Implement commands; tests green
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 3 — Today Page & Settings UI (Frontend)
+## Phase 3 — Today Page & Settings UI (Frontend) [checkpoint: f705a09]
 
 *Goal: user-facing Today page + settings controls. Presentational — no tests
 required (project rule); logic helpers tested.*
@@ -62,7 +62,7 @@ required (project rule); logic helpers tested.*
   - [x] Notification + adhan toggles (defaults enabled) → persist via settings
 - [x] Task 3.4: Verify shell in dev — f705a09
   - [x] `pnpm tauri dev` renders pages; Biome + `tsc --noEmit` pass
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 4 — Notifications & Adhan Audio
 

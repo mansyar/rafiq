@@ -1,0 +1,15 @@
+Task: Phase 3 Task 1 - Write failing tests for prayer log commands
+Changes: src-tauri/src/commands.rs (new tests in existing tests module), src-tauri/src/log/mod.rs (1 test in classify_tests)
+- log_prayer_rejects_without_location (no stored location -> err mentions location)
+- log_prayer_rejects_unknown_prayer ("sunrise" is not obligatory)
+- log_prayer_rejects_outside_seven_day_lookback (today-8 and today+1 both rejected, err mentions 7)
+- log_prayer_classifies_at_logged_instant_and_persists (dhuhr at window start -> on_time entry; duplicate (date, prayer) -> err)
+- log_prayer_logs_qada_when_outside_window (fajr at sunrise+60s -> qada)
+- delete_log_entry_removes_and_counts_rows (1 then 0)
+- get_prayer_log_returns_ordered_range (insert dhuhr then fajr -> returns Fajr, Dhuhr)
+- get_log_analytics_reports_streaks_and_month (all 5 at window starts -> streaks.current 1, complete_days 1, on_time 5)
+- day_windows_from_rfc3339_rejects_garbage
+Test helpers: set_jakarta, local_today (chrono::Local::now().date_naive), windows_for (real MWL windows at stored location + next-day fajr via DayWindows::from_rfc3339).
+Implied contract: log_prayer_impl(conn, prayer, log_date, logged_at) -> Result<LogEntry, String>; delete_log_entry_impl(conn, log_date, prayer) -> Result<usize, String>; get_prayer_log_impl(conn, from, to) -> Result<Vec<LogEntry>, String>; get_log_analytics_impl(conn) -> Result<LogAnalytics { streaks, month }, String>; DayWindows::from_rfc3339(7x &str) -> Result<DayWindows, String>.
+jiff 0.2.24: no jiff::Duration; instant math via Timestamp::from_second(ts.as_second() + 60).
+RED confirmed: cargo test exit 101 with only E0425/E0599 for the five unimplemented items.

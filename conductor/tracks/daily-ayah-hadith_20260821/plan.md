@@ -85,10 +85,10 @@ command.*
 
 *Goal: full quality gate + spec acceptance walk.*
 
-- [ ] Task: Full local gate
-  - [ ] `cargo fmt` + `clippy -D warnings` + `cargo test`; `pnpm check`
+- [x] Task: Full local gate [4f0837c]
+  - [x] `cargo fmt` + `clippy -D warnings` + `cargo test`; `pnpm check`
         (Biome) + `tsc --noEmit` + Vitest
-  - [ ] Fix issues; commit
+  - [x] Fix issues; commit
 - [ ] Task: Acceptance criteria verification
   - [ ] Walk spec AC-1..AC-6; record results in plan notes
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

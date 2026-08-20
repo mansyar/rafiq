@@ -38,8 +38,9 @@ never monetized or surveilled.
 2. **Quran Reader** — Arabic text with English translations (Sahih International,
    The Clear Quran) and Indonesian translation (Kemenag); parallel view;
    per-surah navigation.
-3. **Audio Recitation** — Mishary Alafasy; download-on-demand per surah, cached
-   forever locally; offline playback.
+3. **Audio Recitation** — Mishary Rashid Alafasy; per-ayah audio with
+    download-on-demand (explicit play, visible progress), cached forever
+    locally; offline playback; last-played position remembered per surah.
 4. **Prayer Log + Analytics** — log each prayer; track on-time vs qada; streak
    tracking; progress reports (daily / weekly / monthly).
 5. **Hijri Calendar** — Umm al-Qura basis; Hijri↔Gregorian conversion; today's
@@ -68,5 +69,6 @@ release — not by telemetry.
 - Quran text: public domain
 - Translations: Sahih International / The Clear Quran (free licenses),
   Kemenag (Indonesian government publication, free to use)
-- Recitation: Mishary Alafasy — **licensing to be verified** during the audio
-  track (fallback reciters identified if needed)
+- Recitation: Mishary Rashid Alafasy (Islamic Network CDN, edition
+  `ar.alafasy`) — **license verified 2026-08-20** (free redistribution with
+  attribution, commercial bundling allowed; see ATTRIBUTION.md)

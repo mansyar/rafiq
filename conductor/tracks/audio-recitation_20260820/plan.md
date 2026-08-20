@@ -13,13 +13,13 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — d2f1620
 
 ## Phase 2: Audio Index & Ayah Mapping (Rust) *(FR-2.4, FR-2.1)*
-- [~] Task: Write failing tests for recitation audio index & mapping *(Red)*
-  - [ ] Tests: `recitation` table schema, insert/lookup of cached files, size + fetched-at tracking
-  - [ ] Tests: (surah, ayah) → global ayah number mapping from bundled Quran metadata (boundary cases: first/last ayah, 6236)
-- [ ] Task: Implement audio index & mapping *(Green)*
-  - [ ] Add `recitation` table + `RecitationRepo` to `src-tauri/src/storage/`
-  - [ ] Add global-ayah mapping to `src-tauri/src/quran/` (reuses bundled surah metadata)
-- [ ] Task: Refactor & verify coverage >80% for new modules
+- [x] Task: Write failing tests for recitation audio index & mapping *(Red)* (d08e5a8)
+  - [x] Tests: `recitation` table schema, insert/lookup of cached files, size + fetched-at tracking
+  - [x] Tests: (surah, ayah) → global ayah number mapping from bundled Quran metadata (boundary cases: first/last ayah, 6236)
+- [x] Task: Implement audio index & mapping *(Green)* (f64b590)
+  - [x] Add `recitation` table + `RecitationRepo` to `src-tauri/src/storage/`
+  - [x] Add global-ayah mapping to `src-tauri/src/quran/` (reuses bundled surah metadata)
+- [x] Task: Refactor & verify coverage >80% for new modules (f64b590)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: On-Demand Download & Cache (Rust) *(FR-2.1–FR-2.3)*

@@ -49,7 +49,7 @@ delivered as an in-app prompt per the spec amendment._
 - [x] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest) [33d5429]
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 5: Frontend — Log screen + i18n
+## Phase 5: Frontend — Log screen + i18n [checkpoint: 260d730]
 
 _Presentational components are test-exempt per project rule; thin API wrappers
 mirror the existing `lib/*.ts` pattern._
@@ -58,4 +58,4 @@ mirror the existing `lib/*.ts` pattern._
 - [x] Task: Replace the `/log` placeholder route in `App.tsx` with the Log page [bc4a2f5]
 - [x] Task: i18n — all new strings under `log.*` in `en` + `id` catalogs [bc4a2f5]
 - [x] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest) [bc4a2f5]
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)

@@ -6,8 +6,17 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["src/**", "vite.config.ts", "index.html", "*.json", "**/*.json", "*.css"]
+    "includes": ["src/**", "vite.config.ts", "index.html", "*.json", "**/*.json", "*.css"],
+    "ignoreUnknown": false,
+    "maxSize": 10485760
   },
+  "overrides": [
+    {
+      "includes": ["src-tauri/assets/**"],
+      "formatter": { "enabled": false },
+      "linter": { "enabled": false }
+    }
+  ],
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

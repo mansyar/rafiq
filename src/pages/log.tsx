@@ -60,21 +60,23 @@ export function LogPage() {
   const methodQuery = useQuery({
     queryKey: ['prayer-method'],
     queryFn: getCalculationMethod,
-    staleTime: 60 * 60 * 1000,
+    staleTime: 1000 * 60 * 60,
   });
   const timesQuery = useQuery({
     queryKey: ['prayer-times', today, locationQuery.data, methodQuery.data],
-    queryFn: () =>
-      getPrayerTimes({
+    enabled: !!locationQuery.data && !!methodQuery.data,
+    queryFn: async () => {
+      if (!locationQuery.data) throw new Error('no location');
+      return getPrayerTimes({
         date: today,
         coordinates: {
-          latitude: locationQuery.data!.latitude,
-          longitude: locationQuery.data!.longitude,
+          latitude: locationQuery.data.latitude,
+          longitude: locationQuery.data.longitude,
         },
         method: methodQuery.data ?? null,
-      }),
-    enabled: !!locationQuery.data && methodQuery.data !== undefined,
-    staleTime: 60 * 60 * 1000,
+      });
+    },
+    staleTime: 1000 * 60 * 60, // cache for an hour; recompute on date change
   });
 
   const entries = logQuery.data ?? [];

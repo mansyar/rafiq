@@ -1,0 +1,11 @@
+Task: Add daily.* i18n keys to en.json + id.json
+
+Summary: Added daily.* namespace to EN + ID locales covering header, subtitle, loading/error, ayah/hadith labels, open-in-quran text, ARIA labels (ayahAriaLabel/hadithAriaLabel), showMore/showLess, and date/source labels per spec FR-3/FR-4.
+
+Files:
+- src/i18n/locales/en.json (added daily object, 13 keys)
+- src/i18n/locales/id.json (added daily object, 13 keys, Indonesian translations: Tadabbur Harian, Ayat/Hadis Hari Ini, Buka di Al-Qur'an, Lihat selengkapnya)
+
+Why: Chrome strings for Daily Reflection card must be localised EN+ID before card build; keeps i18n source of truth before typed wrapper + UI per Phase 3 order.
+
+Commit: be7e94a

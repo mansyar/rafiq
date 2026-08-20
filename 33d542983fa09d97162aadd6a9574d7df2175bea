@@ -1,7 +1,7 @@
 Phase 4 follow-up - trigger_test_prayer mirrors the scheduler's prayer-fired event.
 
 The Settings "test prayer" triggers now also emit "prayer-fired" (always,
-whenever the command succeeds — i.e. at least one of the notification/adhan
+whenever the command succeeds ΓÇö i.e. at least one of the notification/adhan
 toggles is enabled, matching the existing Err path semantics). This mirrors
 fire_prayer, which emits the event unconditionally, and makes the prayer-time
 prompt verifiable end-to-end without waiting for a real prayer time:
@@ -14,3 +14,33 @@ payload.clone() keeps ownership intact across the two emits; single hoisted
 Test-exempt per project rule: event emit glue requiring a live AppHandle.
 cargo test 119 unit + 6 integration pass; clippy -D warnings clean; fmt
 clean.
+Phase 4 Verification Report — Prayer Log + Analytics: Prayer-time one-tap (in-app prompt)
+
+Scope (git diff 961ab2f..HEAD):
+  Code: src-tauri/src/commands.rs, src-tauri/src/scheduler/mod.rs,
+        src/App.tsx, src/components/prayer-prompt.tsx, src/lib/log.ts
+  Docs: spec.md (amendment), tech-stack.md (dated note), plan.md
+  Test mapping: log.ts -> log.test.ts; commands.rs + scheduler/mod.rs inline
+  #[cfg(test)]; prayer-prompt.tsx + App.tsx mount presentational (exempt).
+
+Automated checks (all green at 33d5429):
+  - cargo test: 119 unit + 6 integration pass, 0 fail
+  - cargo clippy --all-targets -- -D warnings: clean
+  - cargo fmt --check: clean
+  - biome check .: 44 files, no findings
+  - tsc --noEmit: clean
+  - vitest run: 4 files, 24 tests pass
+
+Manual verification (pnpm dev):
+  1. App boots; Today page renders normally.
+  2. Settings -> test trigger (Dhuhr): OS notification + bottom-right prompt
+     card "Dhuhr time" with current time.
+  3. Tap "Prayed": card shows "Noted — may it be accepted", auto-dismiss ~4s.
+  4. get_prayer_log console invoke: dhuhr entry for today present with
+     on_time/qada status.
+  5. Same prayer re-triggered: no prompt (already logged today).
+  6. Different prayer (Asr): prompt appears again.
+  7. Adhan audio unchanged on test trigger when adhan toggle on.
+
+User confirmation: Yes, proceed (2026-08-20).
+Checkpoint: 33d5429

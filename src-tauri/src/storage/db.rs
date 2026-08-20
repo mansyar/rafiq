@@ -49,7 +49,7 @@ pub fn init_db(app_data_dir: &Path) -> Result<Connection> {
 
 /// Applies all pending migrations in order, tracking the current version in
 /// `meta.schema_version`. Safe to call repeatedly.
-fn run_migrations(conn: &mut Connection) -> Result<()> {
+pub(crate) fn run_migrations(conn: &mut Connection) -> Result<()> {
     let current = schema_version(conn)?;
     for (index, migration) in MIGRATIONS.iter().enumerate() {
         let version = (index + 1) as i64;

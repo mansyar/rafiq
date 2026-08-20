@@ -40,21 +40,22 @@ verified licensing and data integrity.*
 *Goal: date → item selection as a pure function, exposed via a Tauri
 command.*
 
-- [ ] Task: Write failing tests for rotation & command *(Red)*
-  - [ ] Same date → same ayah + hadith; adjacent dates advance the index
-  - [ ] Full-cycle coverage: 365 days → 365 distinct ayahs; 40 days → 40
+- [x] Task: Write failing tests for rotation & command *(Red)* [5676c7b]
+  - [x] Same date → same ayah + hadith; adjacent dates advance the index
+  - [x] Full-cycle coverage: 365 days → 365 distinct ayahs; 40 days → 40
         distinct hadiths (each item exactly once per cycle)
-  - [ ] Epoch boundary (2026-01-01) + leap-year/February edge
-  - [ ] `get_daily_content` response shape; local date used; ayah Arabic
+  - [x] Epoch boundary (2026-01-01) + leap-year/February edge
+  - [x] `get_daily_content` response shape; local date used; ayah Arabic
         resolved from bundled Quran; translation follows `quran_translation`
         setting (default, override, invalid → fallback)
-- [ ] Task: Implement rotation engine + command *(Green)*
-  - [ ] Pure function: `days_since_2026_01_01(date) mod <collection length>`
+- [x] Task: Implement rotation engine + command *(Green)* [5676c7b]
+  - [x] Pure function: `days_since_2026_01_01(date) mod <collection length>`
         per collection *(spec FR-2.1)*
-  - [ ] `get_daily_content` in `commands.rs` + registered in `lib.rs`; local
+  - [x] `get_daily_content` in `commands.rs` + registered in `lib.rs`; local
         date via `chrono::Local`
-  - [ ] `cargo test` → green; `clippy` clean
-- [ ] Task: Refactor & verify coverage ≥80%
+  - [x] `cargo test` → green; `clippy` clean
+- [x] Task: Refactor & verify coverage ≥80% [5676c7b]
+  - [x] Coverage 21 daily tests + 4 command tests (184 total), unwrap_or_default fix, fmt
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Daily Reflection Card (Frontend)

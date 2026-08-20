@@ -30,7 +30,7 @@
   - [x] `cargo fmt`, `cargo clippy`, `cargo test` all pass — 134 passed / 0 failed, clippy clean
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 1f079dd
 
-## Phase 3 — Frontend: i18n, API Wrapper, Month View
+## Phase 3 — Frontend: i18n, API Wrapper, Month View [checkpoint: 7f11f1e]
 - [x] Task: Add `hijri` i18n keys to `src/i18n/locales/en.json` and `id.json` — 7f11f1e
   - [x] `nav.calendar` + `calendar` namespace (title/subtitle, today, nav, loading/error, footnote)
   - [x] 12 Hijri month names per locale (EN: Rabi al-Awwal… / ID: Rabiul Awal, Jumadil Awal, Dzulqa'dah, Dzulhijjah…) + locale-independent Arabic-script set (محرم، صفر، ربيع الأول، …)
@@ -41,7 +41,7 @@
   - [x] Previous / Next month + Today button
   - [x] Today's cell highlighted (gold accent); ±1 day footnote
   - [x] Register route in `App.tsx` + nav item in `layout.tsx` (lucide `CalendarDays` icon)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 7f11f1e
 
 ## Phase 4 — Date Converter & Final Verification
 - [ ] Task: Implement bidirectional date converter

@@ -13,7 +13,13 @@ import {
   logWindowDates,
   prayerStatus,
 } from '@/lib/log';
-import { getResolvedLocation, todayDateString } from '@/lib/prayer';
+import {
+  getCalculationMethod,
+  getPrayerTimes,
+  getResolvedLocation,
+  isPast,
+  todayDateString,
+} from '@/lib/prayer';
 
 const PRAYERS: readonly LoggablePrayer[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
@@ -50,6 +56,25 @@ export function LogPage() {
   const analyticsQuery = useQuery({
     queryKey: ['log-analytics', today],
     queryFn: getLogAnalytics,
+  });
+  const methodQuery = useQuery({
+    queryKey: ['prayer-method'],
+    queryFn: getCalculationMethod,
+    staleTime: 60 * 60 * 1000,
+  });
+  const timesQuery = useQuery({
+    queryKey: ['prayer-times', today, locationQuery.data, methodQuery.data],
+    queryFn: () =>
+      getPrayerTimes({
+        date: today,
+        coordinates: {
+          latitude: locationQuery.data!.latitude,
+          longitude: locationQuery.data!.longitude,
+        },
+        method: methodQuery.data ?? null,
+      }),
+    enabled: !!locationQuery.data && methodQuery.data !== undefined,
+    staleTime: 60 * 60 * 1000,
   });
 
   const entries = logQuery.data ?? [];
@@ -163,6 +188,8 @@ export function LogPage() {
                     const status = prayerStatus(entries, today, prayer);
                     const key = `${today}:${prayer}`;
                     const deleting = confirmDelete === key;
+                    const time = timesQuery.data?.[prayer];
+                    const windowOpen = !time || isPast(time);
                     return (
                       <li key={prayer} className="flex items-center justify-between px-4 py-3">
                         <div className="flex items-center gap-3">
@@ -183,7 +210,7 @@ export function LogPage() {
                           <Button
                             size="sm"
                             onClick={() => void handleLog(today, prayer)}
-                            disabled={busy !== null}
+                            disabled={busy !== null || !windowOpen}
                             aria-label={`${t('log.today.log')} ${t(`prayer.${prayer}`)}`}
                           >
                             {t('log.today.log')}

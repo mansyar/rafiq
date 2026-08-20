@@ -138,3 +138,12 @@ the plugin source during Phase 4). The prayer-time one-tap is delivered as an
 in-app prompt driven by a new always-on `prayer-fired` event emitted by the
 scheduler (independent of the notification/adhan toggles). A dated note was
 added to `conductor/tech-stack.md`.
+
+## Amendment (2026-08-20, Phase 5)
+
+Early-tap guard (decided during Phase 5 checkpoint): on the Log screen,
+today's "Prayed" button for a prayer whose window has not yet opened
+(logged instant would be before the prayer time) is disabled until the
+window opens, so an early tap can no longer be silently recorded as qada.
+Retroactive 7-day grid cells remain tappable (their qada classification is
+the intended behavior). FR-2 classification rule unchanged.

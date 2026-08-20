@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DateConverter } from '@/components/date-converter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type GridDay, getMonthGrid, todayHijri } from '@/lib/hijri';
@@ -189,12 +190,14 @@ export function CalendarPage() {
                   );
                 })}
               </div>
-
-              <p className="text-xs text-muted-foreground">{t('calendar.footnote')}</p>
             </>
           )}
         </CardContent>
       </Card>
+
+      <DateConverter />
+
+      <p className="text-xs text-muted-foreground">{t('calendar.footnote')}</p>
     </section>
   );
 }

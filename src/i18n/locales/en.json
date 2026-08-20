@@ -202,6 +202,16 @@
       "Oct",
       "Nov",
       "Dec"
-    ]
+    ],
+    "converter": {
+      "title": "Date converter",
+      "gregorianToHijri": "Gregorian to Hijri",
+      "hijriToGregorian": "Hijri to Gregorian",
+      "gregorianDate": "Gregorian date",
+      "hijriYear": "Hijri year",
+      "hijriMonth": "Hijri month",
+      "hijriDay": "Hijri day",
+      "invalid": "Invalid date: {{message}}"
+    }
   }
 }

@@ -5,7 +5,7 @@ use std::error::Error;
 use std::path::Path;
 
 /// Latest schema version understood by this build.
-pub const SCHEMA_VERSION: i64 = 1;
+pub const SCHEMA_VERSION: i64 = 2;
 
 pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -22,7 +22,21 @@ CREATE TABLE settings (
 );
 "#;
 
-const MIGRATIONS: &[&str] = &[MIGRATION_001];
+/// Migration 2: `prayer_log` — one row per (local date, prayer) for the five
+/// obligatory prayers; the on-time/qada classification is captured once, at
+/// log time, and never re-graded.
+const MIGRATION_002: &str = r#"
+CREATE TABLE prayer_log (
+    id INTEGER PRIMARY KEY,
+    log_date TEXT NOT NULL,
+    prayer TEXT NOT NULL,
+    logged_at TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('on_time', 'qada')),
+    UNIQUE (log_date, prayer)
+);
+"#;
+
+const MIGRATIONS: &[&str] = &[MIGRATION_001, MIGRATION_002];
 
 /// Opens (or creates) the SQLite database at `app_data_dir/rafiq.db` and
 /// applies any pending migrations. Idempotent on an existing database.

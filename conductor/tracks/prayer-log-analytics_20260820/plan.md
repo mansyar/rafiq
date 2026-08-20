@@ -24,8 +24,8 @@ Checkpointing Protocol.
 - [x] Task: Write failing tests for streak computation (complete day, gap day breaks streak, today-complete vs today-incomplete, best streak across multiple gaps, empty history) [8476315]
 - [x] Task: Implement streak computation (current + best over log entries) [891e883]
 - [x] Task: Write failing tests for monthly summary (mid-month completion %, on-time / qada / missed breakdown, empty month, month boundary) [ec0eb00]
-- [~] Task: Implement monthly summary computation
-- [ ] Task: Refactor + verify coverage ≥80% for the log module
+- [x] Task: Implement monthly summary computation [07048e7]
+- [~] Task: Refactor + verify coverage ≥80% for the log module
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: Tauri commands

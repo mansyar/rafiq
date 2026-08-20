@@ -5,7 +5,7 @@
 //! dates (no time component). Weekdays are encoded as `0 = Sunday .. 6 =
 //! Saturday` for stable serialization to the frontend.
 
-use chrono::NaiveDate;
+use chrono::{Datelike, NaiveDate};
 use icu_calendar::cal::hijri::UmmAlQura;
 use icu_calendar::cal::Hijri;
 use icu_calendar::types::Weekday;
@@ -120,6 +120,12 @@ pub fn month_grid(year: i32, month: u8, today: NaiveDate) -> Result<MonthGrid, S
 /// Today's date in the OS local timezone (civil date, no time component).
 pub fn today() -> NaiveDate {
     chrono::Local::now().date_naive()
+}
+
+/// Today's local date expressed in the Umm al-Qura Hijri calendar.
+pub fn today_hijri() -> Result<HijriDate, String> {
+    let t = today();
+    gregorian_to_hijri(t.year(), t.month() as u8, t.day() as u8)
 }
 
 /// Map an ICU4X weekday to `0 = Sunday .. 6 = Saturday`.

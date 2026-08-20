@@ -58,7 +58,11 @@ pub fn run() {
             commands::log_prayer,
             commands::delete_log_entry,
             commands::get_prayer_log,
-            commands::get_log_analytics
+            commands::get_log_analytics,
+            commands::hijri_from_gregorian,
+            commands::hijri_to_gregorian,
+            commands::hijri_month_grid,
+            commands::today_hijri
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

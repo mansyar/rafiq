@@ -367,6 +367,36 @@ pub fn get_log_analytics_impl(conn: &Connection) -> Result<LogAnalytics, String>
     })
 }
 
+// --- Hijri (Umm al-Qura) ---
+
+/// Converts a Gregorian (ISO) date to the Umm al-Qura Hijri calendar.
+pub fn hijri_from_gregorian_impl(
+    year: i32,
+    month: u8,
+    day: u8,
+) -> Result<crate::hijri::HijriDate, String> {
+    crate::hijri::gregorian_to_hijri(year, month, day)
+}
+
+/// Converts an Umm al-Qura Hijri date to a Gregorian (ISO) date.
+pub fn hijri_to_gregorian_impl(
+    year: i32,
+    month: u8,
+    day: u8,
+) -> Result<crate::hijri::GregorianDate, String> {
+    crate::hijri::hijri_to_gregorian(year, month, day)
+}
+
+/// Grid of all days in the given Hijri month, with the local "today" day flagged.
+pub fn hijri_month_grid_impl(year: i32, month: u8) -> Result<crate::hijri::MonthGrid, String> {
+    crate::hijri::month_grid(year, month, crate::hijri::today())
+}
+
+/// Today's local date expressed in the Umm al-Qura Hijri calendar.
+pub fn today_hijri_impl() -> Result<crate::hijri::HijriDate, String> {
+    crate::hijri::today_hijri()
+}
+
 /// Trims and validates a settings key.
 fn validate_key(key: &str) -> Result<String, String> {
     let trimmed = key.trim();
@@ -655,6 +685,34 @@ pub fn trigger_test_prayer(
         prayer: prayer_name,
         time: now.to_rfc3339(),
     })
+}
+
+#[tauri::command]
+pub fn hijri_from_gregorian(
+    year: i32,
+    month: u8,
+    day: u8,
+) -> Result<crate::hijri::HijriDate, String> {
+    hijri_from_gregorian_impl(year, month, day)
+}
+
+#[tauri::command]
+pub fn hijri_to_gregorian(
+    year: i32,
+    month: u8,
+    day: u8,
+) -> Result<crate::hijri::GregorianDate, String> {
+    hijri_to_gregorian_impl(year, month, day)
+}
+
+#[tauri::command]
+pub fn hijri_month_grid(year: i32, month: u8) -> Result<crate::hijri::MonthGrid, String> {
+    hijri_month_grid_impl(year, month)
+}
+
+#[tauri::command]
+pub fn today_hijri() -> Result<crate::hijri::HijriDate, String> {
+    today_hijri_impl()
 }
 
 #[cfg(test)]

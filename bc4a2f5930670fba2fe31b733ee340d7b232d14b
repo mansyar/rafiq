@@ -1,0 +1,28 @@
+Phase 5 Tasks 1-3 - Log page + route + i18n.
+
+src/pages/log.tsx (new, presentational — test-exempt per project rule;
+the logic-bearing helpers are tested in log.test.ts):
+- Today section (FR-3.2): the five obligatory prayers with status badge
+  (on-time emerald / qada gold) and one-tap "Prayed"; logged rows get a
+  two-step Remove (confirm) for FR-1.5 corrections; warm one-liner when
+  all five are logged (no gamified pressure).
+- 7-day grid (FR-3.3): semantic <table> (caption, th scope=row, td) for
+  accessibility; on-time = emerald fill, qada = gold fill, missed =
+  empty; missed cells are tappable to log retroactively (7-day lookback,
+  FR-1.4) — logged cells are non-interactive; weekday letter + day label
+  per row, sr-only "today" marker.
+- Streak card (FR-3.4): current + best, with the "all five logged" hint.
+- Month card (FR-3.5): completion % + on-time / qada / missed breakdown.
+- Empty state (FR-3.6): gentle invitation, no guilt.
+- No location (FR-1.6/AC-7): gold hint box + settings link, no crash.
+- Data: TanStack Query ['prayer-log', from, today] + ['log-analytics',
+  today], both invalidated after mutations; error states role=alert.
+- i18n: all new strings under log.* (log.today/week/status/streaks/
+  month/empty/loading/error/noLocation) in en.json + id.json; page shell
+  reuses existing page.log.title/subtitle; prayer names reuse prayer.*.
+
+src/App.tsx: /log route now renders LogPage (PagePlaceholder import
+removed). placeholder.tsx left in place (still unused but not deleted —
+out of scope for this track).
+
+Gate: biome clean (auto-fixed import order), tsc clean, vitest 29 passed.

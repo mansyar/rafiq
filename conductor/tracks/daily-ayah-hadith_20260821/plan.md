@@ -12,8 +12,8 @@ UI components exempt per project rule.
 *Goal: bundle the Nawawi 40 hadiths + ~365 curated ayah references with
 verified licensing and data integrity.*
 
-- [ ] Task: Verify content licensing *(spec FR-1.4)*
-  - [ ] Verify Nawawi 40 Hadith Arabic (public domain) + chosen EN/ID
+- [x] Task: Verify content licensing *(spec FR-1.4)* [1889419]
+  - [x] Verify Nawawi 40 Hadith Arabic (public domain) + chosen EN/ID
         translation sources are under verifiable permissive terms; record
         source + date in `src-tauri/assets/ATTRIBUTION.md`
 - [ ] Task: Author content assets

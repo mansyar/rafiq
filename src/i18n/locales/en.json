@@ -78,5 +78,27 @@
     "error": "Could not load prayer times: {{message}}",
     "cityNotFound": "Saved city not found — please reselect.",
     "manualFallback": "Manual coordinates ({{lat}}, {{lon}})"
+  },
+  "quran": {
+    "title": "Quran",
+    "subtitle": "114 surahs — Uthmani + 3 translations",
+    "searchPlaceholder": "Search surah (name or number)",
+    "noResults": "No surah found",
+    "loading": "Loading…",
+    "error": "Could not load Quran: {{message}}",
+    "surah": "Surah",
+    "ayah": "Ayah",
+    "ayahs": "{{count}} ayahs",
+    "bismillah": "بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    "revealedMeccan": "Meccan",
+    "revealedMedinan": "Medinan",
+    "translations": {
+      "sahih": "Saheeh International",
+      "clear": "The Clear Quran",
+      "kemenag": "Kemenag"
+    },
+    "translationLabel": "Translation",
+    "readerTitle": "{{name}} — {{transliteration}}",
+    "continuousHint": "Continuous scroll — {{count}} ayahs"
   }
 }

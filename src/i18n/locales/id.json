@@ -78,5 +78,27 @@
     "error": "Gagal memuat waktu salat: {{message}}",
     "cityNotFound": "Kota tersimpan tidak ditemukan — silakan pilih ulang.",
     "manualFallback": "Koordinat manual ({{lat}}, {{lon}})"
+  },
+  "quran": {
+    "title": "Al-Qur'an",
+    "subtitle": "114 surah — Uthmani + 3 terjemahan",
+    "searchPlaceholder": "Cari surah (nama atau nomor)",
+    "noResults": "Surah tidak ditemukan",
+    "loading": "Memuat…",
+    "error": "Gagal memuat Al-Qur'an: {{message}}",
+    "surah": "Surah",
+    "ayah": "Ayat",
+    "ayahs": "{{count}} ayat",
+    "bismillah": "بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    "revealedMeccan": "Makkiyah",
+    "revealedMedinan": "Madaniyah",
+    "translations": {
+      "sahih": "Saheeh International",
+      "clear": "The Clear Quran",
+      "kemenag": "Kemenag"
+    },
+    "translationLabel": "Terjemahan",
+    "readerTitle": "{{name}} — {{transliteration}}",
+    "continuousHint": "Gulir kontinyu — {{count}} ayat"
   }
 }

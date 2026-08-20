@@ -8,7 +8,7 @@
 
 *Goal: bundled Uthmani + 3 translations as offline assets with validation.*
 
-- [ ] Task 1.1: Acquire & curate Quran datasets (Red)
+- [~] Task 1.1: Acquire & curate Quran datasets (Red)
   - [ ] Source Tanzil Uthmani Arabic + Sahih International, The Clear Quran, Kemenag JSON (license-verified, ATTRIBUTION)
   - [ ] Generate `src-tauri/assets/quran/` (surah metadata + ayahs) + `ATTRIBUTION.md`
   - [ ] Validation test: 114 surahs, ayah counts, Uthmani non-empty, translations aligned, unique ids

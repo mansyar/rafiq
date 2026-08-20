@@ -1,7 +1,9 @@
 //! Prayer log domain: logged prayers, on-time/qada classification, analytics.
 
+use chrono::NaiveDate;
 use jiff::Timestamp;
 use rusqlite::{params, Connection};
+use std::collections::BTreeMap;
 
 /// The five obligatory daily prayers, in canonical (daily) order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -115,6 +117,72 @@ pub fn classify(prayer: Prayer, logged_at: Timestamp, windows: &DayWindows) -> L
     } else {
         LogStatus::Qada
     }
+}
+
+/// Streaks of complete days, where a complete day has all five prayers logged.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Streaks {
+    /// Consecutive complete days ending at `today` — or at `yesterday` when
+    /// today is not complete yet (an unfinished day never breaks a streak).
+    pub current: u32,
+    /// Longest run of consecutive complete days in the logged history.
+    pub best: u32,
+}
+
+/// Computes the current and best streaks from logged entries.
+///
+/// A day counts as complete when all five obligatory prayers are logged; the
+/// on-time/qada status of individual prayers does not matter (make-up prayers
+/// still count — the point is the habit, not perfection). Entries whose
+/// `log_date` is not a valid `YYYY-MM-DD` date are ignored.
+pub fn compute_streaks(entries: &[LogEntry], today: NaiveDate) -> Streaks {
+    let mut prayers_per_day: BTreeMap<NaiveDate, u32> = BTreeMap::new();
+    for entry in entries {
+        if let Ok(date) = NaiveDate::parse_from_str(&entry.log_date, "%Y-%m-%d") {
+            *prayers_per_day.entry(date).or_insert(0) += 1;
+        }
+    }
+    let complete: Vec<NaiveDate> = prayers_per_day
+        .into_iter()
+        .filter(|(_, count)| *count >= Prayer::ALL.len() as u32)
+        .map(|(date, _)| date)
+        .collect();
+
+    // Current run: walk backwards from today, or from yesterday when today is
+    // still incomplete.
+    let mut current = 0u32;
+    let mut cursor = complete
+        .contains(&today)
+        .then_some(today)
+        .or_else(|| today.pred_opt());
+    while let Some(day) = &cursor {
+        if !complete.contains(day) {
+            break;
+        }
+        current += 1;
+        cursor = day.pred_opt();
+    }
+
+    Streaks {
+        current,
+        best: longest_run(&complete),
+    }
+}
+
+/// Length of the longest run of consecutive days in a sorted, unique date vec.
+fn longest_run(dates: &[NaiveDate]) -> u32 {
+    let mut best = 0u32;
+    let mut run = 0u32;
+    let mut prev: Option<NaiveDate> = None;
+    for date in dates {
+        run = match prev {
+            Some(p) if p.succ_opt().as_ref() == Some(date) => run + 1,
+            _ => 1,
+        };
+        best = best.max(run);
+        prev = Some(*date);
+    }
+    best
 }
 
 /// A single logged prayer.

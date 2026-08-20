@@ -10,7 +10,7 @@ Checkpointing Protocol.
 
 ## Phase 1: Storage — `prayer_log` table + repository
 
-- [ ] Task: Write failing tests for migration 2 (temp DB: migration applies, `schema_version` → 2, idempotent re-run, `prayer_log` table exists with `UNIQUE(log_date, prayer)`)
+- [x] Task: Write failing tests for migration 2 (temp DB: migration applies, `schema_version` → 2, idempotent re-run, `prayer_log` table exists with `UNIQUE(log_date, prayer)`) [c99596e]
 - [ ] Task: Implement migration 2 in `storage/db.rs` (`MIGRATION_002`, bump `SCHEMA_VERSION` to 2)
 - [ ] Task: Write failing tests for the prayer-log repository (insert, duplicate `(date, prayer)` rejected, delete, range query ordering, empty range)
 - [ ] Task: Implement repository in `src-tauri/src/log/mod.rs` (insert / delete / range query over rusqlite)

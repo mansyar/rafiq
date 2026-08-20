@@ -1,5 +1,6 @@
 //! Prayer log domain: logged prayers, on-time/qada classification, analytics.
 
+use jiff::Timestamp;
 use rusqlite::{params, Connection};
 
 /// The five obligatory daily prayers, in canonical (daily) order.
@@ -71,6 +72,48 @@ impl LogStatus {
             "qada" => Some(LogStatus::Qada),
             _ => None,
         }
+    }
+}
+
+/// A day's prayer-time windows as absolute UTC instants.
+///
+/// Each obligatory prayer has a half-open window `[start, end)`: it opens at
+/// the prayer's own time and closes when the next element of the chain
+/// Fajr → Sunrise → Dhuhr → Asr → Maghrib → Isha → next-day Fajr begins.
+/// Isha's window crosses midnight and is closed by the following day's Fajr.
+#[derive(Debug, Clone, Copy)]
+pub struct DayWindows {
+    pub fajr: Timestamp,
+    pub sunrise: Timestamp,
+    pub dhuhr: Timestamp,
+    pub asr: Timestamp,
+    pub maghrib: Timestamp,
+    pub isha: Timestamp,
+    /// The next day's Fajr — closes Isha's window.
+    pub next_fajr: Timestamp,
+}
+
+impl DayWindows {
+    /// The `[start, end)` window for `prayer` (start inclusive, end exclusive).
+    fn window(&self, prayer: Prayer) -> (Timestamp, Timestamp) {
+        match prayer {
+            Prayer::Fajr => (self.fajr, self.sunrise),
+            Prayer::Dhuhr => (self.dhuhr, self.asr),
+            Prayer::Asr => (self.asr, self.maghrib),
+            Prayer::Maghrib => (self.maghrib, self.isha),
+            Prayer::Isha => (self.isha, self.next_fajr),
+        }
+    }
+}
+
+/// Classifies a logged prayer by the prayer-window rule (spec FR-2):
+/// `OnTime` when `logged_at` falls inside the prayer's window, `Qada` otherwise.
+pub fn classify(prayer: Prayer, logged_at: Timestamp, windows: &DayWindows) -> LogStatus {
+    let (start, end) = windows.window(prayer);
+    if logged_at >= start && logged_at < end {
+        LogStatus::OnTime
+    } else {
+        LogStatus::Qada
     }
 }
 

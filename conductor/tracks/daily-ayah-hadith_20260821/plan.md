@@ -77,8 +77,8 @@ command.*
         line-clamp with "more" for long hadiths
   - [x] Re-resolves on local date rollover (existing Today-page mechanism)
   - [x] Gold/emerald tokens, ARIA labels, keyboard-operable link
-- [ ] Task: Verify shell in dev
-  - [ ] `pnpm tauri dev` renders the card; Biome + `tsc --noEmit` pass
+- [x] Task: Verify shell in dev [f062e12]
+  - [x] `pnpm tauri dev` renders the card; Biome + `tsc --noEmit` pass
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4 — Integration Gate & Acceptance

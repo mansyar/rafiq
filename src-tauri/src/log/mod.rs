@@ -295,3 +295,118 @@ mod tests {
         assert!(repo.range("2026-08-01", "2026-08-31").unwrap().is_empty());
     }
 }
+
+#[cfg(test)]
+mod classify_tests {
+    use super::*;
+    use jiff::Timestamp;
+
+    /// 2025-08-20 00:00:00 UTC, as unix seconds.
+    const DAY0: i64 = 1_755_648_000;
+
+    /// Instant `mins` minutes after the test day's 00:00 UTC.
+    fn ts(mins: i64) -> Timestamp {
+        Timestamp::from_second(DAY0 + mins * 60).expect("valid timestamp")
+    }
+
+    /// Fixed test-day windows:
+    /// fajr 04:30, sunrise 05:45, dhuhr 12:05, asr 15:30, maghrib 18:02,
+    /// isha 19:20, next-day fajr 04:35 (crosses midnight).
+    fn windows() -> DayWindows {
+        DayWindows {
+            fajr: ts(4 * 60 + 30),
+            sunrise: ts(5 * 60 + 45),
+            dhuhr: ts(12 * 60 + 5),
+            asr: ts(15 * 60 + 30),
+            maghrib: ts(18 * 60 + 2),
+            isha: ts(19 * 60 + 20),
+            next_fajr: ts(24 * 60 + 4 * 60 + 35),
+        }
+    }
+
+    #[test]
+    fn fajr_within_window_is_on_time() {
+        assert_eq!(
+            classify(Prayer::Fajr, ts(4 * 60 + 35), &windows()),
+            LogStatus::OnTime
+        );
+    }
+
+    #[test]
+    fn fajr_after_sunrise_is_qada() {
+        assert_eq!(
+            classify(Prayer::Fajr, ts(6 * 60), &windows()),
+            LogStatus::Qada
+        );
+    }
+
+    #[test]
+    fn fajr_exactly_at_window_start_is_on_time() {
+        assert_eq!(
+            classify(Prayer::Fajr, ts(4 * 60 + 30), &windows()),
+            LogStatus::OnTime
+        );
+    }
+
+    #[test]
+    fn fajr_exactly_at_window_end_is_qada() {
+        assert_eq!(
+            classify(Prayer::Fajr, ts(5 * 60 + 45), &windows()),
+            LogStatus::Qada
+        );
+    }
+
+    #[test]
+    fn dhuhr_window_bounded_by_asr() {
+        assert_eq!(
+            classify(Prayer::Dhuhr, ts(13 * 60), &windows()),
+            LogStatus::OnTime
+        );
+        assert_eq!(
+            classify(Prayer::Dhuhr, ts(16 * 60), &windows()),
+            LogStatus::Qada
+        );
+    }
+
+    #[test]
+    fn asr_window_bounded_by_maghrib() {
+        assert_eq!(
+            classify(Prayer::Asr, ts(17 * 60), &windows()),
+            LogStatus::OnTime
+        );
+        assert_eq!(
+            classify(Prayer::Asr, ts(19 * 60), &windows()),
+            LogStatus::Qada
+        );
+    }
+
+    #[test]
+    fn maghrib_window_bounded_by_isha() {
+        assert_eq!(
+            classify(Prayer::Maghrib, ts(18 * 60 + 30), &windows()),
+            LogStatus::OnTime
+        );
+        assert_eq!(
+            classify(Prayer::Maghrib, ts(20 * 60), &windows()),
+            LogStatus::Qada
+        );
+    }
+
+    #[test]
+    fn isha_window_crosses_midnight_to_next_fajr() {
+        assert_eq!(
+            classify(Prayer::Isha, ts(21 * 60), &windows()),
+            LogStatus::OnTime
+        );
+        // 03:00 on the following calendar day is still before next-day fajr (04:35).
+        assert_eq!(
+            classify(Prayer::Isha, ts(24 * 60 + 3 * 60), &windows()),
+            LogStatus::OnTime
+        );
+        // After next-day fajr the window has closed.
+        assert_eq!(
+            classify(Prayer::Isha, ts(24 * 60 + 5 * 60), &windows()),
+            LogStatus::Qada
+        );
+    }
+}

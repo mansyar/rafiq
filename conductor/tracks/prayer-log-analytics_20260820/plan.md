@@ -14,7 +14,7 @@ Checkpointing Protocol.
 - [x] Task: Implement migration 2 in `storage/db.rs` (`MIGRATION_002`, bump `SCHEMA_VERSION` to 2) [fa36334]
 - [x] Task: Write failing tests for the prayer-log repository (insert, duplicate `(date, prayer)` rejected, delete, range query ordering, empty range) [d495f3f]
 - [x] Task: Implement repository in `src-tauri/src/log/mod.rs` (insert / delete / range query over rusqlite) [1aa4f25]
-- [ ] Task: Refactor + verify coverage ≥80% for the new module
+- [x] Task: Refactor + verify coverage ≥80% for the new module [1aa4f25]
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2: Classification + analytics (pure logic)

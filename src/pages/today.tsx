@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { DailyReflectionCard } from '@/components/daily-reflection-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -231,6 +232,8 @@ export function Today() {
           )}
         </CardContent>
       </Card>
+
+      <DailyReflectionCard />
     </section>
   );
 }

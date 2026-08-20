@@ -47,23 +47,82 @@ pub fn validate_coordinates(latitude: f64, longitude: f64) -> Result<(), String>
 
 /// Parse a coordinate string (e.g., from manual lat/long input) with friendly errors.
 pub fn parse_coordinate(s: &str) -> Result<f64, String> {
-    // TODO: Red phase stub — intentionally not implemented yet
-    let _ = s;
-    Err("not implemented".to_string())
+    let trimmed = s.trim();
+    if trimmed.is_empty() {
+        return Err("coordinate must be a number".to_string());
+    }
+    trimmed
+        .parse::<f64>()
+        .map_err(|_| format!("coordinate '{trimmed}' must be a number"))
+        .and_then(|v| {
+            if !v.is_finite() {
+                Err(format!("coordinate '{trimmed}' must be a finite number"))
+            } else {
+                Ok(v)
+            }
+        })
 }
 
 /// Search cities by name/country substring, case-insensitive, ranked, capped at `limit`.
 pub fn search_cities(query: &str, limit: usize) -> Vec<City> {
-    let _ = (query, limit);
-    // TODO: Red phase stub — return empty to drive failing tests
-    Vec::new()
+    if limit == 0 {
+        return Vec::new();
+    }
+    let trimmed = query.trim();
+    if trimmed.is_empty() {
+        return Vec::new();
+    }
+    let q = trimmed.to_lowercase();
+    // score: lower is better
+    // 0 = name exact, 1 = name prefix, 2 = name contains,
+    // 3 = country exact, 4 = country prefix, 5 = country contains,
+    // 6 = country_code exact
+    let mut scored: Vec<(i32, usize, &City)> = Vec::new();
+    for city in all_cities() {
+        let name_lower = city.name.to_lowercase();
+        let country_lower = city.country.to_lowercase();
+        let cc_lower = city.country_code.to_lowercase();
+        let score = if name_lower == q {
+            Some(0)
+        } else if name_lower.starts_with(&q) {
+            Some(1)
+        } else if name_lower.contains(&q) {
+            Some(2)
+        } else if country_lower == q {
+            Some(3)
+        } else if country_lower.starts_with(&q) {
+            Some(4)
+        } else if country_lower.contains(&q) {
+            Some(5)
+        } else if cc_lower == q {
+            Some(6)
+        } else {
+            None
+        };
+        if let Some(s) = score {
+            scored.push((s, city.name.len(), city));
+        }
+    }
+    scored.sort_by(|a, b| {
+        a.0.cmp(&b.0)
+            .then_with(|| a.1.cmp(&b.1))
+            .then_with(|| a.2.name.cmp(&b.2.name))
+            .then_with(|| a.2.id.cmp(&b.2.id))
+    });
+    scored
+        .into_iter()
+        .take(limit)
+        .map(|(_, _, c)| c.clone())
+        .collect()
 }
 
 /// Find a city by its unique `id`.
 pub fn find_city_by_id(city_id: &str) -> Option<City> {
-    let _ = city_id;
-    // TODO: Red phase stub
-    None
+    let trimmed = city_id.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+    all_cities().iter().find(|c| c.id == trimmed).cloned()
 }
 
 /// Result of `resolve_location` — either a city-backed or manual coordinate.
@@ -82,9 +141,34 @@ pub fn resolve_location(
     latitude: Option<f64>,
     longitude: Option<f64>,
 ) -> Result<ResolvedLocation, String> {
-    let _ = (city_id, latitude, longitude);
-    // TODO: Red phase stub
-    Err("not implemented".to_string())
+    if let Some(cid) = city_id {
+        let trimmed = cid.trim();
+        if !trimmed.is_empty() {
+            if let Some(city) = find_city_by_id(trimmed) {
+                return Ok(ResolvedLocation {
+                    latitude: city.latitude,
+                    longitude: city.longitude,
+                    timezone: city.timezone.clone(),
+                    city: Some(city),
+                });
+            } else {
+                return Err(format!("city not found: {trimmed}"));
+            }
+        }
+    }
+    match (latitude, longitude) {
+        (Some(lat), Some(lon)) => {
+            validate_coordinates(lat, lon)?;
+            Ok(ResolvedLocation {
+                city: None,
+                latitude: lat,
+                longitude: lon,
+                timezone: "UTC".to_string(),
+            })
+        }
+        (None, None) => Err("no location provided: set city_id or manual coordinates".to_string()),
+        _ => Err("both latitude and longitude are required for manual location".to_string()),
+    }
 }
 
 #[cfg(test)]

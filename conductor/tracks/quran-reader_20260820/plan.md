@@ -21,10 +21,10 @@
 
 *Goal: Tauri commands for surah list/get, search, translation setting.*
 
-- [ ] Task 2.1: Failing tests for store + resolution (Red)
-  - [ ] `list_surahs`, `get_surah(id)` returns Arabic + ayahs, invalid id error
-  - [ ] `search_surahs` case-insensitive EN/ID/AR + number, ranked top-N
-  - [ ] `quran_translation` setting persist via `SettingsRepo` (single active)
+- [x] Task 2.1: Failing tests for store + resolution (Red) — c480cd6
+  - [x] `list_surahs`, `get_surah(id)` returns Arabic + ayahs, invalid id error — c480cd6
+  - [x] `search_surahs` case-insensitive EN/ID/AR + number, ranked top-N — c480cd6
+  - [x] `quran_translation` setting persist via `SettingsRepo` (single active) — c480cd6
 - [ ] Task 2.2: Implement commands (Green)
   - [ ] Indexed search (score EN exact/prefix/contains + number), `get_surah` with Bismillah handling
   - [ ] Expose `list_surahs/get_surah/search_surahs/get_quran_translation/set_quran_translation` in `commands.rs`/`lib.rs`

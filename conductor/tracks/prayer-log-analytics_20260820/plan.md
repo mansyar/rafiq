@@ -17,7 +17,7 @@ Checkpointing Protocol.
 - [x] Task: Refactor + verify coverage ≥80% for the new module [1aa4f25]
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 2: Classification + analytics (pure logic)
+## Phase 2: Classification + analytics (pure logic) [checkpoint: 07048e7]
 
 - [x] Task: Write failing tests for prayer-window classification (fixtures: Fajr before/after sunrise, Dhuhr→Asr, Asr→Maghrib, Maghrib→Isha, Isha→next-day Fajr midnight crossing, exact window boundary, missing-location error) [42b3885]
 - [x] Task: Implement classification pure function (log_date, prayer, logged_at, that day's times + next-day Fajr for Isha → `on_time` | `qada`) [d6269f5]
@@ -26,7 +26,7 @@ Checkpointing Protocol.
 - [x] Task: Write failing tests for monthly summary (mid-month completion %, on-time / qada / missed breakdown, empty month, month boundary) [ec0eb00]
 - [x] Task: Implement monthly summary computation [07048e7]
 - [x] Task: Refactor + verify coverage ≥80% for the log module [07048e7]
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: Tauri commands
 

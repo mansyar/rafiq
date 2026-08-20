@@ -1,0 +1,18 @@
+Phase 3 Task 2 — implement prayer log commands (GREEN).
+
+Changes:
+- src-tauri/src/log/mod.rs:
+  - `DayWindows::from_rfc3339(7x &str) -> Result<DayWindows, String>` (parses each instant via Timestamp FromStr; per-field error names the offending field).
+  - `Serialize` derives added to `Prayer`, `LogStatus` (both `rename_all = "snake_case"` -> "fajr"/"on_time"), `Streaks`, `MonthlySummary`, `LogEntry`.
+  - New `LogAnalytics { streaks: Streaks, month: MonthlySummary }` (Serialize).
+  - `use std::str::FromStr` (jiff 0.2 exposes parsing via the FromStr trait).
+- src-tauri/src/commands.rs:
+  - `log_prayer_impl(conn, prayer, log_date, logged_at)`: validates prayer name, log_date (YYYY-MM-DD), logged_at (RFC3339), 7-day lookback window (today-7..=today, error names the window), requires a stored location (else "no location set" error), resolves the stored calculation method, computes that day's prayer times + next-day Fajr, builds DayWindows, classifies at the logged instant, persists via PrayerLogRepo (duplicate (date, prayer) -> Err), returns the stored LogEntry.
+  - `delete_log_entry_impl(conn, log_date, prayer) -> usize` (rows removed).
+  - `get_prayer_log_impl(conn, from, to) -> Vec<LogEntry>` (ordered range; from > to -> Err).
+  - `get_log_analytics_impl(conn) -> LogAnalytics`: loads entries from max(month_start, today-7) through today; computes streaks (current + best) and current-month summary via the Phase 2 pure functions.
+  - Four thin `#[tauri::command]` wrappers (state.conn Mutex lock, "app state lock poisoned" on poison).
+  - Note: an intermediate edit accidentally deleted the `validate_key` body; restored in this same commit (no net behavior change).
+- src-tauri/src/lib.rs: registered `log_prayer`, `delete_log_entry`, `get_prayer_log`, `get_log_analytics` in `generate_handler!`.
+
+Verification: cargo test -> 119 unit + 6 integration tests passed (8 new command tests + from_rfc3339 garbage test green).

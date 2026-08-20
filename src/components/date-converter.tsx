@@ -28,6 +28,8 @@ interface H2GState {
  */
 export function DateConverter() {
   const { t } = useTranslation();
+  // i18next returns the real array when returnObjects is set, but
+  // react-i18next types t() as string — hence the double assertion.
   const gregMonths = t('calendar.gregMonths', { returnObjects: true }) as unknown as string[];
   const [gregInput, setGregInput] = useState('');
   const [g2h, setG2h] = useState<G2HState>({ date: null, error: null });

@@ -84,6 +84,8 @@ export function CalendarPage() {
   });
 
   const grid = gridQuery.data ?? null;
+  // i18next returns the real array when returnObjects is set, but
+  // react-i18next types t() as string — hence the double assertion.
   const weekdays = t('calendar.weekdays', { returnObjects: true }) as unknown as string[];
   const gregMonths = t('calendar.gregMonths', { returnObjects: true }) as unknown as string[];
 

@@ -1,0 +1,9 @@
+Task: 3.1 Data layer + i18n
+
+Summary: Added @tanstack/react-query 5.101.4 (pnpm add), src/lib/prayer.ts wrapping Tauri invokes (getPrayerTimes, getLocation, setLocation, searchCities, get/setting for calculation method and notification/adhan toggles) with strict types mirrored from Rust (CalculationMethod union, PrayerTimes RFC3339, City, Location) plus helpers todayDateString, formatPrayerTime (Intl HH:mm), getNextPrayer (excludes sunrise by default, includeSunrise opt), isPast, isCalculationMethod. Added comprehensive i18n keys (en/id) for prayer names, today next-prayer/location/method/loading/error, and settings method selector/location search/manual lat/lon/save + notification/adhan toggles. Added src/lib/prayer.test.ts with 13 unit tests (todayDateString, formatPrayerTime, getNextPrayer with Fiona/sunrise/null cases, isPast, isCalculationMethod).
+
+Files: package.json, pnpm-lock.yaml, src/lib/prayer.ts, src/lib/prayer.test.ts, src/i18n/locales/en.json, src/i18n/locales/id.json
+
+Why: Establish typed frontend data layer per tech-stack (TanStack Query planned for next tasks) and localized strings needed by Today and Settings UI, with isolated pure logic covered by tests.
+
+Verification: pnpm test 17/17 pass (4 locale +13 prayer); pnpm exec tsc --noEmit pass; pnpm exec biome check . pass; helpers validated for date formatting, next-prayer ranking, and method guard.

@@ -42,11 +42,11 @@ tauri-plugin-notification 2.3.3 on desktop (no action API / click events in the
 plugin's desktop path — verified in source). The prayer-time one-tap is
 delivered as an in-app prompt per the spec amendment._
 
-- [ ] Task: Scheduler emits a new always-on `prayer-fired` event (payload `{prayer, time}`) at each prayer time, independent of the notification/adhan toggles; `prayer-time` stays adhan-only (event glue — test-exempt per project rule)
-- [ ] Task: Frontend log API wrapper (`src/lib/log.ts`): types + invoke wrappers mirroring the Rust commands (moved up from Phase 5 — the prompt needs `logPrayer` + `getPrayerLog`)
-- [ ] Task: Global prayer-time prompt (`src/components/prayer-prompt.tsx`, mounted in `App.tsx`): listens to `prayer-fired`, one-tap "Prayed" → `logPrayer` (tap moment = `logged_at`), skipped when the prayer is already logged today, location prompt when none set, gentle auto-dismiss, `aria-live`
-- [ ] Task: i18n — prompt strings under `log.*` in `en` + `id` catalogs
-- [ ] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest)
+- [x] Task: Scheduler emits a new always-on `prayer-fired` event (payload `{prayer, time}`) at each prayer time, independent of the notification/adhan toggles; `prayer-time` stays adhan-only (event glue — test-exempt per project rule) [ea5fe58]
+- [x] Task: Frontend log API wrapper (`src/lib/log.ts`): types + invoke wrappers mirroring the Rust commands (moved up from Phase 5 — the prompt needs `logPrayer` + `getPrayerLog`) [6333190]
+- [x] Task: Global prayer-time prompt (`src/components/prayer-prompt.tsx`, mounted in `App.tsx`): listens to `prayer-fired`, one-tap "Prayed" → `logPrayer` (tap moment = `logged_at`), skipped when the prayer is already logged today, location prompt when none set, gentle auto-dismiss, `aria-live` [1ed3801]
+- [x] Task: i18n — prompt strings under `log.*` in `en` + `id` catalogs [1ed3801]
+- [~] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5: Frontend — Log screen + i18n

@@ -1,0 +1,9 @@
+Task 1.2 Green — bundled Quran dataset + loader passes
+
+- Generated src-tauri/assets/quran/quran.json via scripts/generate-quran.mjs fetching alquran.cloud (quran-uthmani, en.sahih, en.itani, id.indonesian): 114 surahs, 6236 ayahs, Uthmani Arabic + 3 translations aligned, stripped BOM.
+- Updated ATTRIBUTION.md with verified licenses (Tanzil CC BY 3.0, Sahih, Clear Quran, Indonesian) and fetch date.
+- Loader src-tauri/src/quran/mod.rs already with OnceLock + typed Surah/Ayah; tests now Green 6/6.
+- Biome config: increased maxSize to 10MiB and disabled formatter/linter for src-tauri/assets/** to handle 4.8MiB JSON.
+- Verification: cargo test --lib quran 6 passed, full lib 61 passed; cargo clippy -D warnings clean; cargo fmt --check clean; biome check 2 files processed.
+
+Commit: feat(quran) 90c1ddb

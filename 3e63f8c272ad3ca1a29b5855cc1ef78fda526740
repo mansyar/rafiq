@@ -1,0 +1,10 @@
+Task 3.1 — Quran data layer + i18n + typography
+
+- src/lib/quran.ts: types Ayah/Surah, QuranTranslation 3 with DEFAULT sahih, invoke wrappers listSurahs/getSurah/searchSurahs/getQuranTranslation/setQuranTranslation, helpers isQuranTranslation, translationKey, shouldShowBismillah (9 exception), formatAyahNumber.
+- src/lib/quran.test.ts 5 tests (valid/invalid translation, 3 count, i18n key, bismillah).
+- src/i18n/locales en/id quran keys: title/subtitle/searchPlaceholder/noResults/loading/error/surah/ayah/bismillah/revealedMeccan/Medinan/translations 3/translationLabel/readerTitle/continuousHint.
+- src/index.css: imported @fontsource/amiri; font-arabic stack already includes Amiri.
+- pnpm add @fontsource/amiri 5.3.0.
+- Verification: pnpm test 22/22 (incl. quran 5/5), tsc pass, biome 38 clean.
+
+Commit: 3e63f8c

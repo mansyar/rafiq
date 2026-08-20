@@ -1,0 +1,9 @@
+Tasks: 3.2 Today page + 3.3 Settings UI additions
+
+Summary: Implemented Today page (src/pages/today.tsx) rendering today's 5 prayers + sunrise from get_prayer_times via TanStack Query (resolved-location + method + prayer-times queries, todayDateString, formatPrayerTime with locale, getNextPrayer highlight), showing location (city name/country or manual lat/lon fallback), method label (i18n settings.methods), next-prayer pill (gold/emerald) with aria-current, loading/error/not-set states and link to Settings. Added QueryClientProvider in src/App.tsx with retry 1, refetchOnWindowFocus false. Extended src/lib/prayer.ts with getCityById and getResolvedLocation wrappers + ResolvedLocation type. Added backend commands get_city_by_id and get_resolved_location (src-tauri/src/commands.rs) plus ResolvedLocation Serialize derive (city/mod.rs) and lib.rs registration. Rebuilt Settings (src/pages/settings.tsx) to include calculation method selector (7 buttons), location city search (debounced 300ms, searchCities limit 5, results as buttons), manual lat/lon inputs with validation and save, notification/adhan toggles (get/set helpers) persisting via settings, invalidating queries on mutation, localized errors.
+
+Files: src-tauri/src/city/mod.rs, src-tauri/src/commands.rs, src-tauri/src/lib.rs, src/App.tsx, src/lib/prayer.ts, src/pages/today.tsx, src/pages/settings.tsx
+
+Why: Deliver user-facing Today experience per spec AC-3/AC-8 and Settings controls per AC-4/AC-6, reusing typed prayer data layer and i18n.
+
+Verification: pnpm exec tsc --noEmit pass; pnpm exec biome check . pass; pnpm test 17/17 pass; cargo fmt --check pass; cargo clippy -D warnings pass; cargo test --lib 48/48 pass; Today renders 6 rows with next highlighted, location/method localized; Settings saves city/manual with validation errors localized and toggles persist.

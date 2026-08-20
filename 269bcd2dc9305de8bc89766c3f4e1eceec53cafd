@@ -1,0 +1,27 @@
+Review fixes for track 'prayer-log-analytics_20260820' (3 findings from the
+conductor-review):
+
+1. [High] Best/current streak capped at the month window.
+   get_log_analytics_impl (src-tauri/src/commands.rs) loaded only
+   min(month_start, today-7)..=today — a streak crossing the month start
+   was truncated (40-day real streak reported as 20). Now loads the whole
+   stored history (log is never pruned, ~5 rows/day); monthly_summary
+   filters to its own window internally, so the month card is unchanged.
+   TDD: new red test get_log_analytics_covers_full_history_for_streaks
+   seeds 40 complete days and asserts current == best == 40 (failed with
+   left: 20 / right: 40 before the fix). Also removed the now-unused
+   Datelike import.
+
+2. [Medium] 7-day grid's today row bypassed the early-tap guard
+   (src/pages/log.tsx): today's missed grid cells could still log a
+   future prayer as qada. Cells for date === today are now disabled
+   while the prayer window hasn't opened (same isPast guard as the
+   Today list).
+
+3. [Medium] PrayerPrompt dismissal was keyed by prayer name only
+   (src/components/prayer-prompt.tsx): dismissing today's Fajr silenced
+   tomorrow's Fajr in sessions crossing midnight. dismissedRef is now
+   keyed `${todayDateString()}:${prayer}`.
+
+Gate: cargo test 120 unit + 6 integration, clippy -D warnings, fmt,
+tsc, biome (45 files), vitest 29 — all green.

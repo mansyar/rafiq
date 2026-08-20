@@ -54,6 +54,10 @@
   - [x] Verify zero network activity for the feature (offline requirement) — all computation is local (compiled ICU4X data); no network calls in the feature code
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — d2d1326
 
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions — 35f7dc9
+  - [x] [Low] Added justification comments to the three `as unknown as string[]` i18n array casts (calendar.tsx, date-converter.tsx) per typescript.md
+
 *Notes: Per the project rule, tests are required for logic-bearing code only —
 the conversion engine (Rust) is fully TDD'd; the frontend components and thin
 invoke wrappers are presentational and need no tests.*

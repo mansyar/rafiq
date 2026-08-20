@@ -102,6 +102,43 @@
     "continuousHint": "Gulir kontinyu — {{count}} ayat"
   },
   "log": {
+    "empty": "Belum ada catatan salat. Ketuk nama salat di atas setelah Anda salat \u2014 setiap hari adalah awal baru.",
+    "loading": "Memuat catatan Anda\u2026",
+    "error": "Gagal memuat catatan salat.",
+    "noLocation": {
+      "hint": "Atur lokasi Anda untuk mulai mencatat salat.",
+      "openSettings": "Buka pengaturan"
+    },
+    "today": {
+      "title": "Hari ini",
+      "log": "Sudah salat",
+      "delete": "Hapus",
+      "confirmDelete": "Konfirmasi hapus",
+      "allLogged": "Semua salat lima waktu tercatat \u2014 semoga diterima."
+    },
+    "week": {
+      "title": "7 hari terakhir",
+      "today": "hari ini",
+      "legend": "Tepat waktu (hijau) \u00b7 qada (emas) \u00b7 terlewat (kosong). Ketuk sel yang terlewat untuk mencatatnya."
+    },
+    "status": {
+      "on_time": "Tepat waktu",
+      "qada": "Qada",
+      "missed": "Terlewat"
+    },
+    "streaks": {
+      "title": "Rekor",
+      "current": "Berjalan",
+      "best": "Terbaik",
+      "hint": "Sebuah hari terhitung jika kelima salat tercatat."
+    },
+    "month": {
+      "title": "Bulan ini",
+      "completion": "Penyelesaian",
+      "onTime": "Tepat waktu",
+      "qada": "Qada",
+      "missed": "Terlewat"
+    },
     "prompt": {
       "title": "Waktu {{name}}",
       "prayed": "Sudah salat",

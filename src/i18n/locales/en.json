@@ -102,6 +102,43 @@
     "continuousHint": "Continuous scroll — {{count}} ayahs"
   },
   "log": {
+    "empty": "No prayers logged yet. Tap a prayer above when you have prayed — every day is a fresh start.",
+    "loading": "Loading your log\u2026",
+    "error": "Couldn\u2019t load your log.",
+    "noLocation": {
+      "hint": "Set your location to start logging prayers.",
+      "openSettings": "Open settings"
+    },
+    "today": {
+      "title": "Today",
+      "log": "Prayed",
+      "delete": "Remove",
+      "confirmDelete": "Confirm remove",
+      "allLogged": "All five prayers logged \u2014 may they be accepted."
+    },
+    "week": {
+      "title": "Last 7 days",
+      "today": "today",
+      "legend": "On time (green) \u00b7 qada (gold) \u00b7 missed (empty). Tap a missed cell to log it."
+    },
+    "status": {
+      "on_time": "On time",
+      "qada": "Qada",
+      "missed": "Missed"
+    },
+    "streaks": {
+      "title": "Streak",
+      "current": "Current",
+      "best": "Best",
+      "hint": "A day counts when all five prayers are logged."
+    },
+    "month": {
+      "title": "This month",
+      "completion": "Completion",
+      "onTime": "On time",
+      "qada": "Qada",
+      "missed": "Missed"
+    },
     "prompt": {
       "title": "{{name}} time",
       "prayed": "Prayed",

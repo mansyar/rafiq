@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AdhanPlayer } from '@/components/adhan-player';
 import { Layout } from '@/components/layout';
 import { PrayerPrompt } from '@/components/prayer-prompt';
-import { PagePlaceholder } from '@/pages/placeholder';
+import { LogPage } from '@/pages/log';
 import { QuranList } from '@/pages/quran-list';
 import { QuranReader } from '@/pages/quran-reader';
 import { Settings } from '@/pages/settings';
@@ -29,7 +29,7 @@ export function App() {
             <Route index element={<Today />} />
             <Route path="quran" element={<QuranList />} />
             <Route path="quran/:id" element={<QuranReader />} />
-            <Route path="log" element={<PagePlaceholder page="log" />} />
+            <Route path="log" element={<LogPage />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>

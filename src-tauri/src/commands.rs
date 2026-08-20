@@ -860,4 +860,194 @@ mod tests {
             crate::quran::QuranTranslation::Clear
         );
     }
+
+    // ── Prayer log commands ─────────────────────────────────────────────────
+
+    fn set_jakarta(conn: &Connection) {
+        let jakarta_id = crate::city::all_cities()
+            .iter()
+            .find(|c| c.name == "Jakarta" && c.country == "Indonesia")
+            .unwrap()
+            .id
+            .clone();
+        super::set_location_impl(conn, super::Location::from_city(jakarta_id)).unwrap();
+    }
+
+    fn local_today() -> chrono::NaiveDate {
+        chrono::Local::now().date_naive()
+    }
+
+    /// Computes the real prayer windows for `date` at the stored location,
+    /// so tests can pick logged_at instants relative to the actual windows.
+    fn windows_for(conn: &Connection, date: chrono::NaiveDate) -> crate::log::DayWindows {
+        let resolved = super::resolve_stored_location(conn).unwrap().unwrap();
+        let coords = crate::prayer::Coordinates {
+            latitude: resolved.latitude,
+            longitude: resolved.longitude,
+        };
+        let method = crate::prayer::CalculationMethod::default();
+        let times = crate::prayer::calculate_prayer_times(date, coords, method).unwrap();
+        let next = crate::prayer::calculate_prayer_times(date.succ_opt().unwrap(), coords, method)
+            .unwrap();
+        crate::log::DayWindows::from_rfc3339(
+            &times.fajr,
+            &times.sunrise,
+            &times.dhuhr,
+            &times.asr,
+            &times.maghrib,
+            &times.isha,
+            &next.fajr,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn log_prayer_rejects_without_location() {
+        let conn = conn("log-no-loc");
+        let today = local_today();
+        let err = super::log_prayer_impl(&conn, "fajr", &today.to_string(), "2026-08-20T04:30:00Z")
+            .unwrap_err();
+        assert!(err.to_lowercase().contains("location"), "unexpected: {err}");
+    }
+
+    #[test]
+    fn log_prayer_rejects_unknown_prayer() {
+        let conn = conn("log-bad-prayer");
+        set_jakarta(&conn);
+        let err = super::log_prayer_impl(&conn, "sunrise", "2026-08-20", "2026-08-20T12:00:00Z")
+            .unwrap_err();
+        assert!(err.contains("prayer"), "unexpected: {err}");
+    }
+
+    #[test]
+    fn log_prayer_rejects_outside_seven_day_lookback() {
+        let conn = conn("log-lookback");
+        set_jakarta(&conn);
+        let too_old = local_today() - chrono::TimeDelta::try_days(8).unwrap();
+        let err =
+            super::log_prayer_impl(&conn, "fajr", &too_old.to_string(), "2026-08-20T04:30:00Z")
+                .unwrap_err();
+        assert!(err.contains("7"), "unexpected: {err}");
+
+        let in_future = local_today() + chrono::TimeDelta::try_days(1).unwrap();
+        let err = super::log_prayer_impl(
+            &conn,
+            "fajr",
+            &in_future.to_string(),
+            "2026-08-20T04:30:00Z",
+        )
+        .unwrap_err();
+        assert!(err.contains("7"), "unexpected: {err}");
+    }
+
+    #[test]
+    fn log_prayer_classifies_at_logged_instant_and_persists() {
+        let conn = conn("log-classify");
+        set_jakarta(&conn);
+        let today = local_today();
+        let windows = windows_for(&conn, today);
+        // Dhuhr exactly at its window start is on-time regardless of the real clock.
+        let entry = super::log_prayer_impl(
+            &conn,
+            "dhuhr",
+            &today.to_string(),
+            &windows.dhuhr.to_string(),
+        )
+        .unwrap();
+        assert_eq!(entry.prayer, crate::log::Prayer::Dhuhr);
+        assert_eq!(entry.status, crate::log::LogStatus::OnTime);
+        assert_eq!(entry.log_date, today.to_string());
+        assert_eq!(entry.logged_at, windows.dhuhr.to_string());
+
+        // Re-logging the same (date, prayer) is rejected (UNIQUE constraint).
+        let dup = super::log_prayer_impl(
+            &conn,
+            "dhuhr",
+            &today.to_string(),
+            &windows.dhuhr.to_string(),
+        );
+        assert!(dup.is_err());
+    }
+
+    #[test]
+    fn log_prayer_logs_qada_when_outside_window() {
+        let conn = conn("log-qada");
+        set_jakarta(&conn);
+        let today = local_today();
+        let windows = windows_for(&conn, today);
+        // The Fajr window ends at sunrise; one minute after is qada.
+        let after_sunrise = jiff::Timestamp::from_second(windows.sunrise.as_second() + 60).unwrap();
+        let entry = super::log_prayer_impl(
+            &conn,
+            "fajr",
+            &today.to_string(),
+            &after_sunrise.to_string(),
+        )
+        .unwrap();
+        assert_eq!(entry.status, crate::log::LogStatus::Qada);
+    }
+
+    #[test]
+    fn delete_log_entry_removes_and_counts_rows() {
+        let conn = conn("log-delete");
+        set_jakarta(&conn);
+        let today = local_today();
+        let windows = windows_for(&conn, today);
+        super::log_prayer_impl(&conn, "fajr", &today.to_string(), &windows.fajr.to_string())
+            .unwrap();
+        assert_eq!(
+            super::delete_log_entry_impl(&conn, &today.to_string(), "fajr").unwrap(),
+            1
+        );
+        assert_eq!(
+            super::delete_log_entry_impl(&conn, &today.to_string(), "fajr").unwrap(),
+            0
+        );
+    }
+
+    #[test]
+    fn get_prayer_log_returns_ordered_range() {
+        let conn = conn("log-range");
+        set_jakarta(&conn);
+        let today = local_today();
+        let windows = windows_for(&conn, today);
+        // Insert out of order; the query must return prayer order within the date.
+        super::log_prayer_impl(
+            &conn,
+            "dhuhr",
+            &today.to_string(),
+            &windows.dhuhr.to_string(),
+        )
+        .unwrap();
+        super::log_prayer_impl(&conn, "fajr", &today.to_string(), &windows.fajr.to_string())
+            .unwrap();
+        let entries =
+            super::get_prayer_log_impl(&conn, &today.to_string(), &today.to_string()).unwrap();
+        assert_eq!(entries.len(), 2);
+        assert_eq!(entries[0].prayer, crate::log::Prayer::Fajr);
+        assert_eq!(entries[1].prayer, crate::log::Prayer::Dhuhr);
+    }
+
+    #[test]
+    fn get_log_analytics_reports_streaks_and_month() {
+        let conn = conn("log-analytics");
+        set_jakarta(&conn);
+        let today = local_today();
+        let windows = windows_for(&conn, today);
+        // All five prayers at their own window starts -> complete, all on-time day.
+        for (name, instant) in [
+            ("fajr", windows.fajr),
+            ("dhuhr", windows.dhuhr),
+            ("asr", windows.asr),
+            ("maghrib", windows.maghrib),
+            ("isha", windows.isha),
+        ] {
+            super::log_prayer_impl(&conn, name, &today.to_string(), &instant.to_string()).unwrap();
+        }
+        let analytics = super::get_log_analytics_impl(&conn).unwrap();
+        assert_eq!(analytics.streaks.current, 1);
+        assert_eq!(analytics.month.complete_days, 1);
+        assert_eq!(analytics.month.on_time, 5);
+        assert_eq!(analytics.month.missed, analytics.month.days_elapsed * 5 - 5);
+    }
 }

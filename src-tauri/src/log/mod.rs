@@ -592,6 +592,21 @@ mod classify_tests {
             LogStatus::Qada
         );
     }
+
+    #[test]
+    fn day_windows_from_rfc3339_rejects_garbage() {
+        let err = DayWindows::from_rfc3339(
+            "not-a-time",
+            "2025-08-20T05:45:00Z",
+            "2025-08-20T12:05:00Z",
+            "2025-08-20T15:30:00Z",
+            "2025-08-20T18:02:00Z",
+            "2025-08-20T19:20:00Z",
+            "2025-08-21T04:35:00Z",
+        )
+        .unwrap_err();
+        assert!(!err.is_empty());
+    }
 }
 
 #[cfg(test)]

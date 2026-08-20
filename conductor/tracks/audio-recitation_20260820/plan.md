@@ -4,12 +4,12 @@
 **Spec:** Approved 2026-08-20
 
 ## Phase 1: License Verification & Content Gate *(FR-1.2, FR-1.3, AC-7)*
-- [ ] Task: Verify recitation audio source license
-  - [ ] Verify Islamic Network CDN terms + Mishary Alafasy recitation rights; record source and date
-  - [ ] If verifiable: document license in `src-tauri/assets/ATTRIBUTION.md`
-  - [ ] If not verifiable: select a fallback edition from `api.alquran.cloud/v1/edition/format/audio`, record the decision in `conductor/tech-stack.md`, and update the spec's FR-1.3 reciter name
-- [ ] Task: Document audio design in tech stack *(workflow: stack changes before implementation)*
-  - [ ] Add dated note to `conductor/tech-stack.md`: recitation source (CDN pattern, edition, bitrate) and local cache directory design
+- [x] Task: Verify recitation audio source license (d2f1620)
+  - [x] Verify Islamic Network CDN terms + Mishary Alafasy recitation rights; record source and date
+  - [x] If verifiable: document license in `src-tauri/assets/ATTRIBUTION.md`
+  - [-] Fallback: not triggered — license verified 2026-08-20 (contingency edition documented)
+- [x] Task: Document audio design in tech stack *(workflow: stack changes before implementation)* (d2f1620)
+  - [x] Add dated note to `conductor/tech-stack.md`: recitation source (CDN pattern, edition, bitrate) and local cache directory design
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2: Audio Index & Ayah Mapping (Rust) *(FR-2.4, FR-2.1)*

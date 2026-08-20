@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { AdhanPlayer } from '@/components/adhan-player';
 import { Layout } from '@/components/layout';
 import { PagePlaceholder } from '@/pages/placeholder';
 import { Settings } from '@/pages/settings';
@@ -17,6 +18,7 @@ const queryClient = new QueryClient({
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <AdhanPlayer />
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>

@@ -1,6 +1,6 @@
 //! Prayer log domain: logged prayers, on-time/qada classification, analytics.
 
-use chrono::NaiveDate;
+use chrono::{Datelike, NaiveDate};
 use jiff::Timestamp;
 use rusqlite::{params, Connection};
 use std::collections::BTreeMap;
@@ -183,6 +183,78 @@ fn longest_run(dates: &[NaiveDate]) -> u32 {
         prev = Some(*date);
     }
     best
+}
+
+/// Aggregate of the month containing `today`, counted only up to `today`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct MonthlySummary {
+    /// Days elapsed from the 1st of the month through `today` (inclusive).
+    pub days_elapsed: u32,
+    /// Days on which all five prayers were logged (status-agnostic).
+    pub complete_days: u32,
+    /// `complete_days / days_elapsed * 100`.
+    pub completion_pct: f64,
+    /// Prayers logged as `on_time` within the window.
+    pub on_time: u32,
+    /// Prayers logged as `qada` within the window.
+    pub qada: u32,
+    /// Prayer slots within the window that were never logged.
+    pub missed: u32,
+    /// `on_time / total slots * 100`.
+    pub on_time_pct: f64,
+    /// `qada / total slots * 100`.
+    pub qada_pct: f64,
+    /// `missed / total slots * 100`.
+    pub missed_pct: f64,
+}
+
+/// Computes the summary for the month containing `today`.
+///
+/// The window spans the 1st of the month through `today` inclusive; entries for
+/// other months or future days are ignored (neither counted nor missed). Every
+/// day contributes five prayer slots: logged `on_time` or `qada`, otherwise missed.
+pub fn monthly_summary(entries: &[LogEntry], today: NaiveDate) -> MonthlySummary {
+    let month_start =
+        NaiveDate::from_ymd_opt(today.year(), today.month(), 1).expect("valid month start");
+    let days_elapsed = (today - month_start).num_days() as u32 + 1;
+    let total_slots = days_elapsed * Prayer::ALL.len() as u32;
+
+    let mut on_time = 0u32;
+    let mut qada = 0u32;
+    let mut prayers_per_day: BTreeMap<NaiveDate, u32> = BTreeMap::new();
+    for entry in entries {
+        let Ok(date) = NaiveDate::parse_from_str(&entry.log_date, "%Y-%m-%d") else {
+            continue;
+        };
+        if date < month_start || date > today {
+            continue;
+        }
+        match entry.status {
+            LogStatus::OnTime => on_time += 1,
+            LogStatus::Qada => qada += 1,
+        }
+        *prayers_per_day.entry(date).or_insert(0) += 1;
+    }
+    let complete_days = prayers_per_day
+        .values()
+        .filter(|count| **count >= Prayer::ALL.len() as u32)
+        .count() as u32;
+
+    let missed = total_slots.saturating_sub(on_time + qada);
+    // Multiply before dividing: keeps whole-percentage results exact in f64.
+    let pct = |count: u32| count as f64 * 100.0 / total_slots as f64;
+
+    MonthlySummary {
+        days_elapsed,
+        complete_days,
+        completion_pct: complete_days as f64 * 100.0 / days_elapsed as f64,
+        on_time,
+        qada,
+        missed,
+        on_time_pct: pct(on_time),
+        qada_pct: pct(qada),
+        missed_pct: pct(missed),
+    }
 }
 
 /// A single logged prayer.

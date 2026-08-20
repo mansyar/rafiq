@@ -8,10 +8,10 @@
 
 *Goal: bundled Uthmani + 3 translations as offline assets with validation.*
 
-- [~] Task 1.1: Acquire & curate Quran datasets (Red)
+- [x] Task 1.1: Acquire & curate Quran datasets (Red) — 5e6fe06
   - [ ] Source Tanzil Uthmani Arabic + Sahih International, The Clear Quran, Kemenag JSON (license-verified, ATTRIBUTION)
   - [ ] Generate `src-tauri/assets/quran/` (surah metadata + ayahs) + `ATTRIBUTION.md`
-  - [ ] Validation test: 114 surahs, ayah counts, Uthmani non-empty, translations aligned, unique ids
+  - [x] Validation test: 114 surahs, ayah counts, Uthmani non-empty, translations aligned, unique ids — 5e6fe06
 - [ ] Task 1.2: Implement asset loader (Green)
   - [ ] Lazy-load via `OnceLock<Vec<Surah>>/Ayah>`, typed `Surah/Ayah/Quran` structs
   - [ ] Tests green; `clippy` clean

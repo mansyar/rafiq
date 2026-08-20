@@ -1,0 +1,11 @@
+Task: 4.2 Green + 4.3 config + 4.4 manual verify
+
+Summary: Implemented full Phase 4 scheduler pipeline.
+- src-tauri/src/scheduler/mod.rs: next_prayer (5 prayers excluding sunrise, earliest > now), should_fire (both toggles), next_prayer_including_tomorrow, compute_next_prayer (reads location via resolve_stored_location + method via resolve_prayer_method, calculates today/tomorrow with calculate_prayer_times), spawn_scheduler (mpsc channel, OnceLock sender, background thread: compute next, poll 60s when no location, sleep via recv_timeout, fires via fire_prayer checking notification_enabled/adhan_enabled tolerant read, sends tauri_plugin_notification builder title/body .show() and emits 'prayer-time' event via Emitter, request_reschedule to interrupt sleep). Fixed imports tauri::Manager/Emitter, clone-on-copy, fmt.
+- src-tauri/src/commands.rs: made resolve_prayer_method pub, added NextPrayer struct, get_next_prayer (compute_next_prayer -> RFC3339), reschedule_prayer_notifications (request_reschedule), trigger_test_prayer (reads toggles, fires notification+emit, validates at least one enabled, returns NextPrayer), modified set_setting/set_location to auto request_reschedule for relevant keys, added Manager import.
+- src-tauri/src/lib.rs: spawn_scheduler(app.handle().clone()) in setup, register new commands get_next_prayer/reschedule/trigger_test_prayer in invoke_handler.
+- src-tauri/tauri.conf.json: added additionalBrowserArgs '--autoplay-policy=no-user-gesture-required' for audio autoplay.
+- src/lib/prayer.ts: added wrappers getScheduledNextPrayer/triggerTestPrayer/reschedulePrayerNotifications via invoke.
+- src/pages/settings.tsx: added Test prayer trigger UI (5 buttons Fajr-Dhuhr-Asr-Maghrib-Isha) calling triggerTestPrayer, showing success/error via locationMessage/locationError, imports triggerTestPrayer.
+
+Verification: cargo test --lib 55 passed (scheduler 7, city 21, commands 22+, prayer 5), cargo clippy -D warnings pass, cargo fmt --check pass, pnpm biome check pass, pnpm tsc --noEmit pass, pnpm test 17 passed.

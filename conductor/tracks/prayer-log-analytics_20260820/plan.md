@@ -8,14 +8,14 @@ Method: strict TDD per `workflow.md` — each implementation task is preceded by
 its failing-test task. Every phase ends with the Phase Verification &
 Checkpointing Protocol.
 
-## Phase 1: Storage — `prayer_log` table + repository
+## Phase 1: Storage — `prayer_log` table + repository [checkpoint: 1aa4f25]
 
 - [x] Task: Write failing tests for migration 2 (temp DB: migration applies, `schema_version` → 2, idempotent re-run, `prayer_log` table exists with `UNIQUE(log_date, prayer)`) [c99596e]
 - [x] Task: Implement migration 2 in `storage/db.rs` (`MIGRATION_002`, bump `SCHEMA_VERSION` to 2) [fa36334]
 - [x] Task: Write failing tests for the prayer-log repository (insert, duplicate `(date, prayer)` rejected, delete, range query ordering, empty range) [d495f3f]
 - [x] Task: Implement repository in `src-tauri/src/log/mod.rs` (insert / delete / range query over rusqlite) [1aa4f25]
 - [x] Task: Refactor + verify coverage ≥80% for the new module [1aa4f25]
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2: Classification + analytics (pure logic)
 

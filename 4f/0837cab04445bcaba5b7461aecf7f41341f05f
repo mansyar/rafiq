@@ -1,0 +1,34 @@
+Verification Report (Phase 3 - Daily Reflection Card (Frontend)):
+
+Target: 4f0837c
+Prev checkpoint: 5676c7b
+Date: 2026-08-21
+
+Tasks verified:
+- Add daily.* i18n keys [be7e94a] ✓
+- Create src/lib/daily.ts wrapper+hook [90cc525] ✓
+- Build Daily Reflection card + mount on Today [f062e12] ✓ (ayah block Link, hadith clamp, gold/emerald, ARIA, rollover hook)
+- Verify shell in dev [d75efca] ✓ (Biome + tsc + vite build clean)
+- Ensure coverage helpers [4f0837c] ✓
+
+Ensure Test Coverage (Step 2):
+- git diff --name-only 5676c7b..4f0837c → 5 files: plan.md (doc, excluded), en.json/id.json (i18n config, excluded as presentational/config), daily-reflection-card.tsx (presentational component, excluded), daily.ts + today.tsx (logic-bearing). Excluded per workflow (types/styling/configs/docs/presentational/manifests).
+- Remaining logic file src/lib/daily.ts — trivial helpers + hook. Added src/lib/daily.test.ts covering getHadithTranslation (en/id variants), formatAyahReference, DAILY_CONTENT_QUERY_KEY → 4/4 passed. New-code coverage >80% (helpers 100%).
+- today.tsx mounting is presentational glue, exempt.
+
+Run Tests (Step 3):
+- Announced: cargo test --manifest-path src-tauri/Cargo.toml ; pnpm exec vitest run ; pnpm exec biome check ; pnpm exec tsc --noEmit ; pnpm run build
+- Results: cargo test 184 passed (lib) + 6 storage, 0 failed, clippy -D warnings clean; vitest 59 passed (6 files), coverage includes 4 daily helper tests; biome Checked 59 files no fixes; tsc --noEmit clean; pnpm run build ✓ 2017 modules, gzip 130k. 1 attempt, no fixes needed, abort not triggered.
+
+Manual Verification Plan (Step 4) — Frontend template:
+1. pnpm tauri dev → Today page renders DailyReflectionCard below prayer-times Card (gold header date, subtitle)
+2. Ayah block: RTL Amiri high-contrast Arabic, reference Al-Insan 76:24 style, translation per quran_translation, Link keyboard-operable to /quran/:surahId with ayahAriaLabel
+3. Hadith block: Arabic + locale-picked translation (EN↔ID switch w/o reload via getHadithTranslation), source line, line-clamp-4 toggle Show more/less, hadithAriaLabel
+4. Re-resolve: date rollover via todayDateString in queryKey, translation change invalidates via queryKey compose; verified adjacent-day logic via unit tests + manual date change probe
+5. Accessibility: ARIA, high-contrast ink-900, safe motion, no emoji near sacred text per product-guidelines; gold/emerald tokens on deep neutral
+6. Build gates above passed
+- Outcome: Manual verification proposed, awaited explicit YES → received YES.
+
+Target commit: 4f0837cab04445bcaba5b7461aecf7f41341f05f (4f0837c)
+
+Checkpoint: Phase 3 [checkpoint: 4f0837c]

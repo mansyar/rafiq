@@ -9,12 +9,12 @@
 *Goal: bundled Uthmani + 3 translations as offline assets with validation.*
 
 - [x] Task 1.1: Acquire & curate Quran datasets (Red) — 5e6fe06
-  - [ ] Source Tanzil Uthmani Arabic + Sahih International, The Clear Quran, Kemenag JSON (license-verified, ATTRIBUTION)
-  - [ ] Generate `src-tauri/assets/quran/` (surah metadata + ayahs) + `ATTRIBUTION.md`
+  - [x] Source Tanzil Uthmani Arabic + Sahih International, The Clear Quran, Kemenag JSON (license-verified, ATTRIBUTION) — 90c1ddb
+  - [x] Generate `src-tauri/assets/quran/` (surah metadata + ayahs) + `ATTRIBUTION.md` — 90c1ddb
   - [x] Validation test: 114 surahs, ayah counts, Uthmani non-empty, translations aligned, unique ids — 5e6fe06
-- [ ] Task 1.2: Implement asset loader (Green)
-  - [ ] Lazy-load via `OnceLock<Vec<Surah>>/Ayah>`, typed `Surah/Ayah/Quran` structs
-  - [ ] Tests green; `clippy` clean
+- [x] Task 1.2: Implement asset loader (Green) — 90c1ddb
+  - [x] Lazy-load via `OnceLock<Vec<Surah>>/Ayah>`, typed `Surah/Ayah/Quran` structs — 90c1ddb
+  - [x] Tests green; `clippy` clean — 90c1ddb
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 2 — Quran Commands & Search (Rust, TDD)

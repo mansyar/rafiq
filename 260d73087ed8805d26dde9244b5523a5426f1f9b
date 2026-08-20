@@ -1,1 +1,40 @@
 Follow-up to c7c0c00: biome lint/style/noNonNullAssertion warnings on locationQuery.data! - replaced the non-null assertions with the exact idiom used by today.tsx (if (!data) throw inside queryFn, enabled !!data && !!method). No behavior change. Gate: biome 0 findings, tsc clean, vitest 29 passed.
+
+**Phase 5 Verification Report — Prayer Log + Analytics: Frontend — Log screen + i18n**
+
+Scope (git diff --name-only 33d5429..HEAD): conductor plan.md + spec.md
+(Phase 5 amendment), src/App.tsx, src/i18n/locales/{en,id}.json,
+src/lib/log.test.ts, src/lib/log.ts, src/pages/log.tsx.
+
+Test mapping: log.ts (logWindowDates, prayerStatus, isLoggablePrayer) →
+log.test.ts (7 tests, TDD red e3c9621 → green cd8c9ae); log.tsx and
+App.tsx presentational (test-exempt per project rule); i18n JSON data.
+
+Automated checks:
+- pnpm test: 29/29 (locale 4, log 7, quran 5, prayer 13)
+- cargo test: 119 unit + 6 integration pass
+- cargo clippy --all-targets -- -D warnings: clean
+- cargo fmt --check: clean
+- biome check . (45 files): clean (0 findings)
+- tsc --noEmit: clean
+- Coverage (logic-bearing): src-tauri log/mod.rs 98.10% lines / 100%
+  functions / 99.27% branches (>= 80% gate met; unchanged by Phase 5)
+
+Manual verification (pnpm dev → app URL):
+1. Log nav item renders the Log page (today-first layout); empty state
+   shown before any logging
+2. Today: tap Prayed → on-time/qada badge; Remove is two-step (confirm)
+   and deletes; all-logged warm confirmation appears
+3. 7-day grid: 7 rows (weekday letter + label, sr-only today marker);
+   tapping a missed past-day cell logs it retroactively (qada) and fills
+   the cell; logged cells are non-interactive
+4. Streak card updates (all-5-today → current 1); month card
+   completion/on-time/qada/missed % update after each action
+5. Settings test-prayer trigger → in-app prompt → Prayed → Log reflects
+   the entry (Phase 4 integration)
+6. Language switch → all strings in Indonesian
+7. Early-tap guard (checkpoint amendment): today's prayers whose window
+   has not opened show a disabled Prayed button; enables once the prayer
+   time passes; past-day grid cells unaffected
+
+User confirmation: Yes, proceed (2026-08-20). Checkpoint: 260d730

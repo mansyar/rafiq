@@ -62,3 +62,6 @@
   - Notes: AC-1 PASS (114 surahs, 6236 ayahs, 90c1ddb quran.json, Al-Fatihah 7 Bismillah gated 9); AC-2 PASS (default Sahih, roundtrip Clear/Kemenag via SettingsRepo, invalid fallback, reader switcher persists 08c1672); AC-3 PASS (search Baqara/2/البَقَر ranked 0-6, limit 20, 18/18); AC-4 PASS (md:grid-cols-2 side-by-side→stacked, RTL font-arabic Amiri 1.6rem, 08c1672); AC-5 PASS (Bismillah except At-Tawbah, gold border); AC-6 PASS (high-contrast gold badge/emerald, aria-current/pressed/alert); AC-7 PASS (en/id quran.* 12+ keys, 3 translations); AC-8 PASS (gate: cargo 80/80 clippy/fmt, biome 40, tsc, vitest 22/22)
   - Gate (Task 4.1): cargo fmt --check clean, clippy -D warnings clean (dev 0.76s), cargo test 80/80 (quran 18/18), biome 40 clean, tsc pass, vitest 22/22 — 08c1672
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
+
+## Phase: Review Fixes - [x]
+- [x] Task: Apply review suggestions — 51cb850

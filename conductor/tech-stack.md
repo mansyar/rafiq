@@ -30,6 +30,12 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
 - **System integration:** `tauri-plugin-notification` (prayer/adhan alerts);
   `tauri-plugin-autostart`, `tauri-plugin-single-instance`,
   `tauri-plugin-updater` (auto-updates via GitHub Releases)
+  > **Note (2026-08-20):** `tauri-plugin-notification` 2.3.3's desktop path is
+  > a plain `notify_rust` wrapper — no action-button API and no click/action
+  > events (all action APIs are mobile-only; verified in the plugin source). OS
+  > notifications stay informational on desktop; prayer-time one-tap logging is
+  > delivered as an in-app prompt driven by the scheduler's `prayer-fired`
+  > event (prayer-log-analytics track spec, amendment 2026-08-20).
 
 ## Data & Content
 - **City DB:** bundled ~3,000 cities (embedded SQLite/JSON asset, shipped with

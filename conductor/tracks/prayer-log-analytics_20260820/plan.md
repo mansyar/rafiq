@@ -35,11 +35,18 @@ Checkpointing Protocol.
 - [x] Task: Verify coverage + clippy clean [961ab2f]
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 4: Notification "Prayed" action
+## Phase 4: Prayer-time one-tap (in-app prompt)
 
-- [ ] Task: Write failing tests for the notification action (action id + localized label; action event routes to `log_prayer` with the prayer payload; platform fallback leaves the plain notification unchanged)
-- [ ] Task: Implement action in the scheduler notification + action-event handling that calls `log_prayer` (tap moment = `logged_at`)
-- [ ] Task: Verify coverage + clippy clean
+_Revision (2026-08-20): OS-notification action buttons are not achievable with
+tauri-plugin-notification 2.3.3 on desktop (no action API / click events in the
+plugin's desktop path — verified in source). The prayer-time one-tap is
+delivered as an in-app prompt per the spec amendment._
+
+- [ ] Task: Scheduler emits a new always-on `prayer-fired` event (payload `{prayer, time}`) at each prayer time, independent of the notification/adhan toggles; `prayer-time` stays adhan-only (event glue — test-exempt per project rule)
+- [ ] Task: Frontend log API wrapper (`src/lib/log.ts`): types + invoke wrappers mirroring the Rust commands (moved up from Phase 5 — the prompt needs `logPrayer` + `getPrayerLog`)
+- [ ] Task: Global prayer-time prompt (`src/components/prayer-prompt.tsx`, mounted in `App.tsx`): listens to `prayer-fired`, one-tap "Prayed" → `logPrayer` (tap moment = `logged_at`), skipped when the prayer is already logged today, location prompt when none set, gentle auto-dismiss, `aria-live`
+- [ ] Task: i18n — prompt strings under `log.*` in `en` + `id` catalogs
+- [ ] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5: Frontend — Log screen + i18n
@@ -47,7 +54,6 @@ Checkpointing Protocol.
 _Presentational components are test-exempt per project rule; thin API wrappers
 mirror the existing `lib/*.ts` pattern._
 
-- [ ] Task: Frontend log API wrapper (`src/lib/log.ts`): types + invoke wrappers mirroring the Rust commands
 - [ ] Task: Build the Log page (today-first): today's 5 prayers with one-tap log/delete + status; 7-day grid with tappable retroactive cells; streak card (current + best); current-month summary with on-time / qada / missed breakdown; empty state; no-location prompt
 - [ ] Task: Replace the `/log` placeholder route in `App.tsx` with the Log page
 - [ ] Task: i18n — all new strings under `log.*` in `en` + `id` catalogs

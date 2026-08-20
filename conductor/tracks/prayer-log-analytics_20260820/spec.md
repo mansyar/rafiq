@@ -23,9 +23,10 @@ unit-tested.
 - **FR-1.1:** A log entry = one record per (local date, prayer) for the 5
   obligatory prayers (Fajr, Dhuhr, Asr, Maghrib, Isha). Sunrise is never
   loggable.
-- **FR-1.2:** **Notification action:** the existing prayer-time notification
-  gains a localized "Prayed" action button; tapping logs that prayer with the
-  tap moment as `logged_at`.
+- **FR-1.2:** **Prayer-time prompt:** when a prayer time fires, the app shows
+  a small in-app prompt (global, visible on any screen) with a localized
+  one-tap "Prayed" button; tapping logs that prayer with the tap moment as
+  `logged_at`. The OS notification remains informational (see FR-1.7).
 - **FR-1.3:** **Manual logging:** the Log screen shows today's 5 prayers with
   one-tap log / unlog controls.
 - **FR-1.4:** **Retroactive logging:** prayers from the previous 7 calendar
@@ -36,9 +37,12 @@ unit-tested.
 - **FR-1.6:** **Location dependency:** logging requires a resolved location
   (window classification needs computed times); without one, the UI shows a
   friendly "set your location" prompt (no crash, no silent drop).
-- **FR-1.7:** **Platform reality:** notification action buttons are best-effort
-  per platform (Windows/macOS render them; WebKitGTK may not). The notification
-  stays unchanged where unsupported — manual logging is the universal path.
+- **FR-1.7:** **Platform reality (verified 2026-08-20):**
+  `tauri-plugin-notification` 2.3.3's desktop path is a plain `notify_rust`
+  wrapper — no action-button API and no click/action events on desktop (all
+  action APIs are mobile-only). OS notifications therefore stay informational
+  on all desktop platforms; the in-app prompt (FR-1.2) + manual logging
+  (FR-1.3) is the universal one-tap path.
 
 ### FR-2: On-time vs qada classification
 
@@ -98,7 +102,7 @@ unit-tested.
 
 ## Acceptance Criteria
 
-- **AC-1:** Tapping "Prayed" on a prayer notification logs the prayer as
+- **AC-1:** Tapping "Prayed" on the prayer-time prompt logs the prayer as
   on-time (within window); Log screen reflects it immediately.
 - **AC-2:** Tapping a past grid cell (≤7 days) logs it — qada, except the
   boundary case (yesterday's Isha tapped before today's Fajr → on-time).
@@ -124,3 +128,13 @@ unit-tested.
 - Configurable grace periods or streak criteria
 - Tracking beyond the 5 daily prayers (no wudu, no voluntary prayers)
 - Qibla, tafsir, and other stated V1 non-goals
+
+## Amendment (2026-08-20, Phase 4)
+
+FR-1.2 / FR-1.7 / AC-1 reworked: the OS-notification "Prayed" action button is
+not achievable with the current stack — `tauri-plugin-notification` 2.3.3's
+desktop path has no action API and emits no click/action events (verified in
+the plugin source during Phase 4). The prayer-time one-tap is delivered as an
+in-app prompt driven by a new always-on `prayer-fired` event emitted by the
+scheduler (independent of the notification/adhan toggles). A dated note was
+added to `conductor/tech-stack.md`.

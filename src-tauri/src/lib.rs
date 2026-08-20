@@ -30,6 +30,8 @@ pub fn run() {
                 conn: std::sync::Mutex::new(conn),
                 data_dir,
             });
+            // Spawn the adhan + notification scheduler (background thread).
+            scheduler::spawn_scheduler(app.handle().clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -41,7 +43,10 @@ pub fn run() {
             commands::set_location,
             commands::search_cities,
             commands::get_city_by_id,
-            commands::get_resolved_location
+            commands::get_resolved_location,
+            commands::get_next_prayer,
+            commands::reschedule_prayer_notifications,
+            commands::trigger_test_prayer
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

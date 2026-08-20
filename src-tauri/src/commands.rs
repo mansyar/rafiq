@@ -8,7 +8,7 @@ use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 use std::sync::Mutex;
-use tauri::State;
+use tauri::{Manager, State};
 
 /// Shared application state managed by Tauri.
 pub struct AppState {
@@ -183,7 +183,7 @@ pub fn get_prayer_times_impl(
     calculate_prayer_times(date, coordinates, method)
 }
 
-fn resolve_prayer_method(conn: &Connection) -> Result<CalculationMethod, String> {
+pub fn resolve_prayer_method(conn: &Connection) -> Result<CalculationMethod, String> {
     let value = SettingsRepo::new(conn)
         .get(PRAYER_METHOD_SETTING_KEY)
         .map_err(|error| format!("could not read prayer calculation method: {error}"))?;
@@ -221,7 +221,20 @@ pub fn set_setting(state: State<'_, AppState>, key: String, value: String) -> Re
         .conn
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
-    set_setting_impl(&conn, &key, &value)
+    let res = set_setting_impl(&conn, &key, &value);
+    if res.is_ok()
+        && matches!(
+            key.trim(),
+            "prayer_calculation_method"
+                | "notification_enabled"
+                | "adhan_enabled"
+                | "prayer_location"
+                | "locale"
+        )
+    {
+        crate::scheduler::request_reschedule();
+    }
+    res
 }
 
 #[tauri::command]
@@ -262,7 +275,11 @@ pub fn set_location(state: State<'_, AppState>, location: Location) -> Result<()
         .conn
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
-    set_location_impl(&conn, location)
+    let res = set_location_impl(&conn, location);
+    if res.is_ok() {
+        crate::scheduler::request_reschedule();
+    }
+    res
 }
 
 #[tauri::command]
@@ -285,6 +302,91 @@ pub fn get_resolved_location(
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
     resolve_stored_location(&conn)
+}
+
+#[derive(Debug, Serialize)]
+pub struct NextPrayer {
+    pub prayer: String,
+    pub time: String,
+}
+
+#[tauri::command]
+pub fn get_next_prayer(state: State<'_, AppState>) -> Result<Option<NextPrayer>, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    let next = crate::scheduler::compute_next_prayer(&conn, chrono::Utc::now())?;
+    Ok(next.map(|(prayer, dt)| NextPrayer {
+        prayer,
+        time: dt.to_rfc3339(),
+    }))
+}
+
+#[tauri::command]
+pub fn reschedule_prayer_notifications() -> Result<(), String> {
+    crate::scheduler::request_reschedule();
+    Ok(())
+}
+
+#[tauri::command]
+pub fn trigger_test_prayer(
+    app: tauri::AppHandle,
+    prayer: Option<String>,
+) -> Result<NextPrayer, String> {
+    let state = app.state::<AppState>();
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    let notification_enabled = {
+        let v = get_setting_impl(&conn, "notification_enabled").unwrap_or(None);
+        match v {
+            None => true,
+            Some(s) => s.trim() == "1" || s.trim() == "true" || s.trim() == "enabled",
+        }
+    };
+    let adhan_enabled = {
+        let v = get_setting_impl(&conn, "adhan_enabled").unwrap_or(None);
+        match v {
+            None => true,
+            Some(s) => s.trim() == "1" || s.trim() == "true" || s.trim() == "enabled",
+        }
+    };
+
+    // Use requested prayer or fallback to Fajr for test trigger.
+    let prayer_name = prayer.unwrap_or_else(|| "fajr".to_string());
+    let now = chrono::Utc::now();
+    let payload = serde_json::json!({
+        "prayer": prayer_name,
+        "time": now.to_rfc3339(),
+    });
+
+    if notification_enabled {
+        use tauri_plugin_notification::NotificationExt;
+        let _ = app
+            .notification()
+            .builder()
+            .title(format!("Test — {}", prayer_name))
+            .body(format!("Test prayer trigger for {}", prayer_name))
+            .show();
+    }
+
+    if adhan_enabled {
+        use tauri::Emitter;
+        let _ = app.emit("prayer-time", payload);
+    }
+
+    if !notification_enabled && !adhan_enabled {
+        return Err(
+            "both notification and adhan are disabled — enable at least one toggle".to_string(),
+        );
+    }
+
+    Ok(NextPrayer {
+        prayer: prayer_name,
+        time: now.to_rfc3339(),
+    })
 }
 
 #[cfg(test)]

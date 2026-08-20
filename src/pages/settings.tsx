@@ -17,6 +17,7 @@ import {
   setCalculationMethod,
   setLocation,
   setNotificationEnabled,
+  triggerTestPrayer,
 } from '@/lib/prayer';
 import { setSetting } from '@/lib/tauri';
 
@@ -358,6 +359,37 @@ export function Settings() {
               >
                 {adhanQuery.data ? 'On' : 'Off'}
               </Button>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Test trigger — manual verification for Phase 4 */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Test prayer trigger</h3>
+            <p className="text-xs text-muted-foreground">
+              Fires a test notification and adhan sound via the scheduler (respects toggles above).
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const).map((p) => (
+                <Button
+                  key={p}
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      setLocationMessage(null);
+                      setLocationError(null);
+                      await triggerTestPrayer(p);
+                      setLocationMessage(`Test trigger sent for ${p}`);
+                    } catch (e) {
+                      setLocationError(String(e));
+                    }
+                  }}
+                >
+                  Test {p}
+                </Button>
+              ))}
             </div>
           </div>
         </CardContent>

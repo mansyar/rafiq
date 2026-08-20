@@ -96,6 +96,22 @@ export async function getResolvedLocation(): Promise<ResolvedLocation | null> {
   return invoke<ResolvedLocation | null>('get_resolved_location');
 }
 
+export async function getScheduledNextPrayer(): Promise<{ prayer: string; time: string } | null> {
+  return invoke<{ prayer: string; time: string } | null>('get_next_prayer');
+}
+
+export async function triggerTestPrayer(
+  prayer?: string,
+): Promise<{ prayer: string; time: string }> {
+  return invoke<{ prayer: string; time: string }>('trigger_test_prayer', {
+    prayer: prayer ?? null,
+  });
+}
+
+export async function reschedulePrayerNotifications(): Promise<void> {
+  await invoke('reschedule_prayer_notifications');
+}
+
 export async function getSetting(key: string): Promise<string | null> {
   return invoke<string | null>('get_setting', { key });
 }

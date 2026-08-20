@@ -262,6 +262,8 @@ export function LogPage() {
                           </th>
                           {PRAYERS.map((prayer) => {
                             const status = prayerStatus(entries, date, prayer);
+                            const time = date === today ? timesQuery.data?.[prayer] : undefined;
+                            const windowOpen = !time || isPast(time);
                             return (
                               <td key={prayer} className="p-0">
                                 <button
@@ -272,7 +274,11 @@ export function LogPage() {
                                       ? () => void handleLog(date, prayer)
                                       : undefined
                                   }
-                                  disabled={status !== 'missed' || busy !== null}
+                                  disabled={
+                                    status !== 'missed' ||
+                                    busy !== null ||
+                                    (date === today && !windowOpen)
+                                  }
                                   className={`h-8 w-full ${
                                     status === 'on_time'
                                       ? 'bg-emerald-500/70'

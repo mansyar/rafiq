@@ -7,7 +7,7 @@ use crate::log::{
 };
 use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates, PrayerTimes};
 use crate::storage::{schema_version, SettingsRepo};
-use chrono::{Datelike, NaiveDate};
+use chrono::NaiveDate;
 use jiff::Timestamp;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
@@ -355,21 +355,11 @@ pub fn get_prayer_log_impl(
 /// Current/best streaks plus the current-month summary over the stored log.
 pub fn get_log_analytics_impl(conn: &Connection) -> Result<LogAnalytics, String> {
     let today = chrono::Local::now().date_naive();
-    let month_start =
-        NaiveDate::from_ymd_opt(today.year(), today.month(), 1).expect("valid month start");
-    // Cover both the monthly window (from the 1st) and the 7-day lookback
-    // (a current streak may reach further back than the month start).
-    let lookback = today - chrono::TimeDelta::try_days(7).expect("7 days");
-    let from = if month_start < lookback {
-        month_start
-    } else {
-        lookback
-    };
+    // Streaks span the whole stored history (the log is never pruned and is
+    // bounded by ~5 entries/day); the monthly summary filters to its own
+    // window internally.
     let entries = PrayerLogRepo::new(conn)
-        .range(
-            &from.format("%Y-%m-%d").to_string(),
-            &today.format("%Y-%m-%d").to_string(),
-        )
+        .range("0001-01-01", &today.format("%Y-%m-%d").to_string())
         .map_err(|e| e.to_string())?;
     Ok(LogAnalytics {
         streaks: compute_streaks(&entries, today),
@@ -669,6 +659,7 @@ pub fn trigger_test_prayer(
 
 #[cfg(test)]
 mod tests {
+    use crate::log::PrayerLogRepo;
     use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates};
     use crate::storage::{init_db, SettingsRepo, SCHEMA_VERSION};
     use rusqlite::Connection;
@@ -1239,5 +1230,31 @@ mod tests {
         assert_eq!(analytics.month.complete_days, 1);
         assert_eq!(analytics.month.on_time, 5);
         assert_eq!(analytics.month.missed, analytics.month.days_elapsed * 5 - 5);
+    }
+
+    #[test]
+    fn get_log_analytics_covers_full_history_for_streaks() {
+        let conn = conn("log-analytics-history");
+        let today = local_today();
+        // Forty consecutive complete days. The analytics query must see the
+        // whole history: the current streak necessarily reaches back before
+        // the start of the current month (a month is at most 31 days long),
+        // so a range capped at the month start would undercount it.
+        let repo = PrayerLogRepo::new(&conn);
+        for i in 0..40i64 {
+            let date = today - chrono::TimeDelta::try_days(i).unwrap();
+            for &prayer in &crate::log::Prayer::ALL {
+                repo.insert(
+                    &date.to_string(),
+                    prayer,
+                    &format!("{date}T12:00:00Z"),
+                    crate::log::LogStatus::OnTime,
+                )
+                .unwrap();
+            }
+        }
+        let analytics = super::get_log_analytics_impl(&conn).unwrap();
+        assert_eq!(analytics.streaks.current, 40);
+        assert_eq!(analytics.streaks.best, 40);
     }
 }

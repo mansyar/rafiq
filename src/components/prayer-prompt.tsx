@@ -53,7 +53,9 @@ export function PrayerPrompt() {
   const dismiss = useCallback((prayer: LoggablePrayer) => {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = null;
-    dismissedRef.current.add(prayer);
+    // Keyed by date so dismissing today's prayer doesn't silence tomorrow's
+    // in a session that runs across midnight.
+    dismissedRef.current.add(`${todayDateString()}:${prayer}`);
     setPrompt(null);
   }, []);
 
@@ -77,7 +79,7 @@ export function PrayerPrompt() {
       unlisten = await listen<{ prayer: string; time: string }>('prayer-fired', (event) => {
         const { prayer, time } = event.payload;
         if (!isLoggablePrayer(prayer)) return;
-        if (dismissedRef.current.has(prayer)) return;
+        if (dismissedRef.current.has(`${todayDateString()}:${prayer}`)) return;
         void showPrompt(prayer, time);
       });
     }

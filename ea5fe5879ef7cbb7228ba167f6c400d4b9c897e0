@@ -1,0 +1,17 @@
+Phase 4 Task 1 — always-on prayer-fired scheduler event.
+
+fire_prayer (src-tauri/src/scheduler/mod.rs) now builds the {prayer, time}
+payload once and:
+1. Emits "prayer-fired" unconditionally — independent of the
+   notification_enabled / adhan_enabled toggles. Drives the new in-app
+   prayer-time prompt (PrayerPrompt) which offers the one-tap "Prayed"
+   action on any screen. OS notifications cannot carry action buttons on
+   desktop (tauri-plugin-notification 2.3.3 desktop path is plain
+   notify_rust — no action API, no click events; see spec amendment
+   2026-08-20), so the prompt is the desktop one-tap path.
+2. Emits "prayer-time" only when adhan_enabled (unchanged AdhanPlayer
+   behavior).
+
+Test-exempt per project rule: fire_prayer is event glue requiring a live
+AppHandle (no logic-bearing code changed). cargo test 119 unit + 6
+integration pass; no regression.

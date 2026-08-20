@@ -1,3 +1,5 @@
+Phase 3 Task 3 - verify coverage + clippy clean (clippy fix: manual_range_contains in log_prayer lookback check).
+
 **Phase 3 Verification Report - Prayer Log + Analytics: Tauri commands**
 
 Scope (git diff 07048e7..HEAD): src-tauri/src/commands.rs (+ inline #[cfg(test)] tests), src-tauri/src/log/mod.rs (Serialize derives, DayWindows::from_rfc3339, LogAnalytics; + inline tests), src-tauri/src/lib.rs (generate_handler! registration), plan.md.

@@ -1,0 +1,9 @@
+Task: 2.4 Location settings + commands (TDD)
+
+Summary: Added Location persistence via settings (LOCATION_SETTING_KEY) with typed Location {city_id, latitude, longitude} (serde JSON), validation mirroring city::resolve_location (city takes precedence, manual requires both lat/lon and range checks, friendly errors), plus get_location_impl/set_location_impl/validate_location/search_cities_impl/resolve_stored_location helpers and Tauri commands get_location/set_location/search_cities (registered in lib.rs). Implemented 10 new tests in commands::tests covering get_location none, city/manual roundtrips, invalid city/manual/empty rejections, search ranking/limit/empty/not-found, resolve_stored_location after city set, and serialization shape.
+
+Files: src-tauri/src/commands.rs; src-tauri/src/lib.rs
+
+Why: Enable offline location selection (city search or manual lat/long) with validated persistence for prayer time calculation and future Today page controls, as required by spec.
+
+Verification: cargo test --lib 48/48 pass (city 21, commands 21, prayer 5 + storage); cargo test --lib full 48 pass; cargo clippy -D warnings clean; cargo fmt clean. Location validation correctly rejects city not found, out-of-range lat/lon, missing fields, and empty location; search correctly respects limit and ranking.

@@ -23,7 +23,7 @@ commands — presentational components exempt).
   - [x] Implement commands + expose in `commands.rs`/`lib.rs`; wire method default from settings; tests green
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 2 — Location & City Database (Rust, TDD)
+## Phase 2 — Location & City Database (Rust, TDD) [checkpoint: a55663b]
 
 *Goal: bundled ~3,000-city dataset with search and manual lat/long fallback.*
 
@@ -41,7 +41,7 @@ commands — presentational components exempt).
 - [x] Task 2.4: Location settings + commands (TDD) — a55663b
   - [x] Failing tests: `get_location`/`set_location` persist via settings repo; invalid input rejected
   - [x] Implement commands; tests green
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 3 — Today Page & Settings UI (Frontend)
 

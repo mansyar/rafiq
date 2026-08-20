@@ -1,6 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 pub mod city;
 pub mod commands;
+pub mod hijri;
 pub mod log;
 pub mod prayer;
 pub mod quran;

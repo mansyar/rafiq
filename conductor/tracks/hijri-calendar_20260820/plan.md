@@ -2,7 +2,7 @@
 
 **Track:** `hijri-calendar_20260820` · **Spec:** [./spec.md](./spec.md)
 
-**Phase 1: Hijri Conversion Engine (Rust Core)**
+## Phase 1 — Hijri Conversion Engine (Rust Core)
 - [ ] Task: Document tech-stack change and add `icu_calendar` dependency
   - [ ] Add `icu_calendar` (ICU4X) to `src-tauri/Cargo.toml`; verify `cargo build`
   - [ ] Update `conductor/tech-stack.md`: dated note recording the ICU4X Umm al-Qura choice (Workflow Principle 2 — stack changes documented *before* implementation)
@@ -23,14 +23,14 @@
   - [ ] Verify >80% coverage on the new `hijri` module
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-**Phase 2: Tauri Command Layer**
+## Phase 2 — Tauri Command Layer
 - [ ] Task: Expose commands and register them
   - [ ] Add `hijri_from_gregorian`, `hijri_to_gregorian`, `hijri_month_grid`, `today_hijri` to `src-tauri/src/commands.rs` following the existing `*_impl` + wrapper pattern
   - [ ] Register in `lib.rs` `invoke_handler`
   - [ ] `cargo fmt`, `cargo clippy`, `cargo test` all pass
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-**Phase 3: Frontend — i18n, API Wrapper, Month View**
+## Phase 3 — Frontend: i18n, API Wrapper, Month View
 - [ ] Task: Add `hijri` i18n keys to `src/i18n/locales/en.json` and `id.json`
   - [ ] `nav.calendar`, `page.calendar` title/subtitle
   - [ ] 12 Hijri month names per locale (EN: Rabi al-Awwal… / ID: Rabiul Awal, Jumadil Awal, Dzulqa'dah, Dzulhijjah…) + locale-independent Arabic-script set (محرم، صفر، ربيع الأول، …)
@@ -43,7 +43,7 @@
   - [ ] Register route in `App.tsx` + nav item in `layout.tsx` (lucide `CalendarDays` icon)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-**Phase 4: Date Converter & Final Verification**
+## Phase 4 — Date Converter & Final Verification
 - [ ] Task: Implement bidirectional date converter
   - [ ] Gregorian→Hijri and Hijri→Gregorian inputs reusing `src/lib/hijri.ts` (single conversion path)
   - [ ] ±1 day footnote; locale-correct month names in both directions

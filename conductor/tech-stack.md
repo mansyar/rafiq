@@ -23,7 +23,13 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
   7 standard methods, MWL default
 - **Date handling:** `chrono` for command-facing calendar dates and serialization;
   `jiff` for `adhaan` calculation instants and UTC formatting
-- **Hijri calendar:** Umm al-Qura conversion (crate or bespoke implementation)
+- **Hijri calendar:** Umm al-Qura conversion via ICU4X `icu_calendar`
+  (`Hijri::new_umm_al_qura()`; civil dates, proleptic/unbounded range)
+  > **Note (2026-08-20):** Adopted `icu_calendar` 2.x (ICU4X) for the
+  > hijri-calendar track. The crates.io `hijri` crate is a CLI binary, not an
+  > embedding library; its engine is ICU4X's Umm al-Qura rules, which are the
+  > same implementation used here. Anchors verified against Umm al-Qura data:
+  > 2026-06-16 = 1 Muharram 1448 AH; 1447-12-10 = 2026-05-27.
 - **Storage:** SQLite via `rusqlite` behind Rust commands (prayer logs, streaks,
   settings, audio index)
 - **Networking:** `reqwest` for on-demand audio downloads; local cache directory

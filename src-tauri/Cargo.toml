@@ -29,3 +29,4 @@ rusqlite = { version = "0.40", features = ["bundled"] }
 adhan = { package = "adhaan", version = "0.3.0" }
 chrono = { version = "0.4", features = ["serde"] }
 jiff = "0.2"
+icu_calendar = "2.3.0"

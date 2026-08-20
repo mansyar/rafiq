@@ -60,6 +60,12 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
   > the player. Cache: `recitation/` subdirectory of the Tauri app-data
   > directory, files named by global ayah number, tracked in the SQLite audio
   > index.
+  > **Note (2026-08-21):** `<audio src>` for cached files goes through the
+  > Tauri asset protocol (`convertFileSrc` → `http://asset.localhost/…`),
+  > which requires the `protocol-asset` Cargo feature on the `tauri`
+  > dependency plus an `app.security.assetProtocol` scope of
+  > `$APPDATA/recitation/**`. Without the feature the webview gets
+  > `ERR_CONNECTION_REFUSED` on every asset URL.
 - **Licensing:** per `product.md` Content Licensing Notes
 
 ## Dev Tools

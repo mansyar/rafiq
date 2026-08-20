@@ -54,7 +54,7 @@
   - [x] Post-verification fix: asset protocol required `assetProtocol.enable: true` + `protocol-asset` Cargo feature for `<audio>` playback of cached files (9565986)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 9565986
 
-## Phase 6: Offline, Failure & Release Gate *(FR-5, AC-5–AC-8)*
+## Phase 6: Offline, Failure & Release Gate *(FR-5, AC-5–AC-8)* [checkpoint: 2f7d62d]
 - [x] Task: Write failing tests for offline & failure paths *(Red)* — d5e1775
   - [x] Tests: fully cached surah plays without network; failure → calm error state + retry; cached ayahs unaffected by failure
 - [x] Task: Implement/verify offline & failure UX *(Green)* — 2f7d62d
@@ -62,4 +62,4 @@
 - [x] Task: Full gate & docs sync — 2f7d62d
   - [x] `cargo test` + `cargo clippy`, `biome`, `tsc --noEmit`, `vitest` all pass; coverage >80% for all new logic modules
   - [x] Update `conductor/tech-stack.md` + `ATTRIBUTION.md` if design or license findings changed during implementation (no changes required)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 2f7d62d

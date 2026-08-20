@@ -1,0 +1,8 @@
+Task 3.2/3.3 — Quran Reader UI (list + reader)
+
+- src/pages/quran-list.tsx: useQuery listSurahs/searchSurahs debounced 300ms (enabled >=2 chars, limit 20), ranked list 114 Mushaf order, search input aria-label, Card with number badge gold, transliteration + EN/ID, ayah count + Meccan/Medinan, Arabic Noto/Amiri RTL, link to /quran/:id.
+- src/pages/quran-reader.tsx: useParams id validate 1-114, useQuery getSurah + getQuranTranslation, mutation setQuranTranslation invalidates, translation switcher 3 buttons aria-pressed gold active, Bismillah header except At-Tawbah (9) gold border, continuous ayahs grid side-by-side md:grid-cols-2 stacked mobile: Arabic RTL font-arabic 1.6rem with ayah number gold badge + translation text, nav prev/next, aria-label per ayah.
+- src/App.tsx: routes /quran -> QuranList, /quran/:id -> QuranReader, QueryClientProvider.
+- Verification: tsc pass, biome 40 clean (fixed wrapping), pnpm test 22/22, cargo 80/80.
+
+Commit: feat(quran) 08c1672

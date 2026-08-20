@@ -33,7 +33,7 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 0b098d8
 
 ## Phase 4: Tauri Commands & Frontend API *(FR-2.2, FR-3 support)*
-- [ ] Task: Write failing tests for player state logic *(Red)*
+- [~] Task: Write failing tests for player state logic *(Red)*
   - [ ] Frontend tests: player state machine (idle → fetching(progress) → playing → paused → stopped), position persistence triggers, bounded lookahead requests
 - [ ] Task: Implement Rust commands + frontend API *(Green)*
   - [ ] Commands in `commands.rs`: `get_recitation_state(surah)` (cached ayahs, last-played ayah, availability), `fetch_ayah_audio(global_ayah)` → local path, `report_played_position(surah, ayah)`, local-file URL helper for `<audio>`

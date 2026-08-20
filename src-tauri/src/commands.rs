@@ -1315,4 +1315,99 @@ mod tests {
         assert_eq!(analytics.streaks.current, 40);
         assert_eq!(analytics.streaks.best, 40);
     }
+
+    // ── Recitation (audio recitation track) ──
+
+    fn mark_audio(conn: &Connection, global_ayah: u32) {
+        crate::storage::RecitationRepo::new(conn)
+            .mark_cached(
+                global_ayah,
+                &format!("recitation/{global_ayah}.mp3"),
+                100,
+                "2026-08-20T00:00:00Z",
+            )
+            .unwrap();
+    }
+
+    #[test]
+    fn get_recitation_state_unknown_surah_errors() {
+        let conn = conn("rec-unknown");
+        assert!(super::get_recitation_state_impl(&conn, 115).is_err());
+        assert!(super::get_recitation_state_impl(&conn, 0).is_err());
+    }
+
+    #[test]
+    fn get_recitation_state_empty_cache_no_position() {
+        let conn = conn("rec-empty");
+        let state = super::get_recitation_state_impl(&conn, 1).unwrap();
+        assert_eq!(state.surah_id, 1);
+        assert_eq!(state.ayah_count, 7);
+        assert_eq!(state.first_global_ayah, 1);
+        assert!(state.cached.is_empty());
+        assert_eq!(state.last_played_ayah, None);
+        assert_eq!(state.reciter.name, "Mishary Rashid Alafasy");
+        assert_eq!(state.reciter.edition, "ar.alafasy");
+    }
+
+    #[test]
+    fn get_recitation_state_maps_surah_range_and_cached_files() {
+        let conn = conn("rec-range");
+        // Surah 2 (Al-Baqarah, 286 ayahs) spans globals 8..=293.
+        mark_audio(&conn, 8);
+        mark_audio(&conn, 10);
+        mark_audio(&conn, 300); // outside surah 2 — must not leak into its state
+        super::set_setting_impl(&conn, "recitation_position_2", "5").unwrap();
+        let state = super::get_recitation_state_impl(&conn, 2).unwrap();
+        assert_eq!(state.first_global_ayah, 8);
+        assert_eq!(state.ayah_count, 286);
+        let cached_globals: Vec<u32> = state.cached.iter().map(|c| c.global_ayah).collect();
+        assert_eq!(cached_globals, vec![8, 10]);
+        assert_eq!(state.last_played_ayah, Some(5));
+    }
+
+    #[test]
+    fn get_recitation_state_ignores_invalid_last_played() {
+        let conn = conn("rec-invalid-pos");
+        super::set_setting_impl(&conn, "recitation_position_1", "99").unwrap(); // > 7 ayahs
+        assert_eq!(
+            super::get_recitation_state_impl(&conn, 1)
+                .unwrap()
+                .last_played_ayah,
+            None
+        );
+        super::set_setting_impl(&conn, "recitation_position_1", "garbage").unwrap();
+        assert_eq!(
+            super::get_recitation_state_impl(&conn, 1)
+                .unwrap()
+                .last_played_ayah,
+            None
+        );
+        super::set_setting_impl(&conn, "recitation_position_1", "0").unwrap();
+        assert_eq!(
+            super::get_recitation_state_impl(&conn, 1)
+                .unwrap()
+                .last_played_ayah,
+            None
+        );
+    }
+
+    #[test]
+    fn report_played_position_rejects_invalid_ayah() {
+        let conn = conn("rec-report-invalid");
+        assert!(super::report_played_position_impl(&conn, 1, 0).is_err());
+        assert!(super::report_played_position_impl(&conn, 1, 8).is_err()); // surah 1 has 7
+        assert!(super::report_played_position_impl(&conn, 115, 1).is_err());
+    }
+
+    #[test]
+    fn report_played_position_roundtrip() {
+        let conn = conn("rec-report");
+        super::report_played_position_impl(&conn, 1, 3).unwrap();
+        assert_eq!(
+            super::get_recitation_state_impl(&conn, 1)
+                .unwrap()
+                .last_played_ayah,
+            Some(3)
+        );
+    }
 }

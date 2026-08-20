@@ -6,7 +6,7 @@
 logic-bearing code (project rule: calculation engines, storage, state,
 commands — presentational components exempt).
 
-## Phase 1 — Prayer Calculation Engine (Rust, TDD)
+## Phase 1 — Prayer Calculation Engine (Rust, TDD) [checkpoint: 9e51393]
 
 *Goal: `adhan` crate integration with typed outputs and command handlers.*
 
@@ -21,7 +21,7 @@ commands — presentational components exempt).
 - [x] Task 1.3: Prayer command handlers (TDD) — 9e51393
   - [x] Failing tests: `get_prayer_times(date, coordinates, method)` — valid input, invalid coordinates rejected, method overrides default, date parsing errors
   - [x] Implement commands + expose in `commands.rs`/`lib.rs`; wire method default from settings; tests green
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 2 — Location & City Database (Rust, TDD)
 

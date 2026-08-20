@@ -7,3 +7,19 @@ Files: src-tauri/src/commands.rs; src-tauri/src/lib.rs
 Why: Enable offline location selection (city search or manual lat/long) with validated persistence for prayer time calculation and future Today page controls, as required by spec.
 
 Verification: cargo test --lib 48/48 pass (city 21, commands 21, prayer 5 + storage); cargo test --lib full 48 pass; cargo clippy -D warnings clean; cargo fmt clean. Location validation correctly rejects city not found, out-of-range lat/lon, missing fields, and empty location; search correctly respects limit and ranking.
+
+Phase 2 Verification Report — Location & City Database
+
+Automated checks:
+- cargo test --lib 48 passed (city 21/21, commands 22/22, prayer 5/5)
+- cargo clippy -D warnings clean (dev profile)
+- cargo fmt --check clean
+- cities.json: 3000 entries, unique ids 3000, coordinates in range (-90..90 / -180..180), required fields present
+- ATTRIBUTION.md present (CC BY 4.0, GeoNames/Natural Earth/SimpleMaps)
+
+Test coverage (TDD):
+- city: dataset validation (loads >=3000, fields, unique ids), validate_coordinates, parse_coordinate valid/invalid, search (Jakarta exact, case-insensitive, prefix ranking, country filter, empty/not-found/limit), find_city_by_id, resolve_location (city valid/invalid, manual valid/invalid, no input, precedence)
+- commands: get_location none, city/manual roundtrips, invalid city/manual/empty rejections, search ranking/limit, resolve_stored_location after set, serialization shape, plus existing prayer/setting tests
+- Manual verification: Jakarta search returns Jakarta first, Indonesia filter returns 10 Indonesian cities, manual -6.2088,106.8456 accepted and 91,0 rejected, city resolution returns correct lat/lon/timezone, persistence roundtrips via settings JSON, node count 3000 confirmed
+
+User confirmation: Yes, proceed (2026-08-20)

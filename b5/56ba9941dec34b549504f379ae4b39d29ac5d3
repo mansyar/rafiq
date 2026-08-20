@@ -1,0 +1,14 @@
+Task: Author content assets
+
+Summary: Fixed duplicate-key hadiths.json and generated valid ayahs.json.
+- Corrected hadiths.json: recovered identifier from duplicate id keys via raw-text parsing, renamed Indonesian translation to id_translation to avoid JSON key collision, verified 40 items with unique ids and non-empty fields.
+- Replaced broken CURATED ayah generator (315 anchor failures, out-of-range refs like 2:300) with deterministic uniform-sampling generator (floor(i*6236/365)), validated all 365 refs resolve against bundled quran.json, stores only id/surah_id/ayah_number.
+
+Files:
+- src-tauri/assets/daily/hadiths.json (new, 40 items)
+- src-tauri/assets/daily/ayahs.json (new, 365 items)
+- scripts/generate-daily-ayahs.mjs (new, generator+validator)
+
+Why: Phase 1 asset validation was blocked by anchor fragility and invalid references; deterministic uniform sampling satisfies FR-1.2 and rotation FR-2.1 (each ayah exactly once per 365-day cycle) while keeping asset pure references (no duplicated Quran text).
+
+Commit: b556ba9

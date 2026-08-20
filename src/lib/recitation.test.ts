@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   AHEAD,
+  availabilityForStart,
   computeLookahead,
   initialPlayerState,
   type PlayerEvent,
   type PlayerPosition,
   persistencePosition,
   playerReducer,
+  type RecitationState,
 } from './recitation';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
@@ -260,6 +262,70 @@ describe('persistencePosition', () => {
     expect(
       persistencePosition(state, requestPlay(pos(2, 3, SURAH2_START), cached(10), SURAH2_END)),
     ).toBeNull();
+  });
+});
+
+// ── Offline & failure paths (FR-5, AC-5, AC-6) ───────────────────────────────
+
+const recitationFixture = (cachedGlobals: number[], lastPlayed: number | null = null) =>
+  ({
+    surah_id: 2,
+    ayah_count: 286,
+    first_global_ayah: SURAH2_START,
+    cached: cachedGlobals.map((g) => ({ global_ayah: g, file_path: `recitation/${g}.mp3` })),
+    last_played_ayah: lastPlayed,
+    reciter: { name: 'Mishary Rashid Alafasy', edition: 'ar.alafasy' },
+  }) as RecitationState;
+
+describe('availabilityForStart (FR-5.3)', () => {
+  it('is loading while the surah state is unknown', () => {
+    expect(availabilityForStart(undefined, 1)).toBe('loading');
+  });
+
+  it('is ready when the start ayah is already cached', () => {
+    expect(availabilityForStart(recitationFixture([8, 9, 10], 2), 2)).toBe('ready');
+  });
+
+  it('needs download when the start ayah is not cached', () => {
+    const rs = recitationFixture([8]);
+    expect(availabilityForStart(rs, 1)).toBe('ready');
+    expect(availabilityForStart(rs, 2)).toBe('needs-download');
+  });
+});
+
+describe('offline & failure playback (AC-5, AC-6)', () => {
+  it('fully cached playback never enters fetching (AC-5)', () => {
+    // Surah 1 (Al-Fatihah): globals 1..7, all cached.
+    let state = playerReducer(
+      initialPlayerState(),
+      requestPlay(pos(1, 1), cached(1, 2, 3, 4, 5, 6, 7), 7),
+    );
+    expect(state.status).toBe('playing');
+    expect(state.pendingGlobals).toEqual([]);
+    for (let ayah = 2; ayah <= 7; ayah += 1) {
+      state = playerReducer(state, {
+        type: 'advance',
+        position: pos(1, ayah),
+        cachedGlobals: cached(1, 2, 3, 4, 5, 6, 7),
+        surahEndGlobal: 7,
+      });
+      expect(state.status).toBe('playing');
+      expect(state.pendingGlobals).toEqual([]);
+    }
+  });
+
+  it('a failed lookahead fetch does not disturb active playback (AC-6)', () => {
+    // Playing cached ayah 2 (global 9); lookahead fetch of global 12 fails.
+    let state = playerReducer(
+      initialPlayerState(),
+      requestPlay(pos(2, 2, SURAH2_START), cached(8, 9, 10), SURAH2_END),
+    );
+    state = playerReducer(state, { type: 'audioStarted' });
+    expect(state.status).toBe('playing');
+    state = playerReducer(state, { type: 'fetchFailed', global: 12, error: 'offline' });
+    expect(state.status).toBe('playing');
+    expect(state.error).toBeNull();
+    expect(state.current).toEqual(pos(2, 2, SURAH2_START));
   });
 });
 

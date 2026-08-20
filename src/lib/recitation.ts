@@ -228,3 +228,17 @@ export function persistencePosition(state: PlayerState, event: PlayerEvent): Pla
   }
   return null;
 }
+
+/** Play control availability for the start ayah (FR-5.3). */
+export type Availability = 'loading' | 'ready' | 'needs-download';
+
+/**
+ * Whether pressing play at `startAyah` can start immediately from cache.
+ * `loading` while the surah's recitation state is still unknown.
+ */
+export function availabilityForStart(
+  _recitation: RecitationState | undefined,
+  _startAyah: number,
+): Availability {
+  throw new Error('not implemented');
+}

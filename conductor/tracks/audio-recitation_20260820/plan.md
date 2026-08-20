@@ -55,7 +55,7 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 9565986
 
 ## Phase 6: Offline, Failure & Release Gate *(FR-5, AC-5–AC-8)*
-- [ ] Task: Write failing tests for offline & failure paths *(Red)*
+- [~] Task: Write failing tests for offline & failure paths *(Red)*
   - [ ] Tests: fully cached surah plays without network; failure → calm error state + retry; cached ayahs unaffected by failure
 - [ ] Task: Implement/verify offline & failure UX *(Green)*
   - [ ] Calm retry message + action in reader footer; play state reflects availability

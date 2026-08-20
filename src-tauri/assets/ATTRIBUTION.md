@@ -1,4 +1,6 @@
-# City Dataset Attribution — Rafiq
+# Content Attribution — Rafiq
+
+## City Dataset
 
 **File:** `cities.json` (3,000 entries) — bundled offline city database for location search & prayer time resolution.
 
@@ -22,3 +24,18 @@ Each entry: `id` (unique slug), `name`, `country`, `country_code` (ISO 3166-1 al
 ## Updates
 
 Regenerate with `node scripts/generate-cities.mjs` — do not hand-edit `cities.json`.
+
+## Recitation Audio (On-Demand)
+
+**Content:** Quran recitation by **Mishary Rashid Alafasy** (Murattal) — Islamic Network edition `ar.alafasy`, 128 kbps MP3, one file per ayah (global ayah 1–6236).
+**Access:** Not bundled with the app. Downloaded on demand at explicit user playback from the Islamic Network CDN:
+`https://cdn.islamic.network/quran/audio/128/ar.alafasy/{global_ayah}.mp3`,
+then cached permanently in the user's local app-data directory (`recitation/`).
+
+### Source & Licensing
+
+- Provider: **Islamic Network** (https://alquran.cloud, https://cdn.islamic.network).
+- Recitation copyright is retained by the reciter (Mishary Rashid Alafasy).
+- Terms verified 2026-08-20 against the alquran.cloud *Terms and Conditions* (last updated 14 June 2026, https://alquran.cloud/terms-and-conditions), Section IV "Translations and recitations":
+  > "Recitations are licensed to us by the reciters or their estates for free, non-commercial redistribution at the bitrates we publish. You may stream, embed and download them for personal and educational use. You may bundle them into a commercial product, but please note that copyrights lie with the reciters and they may ask you to remove the conent."
+- **Compliance:** Rafiq fetches only on explicit user action (streaming/download for personal use), attributes the reciter in the in-app player, and does not redistribute the files. In any commercial distribution the reciter may request removal; the recitation edition is a single configurable constant so an alternative edition can be substituted if ever required (see `conductor/tech-stack.md`).

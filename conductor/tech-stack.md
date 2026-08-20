@@ -49,6 +49,17 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
 - **Quran text + translations:** bundled local assets (Tanzil-format Quran text,
   JSON translations: Sahih International, The Clear Quran, Kemenag)
 - **Recitation:** Mishary Alafasy, download-on-demand, cached forever locally
+  > **Note (2026-08-20):** Recitation source confirmed for the
+  > audio-recitation track: Islamic Network CDN, per-ayah MP3 at
+  > `https://cdn.islamic.network/quran/audio/128/ar.alafasy/{global_ayah}.mp3`
+  > (edition `ar.alafasy` — Mishary Rashid Alafasy Murattal, 128 kbps, global
+  > ayah 1–6236 mapped from bundled Quran metadata). License verified against
+  > the alquran.cloud Terms & Conditions (last updated 2026-06-14, Section IV):
+  > free non-commercial redistribution; commercial bundling permitted with
+  > reciter copyright retained and takedown possible. Reciter name is shown in
+  > the player. Cache: `recitation/` subdirectory of the Tauri app-data
+  > directory, files named by global ayah number, tracked in the SQLite audio
+  > index.
 - **Licensing:** per `product.md` Content Licensing Notes
 
 ## Dev Tools

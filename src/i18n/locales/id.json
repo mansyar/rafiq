@@ -100,5 +100,16 @@
     "translationLabel": "Terjemahan",
     "readerTitle": "{{name}} — {{transliteration}}",
     "continuousHint": "Gulir kontinyu — {{count}} ayat"
+  },
+  "log": {
+    "prompt": {
+      "title": "Waktu {{name}}",
+      "prayed": "Sudah salat",
+      "logged": "Tercatat — semoga diterima",
+      "error": "Gagal mencatat salat — Anda juga bisa mencatatnya dari halaman Catatan.",
+      "locationHint": "Atur lokasi Anda untuk mencatat salat.",
+      "openSettings": "Buka pengaturan",
+      "dismiss": "Tutup"
+    }
   }
 }

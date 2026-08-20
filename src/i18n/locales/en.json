@@ -100,5 +100,16 @@
     "translationLabel": "Translation",
     "readerTitle": "{{name}} — {{transliteration}}",
     "continuousHint": "Continuous scroll — {{count}} ayahs"
+  },
+  "log": {
+    "prompt": {
+      "title": "{{name}} time",
+      "prayed": "Prayed",
+      "logged": "Noted — may it be accepted",
+      "error": "Couldn\u2019t log that prayer — you can also log it from the Log screen.",
+      "locationHint": "Set your location to log prayers.",
+      "openSettings": "Open settings",
+      "dismiss": "Dismiss"
+    }
   }
 }

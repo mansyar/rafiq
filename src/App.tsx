@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AdhanPlayer } from '@/components/adhan-player';
 import { Layout } from '@/components/layout';
+import { PrayerPrompt } from '@/components/prayer-prompt';
 import { PagePlaceholder } from '@/pages/placeholder';
 import { QuranList } from '@/pages/quran-list';
 import { QuranReader } from '@/pages/quran-reader';
@@ -22,6 +23,7 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <AdhanPlayer />
       <BrowserRouter>
+        <PrayerPrompt />
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Today />} />

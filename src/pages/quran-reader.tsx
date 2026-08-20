@@ -1,8 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import {
+  RecitationAudio,
+  RecitationFooter,
+  RecitationPlayButton,
+} from '@/components/recitation-player';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useRecitationPlayer } from '@/lib/player-store';
 import {
   getQuranTranslation,
   getSurah,
@@ -41,6 +47,11 @@ export function QuranReader() {
   const translation = translationQuery.data ?? 'sahih';
   const surah = surahQuery.data;
 
+  const playerCurrent = useRecitationPlayer((s) => s.current);
+  const playerStatus = useRecitationPlayer((s) => s.status);
+  const playerPlay = useRecitationPlayer((s) => s.play);
+  const playerActive = playerStatus !== 'idle' && playerCurrent?.surahId === surahId;
+
   if (!id || !Number.isInteger(surahId) || surahId < 1 || surahId > 114) {
     return (
       <section className="mx-auto max-w-3xl">
@@ -63,6 +74,8 @@ export function QuranReader() {
 
   return (
     <section aria-labelledby="quran-reader-title" className="mx-auto max-w-4xl space-y-4">
+      <RecitationAudio />
+
       <div className="flex items-center justify-between">
         <Link
           to="/quran"
@@ -82,22 +95,25 @@ export function QuranReader() {
 
       <Card>
         <CardHeader className="space-y-3">
-          {surah ? (
-            <CardTitle id="quran-reader-title" className="font-heading text-xl">
-              {t('quran.readerTitle', {
-                name: surah.name_en,
-                transliteration: surah.name_transliteration,
-              })}{' '}
-              •{' '}
-              <span dir="rtl" lang="ar" className="font-arabic text-2xl">
-                {surah.name_ar}
-              </span>
-            </CardTitle>
-          ) : (
-            <CardTitle id="quran-reader-title" className="font-heading text-xl">
-              {t('quran.loading')}
-            </CardTitle>
-          )}
+          <div className="flex items-start justify-between gap-3">
+            {surah ? (
+              <CardTitle id="quran-reader-title" className="font-heading text-xl">
+                {t('quran.readerTitle', {
+                  name: surah.name_en,
+                  transliteration: surah.name_transliteration,
+                })}{' '}
+                •{' '}
+                <span dir="rtl" lang="ar" className="font-arabic text-2xl">
+                  {surah.name_ar}
+                </span>
+              </CardTitle>
+            ) : (
+              <CardTitle id="quran-reader-title" className="font-heading text-xl">
+                {t('quran.loading')}
+              </CardTitle>
+            )}
+            {surah && <RecitationPlayButton surahId={surah.id} />}
+          </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">{t('quran.translationLabel')}:</span>
@@ -161,15 +177,34 @@ export function QuranReader() {
                     : translation === 'kemenag'
                       ? ayah.kemenag
                       : ayah.sahih;
+                const isCurrent = playerActive && playerCurrent?.ayah === ayah.number;
+                const startFromAyah = () => {
+                  void playerPlay(surah.id, ayah.number);
+                };
                 return (
-                  <article
+                  <button
                     key={ayah.number}
-                    className="overflow-hidden rounded-lg border bg-card"
-                    aria-label={`${t('quran.ayah')} ${ayah.number}`}
+                    type="button"
+                    onClick={startFromAyah}
+                    aria-label={
+                      isCurrent
+                        ? `${t('quran.ayah')} ${ayah.number} — ${t('quran.audio.playingNow')}`
+                        : `${t('quran.ayah')} ${ayah.number} — ${t('quran.audio.playFromAyah')}`
+                    }
+                    className={cn(
+                      'w-full cursor-pointer overflow-hidden rounded-lg border bg-card text-left transition-colors',
+                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500',
+                      isCurrent && 'border-gold-500 ring-1 ring-gold-500/40',
+                    )}
                   >
                     <div className="grid gap-0 md:grid-cols-2">
                       {/* Arabic — sacred text high-contrast */}
-                      <div className="relative bg-amber-50/20 p-5 dark:bg-ink-900/20 md:border-r">
+                      <div
+                        className={cn(
+                          'relative bg-amber-50/20 p-5 dark:bg-ink-900/20 md:border-r',
+                          isCurrent && 'bg-gold-50/40 dark:bg-gold-950/20',
+                        )}
+                      >
                         <p
                           dir="rtl"
                           lang="ar"
@@ -193,7 +228,7 @@ export function QuranReader() {
                         </p>
                       </div>
                     </div>
-                  </article>
+                  </button>
                 );
               })}
             </div>
@@ -204,6 +239,8 @@ export function QuranReader() {
           </CardContent>
         )}
       </Card>
+
+      {surah && <RecitationFooter surahId={surah.id} />}
 
       {surah && (
         <div className="flex items-center justify-between pt-2">

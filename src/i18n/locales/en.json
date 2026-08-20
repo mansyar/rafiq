@@ -100,7 +100,23 @@
     },
     "translationLabel": "Translation",
     "readerTitle": "{{name}} — {{transliteration}}",
-    "continuousHint": "Continuous scroll — {{count}} ayahs"
+    "continuousHint": "Continuous scroll — {{count}} ayahs",
+    "audio": {
+      "player": "Recitation player",
+      "play": "Play",
+      "pause": "Pause",
+      "stop": "Stop",
+      "retry": "Retry",
+      "idle": "Ready",
+      "position": "{{surah}} : {{ayah}}",
+      "playingNow": "playing",
+      "playFrom": "Play from ayah {{ayah}}",
+      "playFromAyah": "play from here",
+      "downloading": "Downloading recitation\u2026",
+      "downloadingAhead": "Preparing {{count}} more ayahs\u2026",
+      "error": "Couldn\u2019t download the recitation. Check your connection.",
+      "reciter": "Recited by {{name}}"
+    }
   },
   "log": {
     "empty": "No prayers logged yet. Tap a prayer above when you have prayed — every day is a fresh start.",

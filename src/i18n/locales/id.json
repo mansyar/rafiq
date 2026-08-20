@@ -100,7 +100,23 @@
     },
     "translationLabel": "Terjemahan",
     "readerTitle": "{{name}} — {{transliteration}}",
-    "continuousHint": "Gulir kontinyu — {{count}} ayat"
+    "continuousHint": "Gulir kontinyu — {{count}} ayat",
+    "audio": {
+      "player": "Pemutar tilawah",
+      "play": "Putar",
+      "pause": "Jeda",
+      "stop": "Hentikan",
+      "retry": "Coba lagi",
+      "idle": "Siap",
+      "position": "{{surah}} : {{ayah}}",
+      "playingNow": "sedang diputar",
+      "playFrom": "Putar dari ayat {{ayah}}",
+      "playFromAyah": "putar dari sini",
+      "downloading": "Mengunduh audio tilawah\u2026",
+      "downloadingAhead": "Menyiapkan {{count}} ayat lagi\u2026",
+      "error": "Gagal mengunduh audio tilawah. Periksa koneksi Anda.",
+      "reciter": "Dibacakan oleh {{name}}"
+    }
   },
   "log": {
     "empty": "Belum ada catatan salat. Ketuk nama salat di atas setelah Anda salat \u2014 setiap hari adalah awal baru.",

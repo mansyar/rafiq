@@ -46,7 +46,7 @@ delivered as an in-app prompt per the spec amendment._
 - [x] Task: Frontend log API wrapper (`src/lib/log.ts`): types + invoke wrappers mirroring the Rust commands (moved up from Phase 5 — the prompt needs `logPrayer` + `getPrayerLog`) [6333190]
 - [x] Task: Global prayer-time prompt (`src/components/prayer-prompt.tsx`, mounted in `App.tsx`): listens to `prayer-fired`, one-tap "Prayed" → `logPrayer` (tap moment = `logged_at`), skipped when the prayer is already logged today, location prompt when none set, gentle auto-dismiss, `aria-live` [1ed3801]
 - [x] Task: i18n — prompt strings under `log.*` in `en` + `id` catalogs [1ed3801]
-- [~] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest)
+- [x] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest) [33d5429]
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5: Frontend — Log screen + i18n

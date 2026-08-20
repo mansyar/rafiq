@@ -1,12 +1,18 @@
 //! Typed Tauri command handlers and their testable logic.
 
 use crate::city::{find_city_by_id, validate_coordinates, City};
+use crate::log::{
+    classify, compute_streaks, monthly_summary, DayWindows, LogAnalytics, LogEntry, Prayer,
+    PrayerLogRepo,
+};
 use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates, PrayerTimes};
 use crate::storage::{schema_version, SettingsRepo};
-use chrono::NaiveDate;
+use chrono::{Datelike, NaiveDate};
+use jiff::Timestamp;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
+use std::str::FromStr;
 use std::sync::Mutex;
 use tauri::{Manager, State};
 
@@ -241,6 +247,136 @@ pub fn resolve_prayer_method(conn: &Connection) -> Result<CalculationMethod, Str
     })
 }
 
+/// Logs one prayer for `log_date` (today or one of the previous 7 days).
+/// Resolves the stored location + calculation method, computes that date's
+/// prayer windows, classifies the entry by the window rule, and persists it.
+pub fn log_prayer_impl(
+    conn: &Connection,
+    prayer: &str,
+    log_date: &str,
+    logged_at: &str,
+) -> Result<LogEntry, String> {
+    let prayer = Prayer::parse(prayer).ok_or_else(|| {
+        format!("unknown prayer '{prayer}' (expected one of: fajr, dhuhr, asr, maghrib, isha)")
+    })?;
+    let date = NaiveDate::parse_from_str(log_date, "%Y-%m-%d")
+        .map_err(|error| format!("invalid log_date '{log_date}', expected YYYY-MM-DD: {error}"))?;
+    let logged_at = Timestamp::from_str(logged_at)
+        .map_err(|error| format!("invalid logged_at '{logged_at}': {error}"))?;
+
+    let today = chrono::Local::now().date_naive();
+    let age_days = (today - date).num_days();
+    if age_days < 0 || age_days > 7 {
+        return Err(format!(
+            "log_date '{log_date}' is outside the 7-day lookback window ({} to {})",
+            today - chrono::TimeDelta::try_days(7).expect("7 days"),
+            today
+        ));
+    }
+
+    let resolved = resolve_stored_location(conn)?
+        .ok_or("no location set — choose a city or manual coordinates in Settings")?;
+    let method = resolve_prayer_method(conn)?;
+    let coords = Coordinates {
+        latitude: resolved.latitude,
+        longitude: resolved.longitude,
+    };
+
+    let date_str = date.format("%Y-%m-%d").to_string();
+    let times = calculate_prayer_times(date, coords, method)?;
+    let next = calculate_prayer_times(
+        date.succ_opt()
+            .ok_or("cannot compute the day after log_date")?,
+        coords,
+        method,
+    )?;
+    let windows = DayWindows::from_rfc3339(
+        &times.fajr,
+        &times.sunrise,
+        &times.dhuhr,
+        &times.asr,
+        &times.maghrib,
+        &times.isha,
+        &next.fajr,
+    )?;
+
+    let status = classify(prayer, logged_at, &windows);
+    let logged_at_str = logged_at.to_string();
+    PrayerLogRepo::new(conn)
+        .insert(&date_str, prayer, &logged_at_str, status)
+        .map_err(|e| format!("could not store prayer log entry: {e}"))?;
+
+    Ok(LogEntry {
+        log_date: date_str,
+        prayer,
+        logged_at: logged_at_str,
+        status,
+    })
+}
+
+/// Deletes a logged prayer; returns the number of rows removed (0 or 1).
+pub fn delete_log_entry_impl(
+    conn: &Connection,
+    log_date: &str,
+    prayer: &str,
+) -> Result<usize, String> {
+    let prayer = Prayer::parse(prayer).ok_or_else(|| {
+        format!("unknown prayer '{prayer}' (expected one of: fajr, dhuhr, asr, maghrib, isha)")
+    })?;
+    NaiveDate::parse_from_str(log_date, "%Y-%m-%d")
+        .map_err(|error| format!("invalid log_date '{log_date}', expected YYYY-MM-DD: {error}"))?;
+    PrayerLogRepo::new(conn)
+        .delete(log_date, prayer)
+        .map_err(|e| format!("could not delete prayer log entry: {e}"))
+}
+
+/// Returns log entries for `from`..=`to` (YYYY-MM-DD, inclusive),
+/// ordered by date, then by prayer order.
+pub fn get_prayer_log_impl(
+    conn: &Connection,
+    from: &str,
+    to: &str,
+) -> Result<Vec<LogEntry>, String> {
+    let from = NaiveDate::parse_from_str(from, "%Y-%m-%d")
+        .map_err(|error| format!("invalid from date '{from}', expected YYYY-MM-DD: {error}"))?;
+    let to = NaiveDate::parse_from_str(to, "%Y-%m-%d")
+        .map_err(|error| format!("invalid to date '{to}', expected YYYY-MM-DD: {error}"))?;
+    if from > to {
+        return Err("from date must not be after to date".to_string());
+    }
+    PrayerLogRepo::new(conn)
+        .range(
+            &from.format("%Y-%m-%d").to_string(),
+            &to.format("%Y-%m-%d").to_string(),
+        )
+        .map_err(|e| e.to_string())
+}
+
+/// Current/best streaks plus the current-month summary over the stored log.
+pub fn get_log_analytics_impl(conn: &Connection) -> Result<LogAnalytics, String> {
+    let today = chrono::Local::now().date_naive();
+    let month_start =
+        NaiveDate::from_ymd_opt(today.year(), today.month(), 1).expect("valid month start");
+    // Cover both the monthly window (from the 1st) and the 7-day lookback
+    // (a current streak may reach further back than the month start).
+    let lookback = today - chrono::TimeDelta::try_days(7).expect("7 days");
+    let from = if month_start < lookback {
+        month_start
+    } else {
+        lookback
+    };
+    let entries = PrayerLogRepo::new(conn)
+        .range(
+            &from.format("%Y-%m-%d").to_string(),
+            &today.format("%Y-%m-%d").to_string(),
+        )
+        .map_err(|e| e.to_string())?;
+    Ok(LogAnalytics {
+        streaks: compute_streaks(&entries, today),
+        month: monthly_summary(&entries, today),
+    })
+}
+
 /// Trims and validates a settings key.
 fn validate_key(key: &str) -> Result<String, String> {
     let trimmed = key.trim();
@@ -390,6 +526,55 @@ pub fn set_quran_translation(
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
     set_quran_translation_impl(&conn, translation)
+}
+
+#[tauri::command]
+pub fn log_prayer(
+    state: State<'_, AppState>,
+    prayer: String,
+    log_date: String,
+    logged_at: String,
+) -> Result<LogEntry, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    log_prayer_impl(&conn, &prayer, &log_date, &logged_at)
+}
+
+#[tauri::command]
+pub fn delete_log_entry(
+    state: State<'_, AppState>,
+    log_date: String,
+    prayer: String,
+) -> Result<usize, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    delete_log_entry_impl(&conn, &log_date, &prayer)
+}
+
+#[tauri::command]
+pub fn get_prayer_log(
+    state: State<'_, AppState>,
+    from: String,
+    to: String,
+) -> Result<Vec<LogEntry>, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_prayer_log_impl(&conn, &from, &to)
+}
+
+#[tauri::command]
+pub fn get_log_analytics(state: State<'_, AppState>) -> Result<LogAnalytics, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_log_analytics_impl(&conn)
 }
 
 #[derive(Debug, Serialize)]

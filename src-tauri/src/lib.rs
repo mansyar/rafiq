@@ -53,7 +53,11 @@ pub fn run() {
             commands::get_surah,
             commands::search_surahs,
             commands::get_quran_translation,
-            commands::set_quran_translation
+            commands::set_quran_translation,
+            commands::log_prayer,
+            commands::delete_log_entry,
+            commands::get_prayer_log,
+            commands::get_log_analytics
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

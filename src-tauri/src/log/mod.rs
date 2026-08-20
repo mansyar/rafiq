@@ -3,10 +3,13 @@
 use chrono::{Datelike, NaiveDate};
 use jiff::Timestamp;
 use rusqlite::{params, Connection};
+use serde::Serialize;
 use std::collections::BTreeMap;
+use std::str::FromStr;
 
 /// The five obligatory daily prayers, in canonical (daily) order.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Prayer {
     Fajr,
     Dhuhr,
@@ -52,7 +55,8 @@ impl Prayer {
 
 /// Whether a prayer was performed within its time window (`OnTime`) or made
 /// up afterwards (`Qada`). Captured once, at log time, and never re-graded.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum LogStatus {
     OnTime,
     Qada,
@@ -96,6 +100,32 @@ pub struct DayWindows {
 }
 
 impl DayWindows {
+    /// Parses the seven window boundaries from RFC3339 UTC strings —
+    /// a `PrayerTimes` payload plus the next day's Fajr.
+    pub fn from_rfc3339(
+        fajr: &str,
+        sunrise: &str,
+        dhuhr: &str,
+        asr: &str,
+        maghrib: &str,
+        isha: &str,
+        next_fajr: &str,
+    ) -> Result<DayWindows, String> {
+        fn parse(value: &str, name: &str) -> Result<Timestamp, String> {
+            Timestamp::from_str(value)
+                .map_err(|error| format!("invalid {name} time '{value}': {error}"))
+        }
+        Ok(DayWindows {
+            fajr: parse(fajr, "fajr")?,
+            sunrise: parse(sunrise, "sunrise")?,
+            dhuhr: parse(dhuhr, "dhuhr")?,
+            asr: parse(asr, "asr")?,
+            maghrib: parse(maghrib, "maghrib")?,
+            isha: parse(isha, "isha")?,
+            next_fajr: parse(next_fajr, "next fajr")?,
+        })
+    }
+
     /// The `[start, end)` window for `prayer` (start inclusive, end exclusive).
     fn window(&self, prayer: Prayer) -> (Timestamp, Timestamp) {
         match prayer {
@@ -120,7 +150,7 @@ pub fn classify(prayer: Prayer, logged_at: Timestamp, windows: &DayWindows) -> L
 }
 
 /// Streaks of complete days, where a complete day has all five prayers logged.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Streaks {
     /// Consecutive complete days ending at `today` — or at `yesterday` when
     /// today is not complete yet (an unfinished day never breaks a streak).
@@ -186,7 +216,7 @@ fn longest_run(dates: &[NaiveDate]) -> u32 {
 }
 
 /// Aggregate of the month containing `today`, counted only up to `today`.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 pub struct MonthlySummary {
     /// Days elapsed from the 1st of the month through `today` (inclusive).
     pub days_elapsed: u32,
@@ -257,8 +287,16 @@ pub fn monthly_summary(entries: &[LogEntry], today: NaiveDate) -> MonthlySummary
     }
 }
 
+/// Bundle of analytics returned by the `get_log_analytics` command:
+/// current/best streaks plus the current-month summary.
+#[derive(Debug, Clone, Serialize)]
+pub struct LogAnalytics {
+    pub streaks: Streaks,
+    pub month: MonthlySummary,
+}
+
 /// A single logged prayer.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct LogEntry {
     /// Local calendar date the prayer belongs to (`YYYY-MM-DD`).
     pub log_date: String,

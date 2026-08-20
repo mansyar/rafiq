@@ -31,10 +31,10 @@ commands — presentational components exempt).
   - [x] Source public dataset (~3,000 cities: name, country, lat, lon, timezone; license-compatible — e.g., CC BY 4.0)
   - [x] Embed as `src-tauri/assets/cities.json` + `ATTRIBUTION` license note
   - [x] Dataset validation test: loads, count ≥ 3,000, required fields present, coordinates in range, unique city ids
-- [ ] Task 2.2: Write failing tests for city store + resolution (Red)
-  - [ ] Search by name/country substring, case-insensitive, ranked top-N results
-  - [ ] Manual lat/long validation (range, parse errors → friendly error)
-  - [ ] Location resolution: `city_id` → coordinates, or manual coordinates fallback
+- [x] Task 2.2: Write failing tests for city store + resolution (Red) — 9a5f121
+  - [x] Search by name/country substring, case-insensitive, ranked top-N results
+  - [x] Manual lat/long validation (range, parse errors → friendly error)
+  - [x] Location resolution: `city_id` → coordinates, or manual coordinates fallback
 - [ ] Task 2.3: Implement city store + resolution (Green)
   - [ ] Lazy-load embedded dataset once; indexed search; typed `Location`/`City` structs
   - [ ] Run tests → green; clippy clean

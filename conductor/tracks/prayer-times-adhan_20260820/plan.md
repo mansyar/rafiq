@@ -85,9 +85,19 @@ required (project rule); logic helpers tested.*
 
 *Goal: full quality gate + spec acceptance walk.*
 
-- [ ] Task 5.1: Full local gate
-  - [ ] `cargo fmt` + `clippy -D warnings` + `cargo test`; `pnpm check` (Biome) + `tsc --noEmit` + Vitest
-  - [ ] Fix issues; commit
-- [ ] Task 5.2: Acceptance criteria verification
-  - [ ] Walk spec AC-1..AC-8; record results in plan notes
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task 5.1: Full local gate
+  - [x] `cargo fmt` + `clippy -D warnings` + `cargo test`; `pnpm check` (Biome) + `tsc --noEmit` + Vitest
+  - [x] Fix issues; commit
+- [x] Task 5.2: Acceptance criteria verification — c973941
+  - [x] Walk spec AC-1..AC-8; record results in plan notes
+  - Notes:
+    - AC-1 (MWL fixture ±1 min): `prayer::tests::prayer_times_mwl_raleigh_2015_07_12_within_one_minute` — uses Raleigh 2015-07-12 MWL vs adhan crate, passes within 60s.
+    - AC-2 (method switch persists): `commands::tests::get_prayer_times_uses_persisted_method_when_override_is_absent` + `get_prayer_times_persisted_tehran` + frontend `setCalculationMethod` → `prayer_calculation_method` setting, invalidate `prayer-method`/`prayer-times`.
+    - AC-3 (city search → Today): `city::tests::search_returns_jakarta...` + `search_ranking_prefix_first` + `commands::tests::resolve_stored_location_after_set` (Jakarta) + `pages/today.tsx` uses `getResolvedLocation` + `getPrayerTimes`.
+    - AC-4 (manual lat/long): `city::tests::parse_coordinate_valid/invalid` + `commands::tests::set_then_get_location_manual_roundtrip` + `set_location_rejects_invalid_manual_coordinates` (91,0) + Settings manual inputs with validation.
+    - AC-5 (notification + adhan at prayer time): `scheduler::tests` (next_prayer, including_tomorrow, should_fire) + `spawn_scheduler` thread (NotificationExt + emit `prayer-time`) + `trigger_test_prayer` manual trigger + `adhan-player.tsx` listen → `<audio>` play; verified via Settings Test buttons.
+    - AC-6 (toggles persist & respected): `getNotificationEnabled`/`getAdhanEnabled` (default true, tolerant 1/true/enabled) + `should_fire` requires both + `trigger_test_prayer` respects each toggle individually + Settings toggles persist via `setSetting` and reschedule via `request_reschedule`.
+    - AC-7 (Today localized): `i18n` en/id keys for `prayer.*`, `today.*`, `settings.*` + `Today` uses `t('prayer.${name}')`, `t('today.nextPrayer')`, `formatPrayerTime` with locale; `Settings` uses `t('settings.methods.*')`.
+    - AC-8 (full gate): 5.1 gate passed — see gate results below.
+    - Gate 5.1 results (2026-08-20): `cargo fmt --check` clean, `cargo clippy -D warnings` clean, `cargo test --lib 55 passed`, `pnpm biome check` 21 files clean, `pnpm tsc --noEmit` pass, `pnpm test 17 passed` (locale 4 + prayer 13), `tauri.conf additionalBrowserArgs` present, `adhan.mp3` CC0.
+- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)

@@ -2,6 +2,7 @@
 pub mod city;
 pub mod commands;
 pub mod prayer;
+pub mod quran;
 pub mod scheduler;
 pub mod storage;
 

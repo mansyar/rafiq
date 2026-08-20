@@ -74,6 +74,23 @@ pub fn list_surahs() -> Vec<Surah> {
     all_surahs().to_vec()
 }
 
+/// Maps a (surah, ayah) position to the global ayah number (1..=6236) used by
+/// the recitation audio CDN — surahs in Mushaf order, ayahs in order.
+/// `None` for an unknown surah or an ayah number outside that surah.
+pub fn global_ayah(surah_id: u8, ayah_number: u16) -> Option<u32> {
+    let mut offset: u32 = 0;
+    for surah in all_surahs() {
+        if surah.id == surah_id {
+            if ayah_number == 0 || (ayah_number as usize) > surah.ayah_count {
+                return None;
+            }
+            return Some(offset + u32::from(ayah_number));
+        }
+        offset += surah.ayah_count as u32;
+    }
+    None
+}
+
 pub fn search_surahs(query: &str, limit: usize) -> Vec<Surah> {
     let q = query.trim();
     if q.is_empty() || limit == 0 {

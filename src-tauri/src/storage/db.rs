@@ -5,7 +5,7 @@ use std::error::Error;
 use std::path::Path;
 
 /// Latest schema version understood by this build.
-pub const SCHEMA_VERSION: i64 = 2;
+pub const SCHEMA_VERSION: i64 = 3;
 
 pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -36,7 +36,18 @@ CREATE TABLE prayer_log (
 );
 "#;
 
-const MIGRATIONS: &[&str] = &[MIGRATION_001, MIGRATION_002];
+/// Migration 3: `recitation` — audio-index of downloaded per-ayah MP3s, one
+/// row per globally numbered ayah (1..=6236) once cached locally.
+const MIGRATION_003: &str = r#"
+CREATE TABLE recitation (
+    global_ayah INTEGER PRIMARY KEY CHECK (global_ayah BETWEEN 1 AND 6236),
+    file_path TEXT NOT NULL,
+    size_bytes INTEGER NOT NULL,
+    fetched_at TEXT NOT NULL
+);
+"#;
+
+const MIGRATIONS: &[&str] = &[MIGRATION_001, MIGRATION_002, MIGRATION_003];
 
 /// Opens (or creates) the SQLite database at `app_data_dir/rafiq.db` and
 /// applies any pending migrations. Idempotent on an existing database.

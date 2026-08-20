@@ -12,7 +12,7 @@
   - [x] Add dated note to `conductor/tech-stack.md`: recitation source (CDN pattern, edition, bitrate) and local cache directory design
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — d2f1620
 
-## Phase 2: Audio Index & Ayah Mapping (Rust) *(FR-2.4, FR-2.1)*
+## Phase 2: Audio Index & Ayah Mapping (Rust) *(FR-2.4, FR-2.1)* [checkpoint: f64b590]
 - [x] Task: Write failing tests for recitation audio index & mapping *(Red)* (d08e5a8)
   - [x] Tests: `recitation` table schema, insert/lookup of cached files, size + fetched-at tracking
   - [x] Tests: (surah, ayah) → global ayah number mapping from bundled Quran metadata (boundary cases: first/last ayah, 6236)
@@ -20,7 +20,7 @@
   - [x] Add `recitation` table + `RecitationRepo` to `src-tauri/src/storage/`
   - [x] Add global-ayah mapping to `src-tauri/src/quran/` (reuses bundled surah metadata)
 - [x] Task: Refactor & verify coverage >80% for new modules (f64b590)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — f64b590
 
 ## Phase 3: On-Demand Download & Cache (Rust) *(FR-2.1–FR-2.3)*
 - [ ] Task: Write failing tests for fetch/cache logic *(Red)*

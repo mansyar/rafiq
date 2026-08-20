@@ -1,0 +1,5 @@
+Task: 4.2 Red — scheduler next_prayer + should_fire
+
+Summary: Created src-tauri/src/scheduler/mod.rs with stubs returning None/false and 7 tests. Added pub mod scheduler to lib.rs. Tests cover next_prayer before Fajr→Fajr, after Fajr skips sunrise→Dhuhr, between Dhuhr/Asr→Asr, after Isha→None, including tomorrow→tomorrow Fajr, exact time advances, and should_fire true only when both toggles enabled.
+
+Verification: cargo test --lib scheduler 1 passed 6 failed (Red) as expected; cargo fmt clean.

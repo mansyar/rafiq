@@ -65,5 +65,5 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 2f7d62d
 
 ## Phase: Review Fixes
-- [~] Task: Apply review suggestions
-  - [ ] Medium: prev/next surah navigation left the previous surah's audio playing; `RecitationAudio` now takes the active `surahId` and stops playback when the store's current surah no longer matches (FR-4.2 intent)
+- [x] Task: Apply review suggestions d59a242
+  - [x] Medium: prev/next surah navigation left the previous surah's audio playing; `RecitationAudio` now takes the active `surahId` and stops playback when the store's current surah no longer matches (FR-4.2 intent)

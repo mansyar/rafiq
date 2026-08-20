@@ -1,0 +1,9 @@
+Task: 4.1 Adhan audio asset
+
+Summary: Generated CC0 placeholder adhan.mp3 (ffmpeg sine 440Hz 4s 44.1kHz mono 16KiB) at src/assets/audio/adhan.mp3 + CC0 ATTRIBUTION.md (synthetic tone, free to replace). Created src/components/adhan-player.tsx — hidden <audio preload=auto src=adhan.mp3> with <track kind=captions> for a11y, listens for Tauri 'prayer-time' event via @tauri-apps/api/event, checks notification_enabled + adhan_enabled via getSetting helpers before play(), resets currentTime and handles autoplay rejection. Integrated via <AdhanPlayer/> in src/App.tsx inside QueryClientProvider (above BrowserRouter) so it mounts globally.
+
+Files: src/assets/audio/adhan.mp3, src/assets/audio/ATTRIBUTION.md, src/components/adhan-player.tsx, src/App.tsx
+
+Why: Provide verified CC0 placeholder satisfying spec FR5/NFR licensing and frontend wiring for Phase 4 scheduler event.
+
+Verification: ffmpeg ffprobe confirms MP3 4s mono; pnpm tsc --noEmit pass; pnpm biome check pass; pnpm build would include asset; audio element hidden with test id, event listener registered for prayer-time.

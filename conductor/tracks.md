@@ -1,3 +1,3 @@
 # Tracks Registry
 
-_Empty — all tracks archived._
+- [ ] **Track: Quran Reader** *Link: [./tracks/quran-reader_20260820/index.md](./tracks/quran-reader_20260820/index.md)*

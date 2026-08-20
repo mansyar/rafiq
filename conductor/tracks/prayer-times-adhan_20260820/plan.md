@@ -48,10 +48,10 @@ commands — presentational components exempt).
 *Goal: user-facing Today page + settings controls. Presentational — no tests
 required (project rule); logic helpers tested.*
 
-- [ ] Task 3.1: Data layer + i18n
-  - [ ] Add `@tanstack/react-query` (per `tech-stack.md`); `src/lib/prayer.ts` client wrapping `invoke` (getPrayerTimes, getLocation, setLocation)
-  - [ ] i18n keys en/id: prayer names, location, method, toggles, next-prayer labels
-  - [ ] Unit tests for any date/format helpers (`src/lib/` logic) if logic-bearing
+- [x] Task 3.1: Data layer + i18n — aa18a86
+  - [x] Add `@tanstack/react-query` (per `tech-stack.md`); `src/lib/prayer.ts` client wrapping `invoke` (getPrayerTimes, getLocation, setLocation)
+  - [x] i18n keys en/id: prayer names, location, method, toggles, next-prayer labels
+  - [x] Unit tests for any date/format helpers (`src/lib/` logic) if logic-bearing
 - [ ] Task 3.2: Build Today page
   - [ ] Render today's 5 prayer times + sunrise from `get_prayer_times`
   - [ ] Highlight next upcoming prayer; show location + method in use

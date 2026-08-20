@@ -1,0 +1,13 @@
+Tasks: Write failing tests (Red) + Implement rotation engine + command (Green) - Phase 2 daily
+
+Red: Stub daily functions returned 0 → 7 failures (adjacent, epoch -1, leap, full-cycle duplicates, response shape empty, translation variance) confirming TDD Red.
+
+Green: Implemented days_since_epoch via signed_duration_since(epoch 2026-01-01), rotation_index handling negative, ayah/hadith indices, resolve_ayah via quran::get_surah and translation enum, daily_content_for_date, plus Tauri command get_daily_content using Local::now and quran_translation with unwrap_or_default fallback for invalid.
+
+Files: src-tauri/src/daily/mod.rs (rotation engine + DailyContent structs), src-tauri/src/commands.rs (get_daily_content_impl, get_daily_content_for_date_impl, Tauri command + 4 tests), src-tauri/src/lib.rs (register command).
+
+Tests: cargo test --lib daily 21 passed, cargo test --lib 184 passed, clippy -D warnings clean, fmt.
+
+Why: Deterministic pure function per spec FR-2.1, offline no-state rotation, translation fallback handling.
+
+Commit: 5676c7b

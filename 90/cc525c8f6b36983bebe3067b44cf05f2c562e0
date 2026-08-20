@@ -1,0 +1,12 @@
+Task: Create src/lib/daily.ts — typed invoke wrapper + TanStack Query hook
+
+Summary: Created src/lib/daily.ts mirroring Rust DailyContent types; getDailyContent() Tauri invoke, DAILY_CONTENT_QUERY_KEY constant, useDailyContent() hook with date-rollover (todayDateString) and quran_translation invalidation via queryKey composition (translationQuery.data). Helpers: getHadithTranslation(locale pick), formatAyahReference (surah_name_en surah_id:ayah_number).
+
+Files:
+- src/lib/daily.ts (new, 83 lines, invoke + useQuery, staleTime 1h, enabled after translation load)
+
+Why: Frontend needs typed, cacheable access to deterministic daily content; hook must re-resolve on local date rollover and on quran_translation change (same UX as Quran reader's translation switch) without manual refresh.
+
+Tests: tsc --noEmit clean, biome check clean, enabled flag prevents fetch before translation resolve.
+
+Commit: 90cc525

@@ -35,7 +35,7 @@ Checkpointing Protocol.
 - [x] Task: Verify coverage + clippy clean [961ab2f]
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 4: Prayer-time one-tap (in-app prompt)
+## Phase 4: Prayer-time one-tap (in-app prompt) [checkpoint: 33d5429]
 
 _Revision (2026-08-20): OS-notification action buttons are not achievable with
 tauri-plugin-notification 2.3.3 on desktop (no action API / click events in the
@@ -47,7 +47,7 @@ delivered as an in-app prompt per the spec amendment._
 - [x] Task: Global prayer-time prompt (`src/components/prayer-prompt.tsx`, mounted in `App.tsx`): listens to `prayer-fired`, one-tap "Prayed" → `logPrayer` (tap moment = `logged_at`), skipped when the prayer is already logged today, location prompt when none set, gentle auto-dismiss, `aria-live` [1ed3801]
 - [x] Task: i18n — prompt strings under `log.*` in `en` + `id` catalogs [1ed3801]
 - [x] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest) [33d5429]
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5: Frontend — Log screen + i18n
 

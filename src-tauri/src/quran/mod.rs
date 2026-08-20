@@ -32,6 +32,8 @@ static QURAN_JSON: &str = include_str!("../../assets/quran/quran.json");
 static QURAN: OnceLock<Vec<Surah>> = OnceLock::new();
 
 fn load_inner() -> Vec<Surah> {
+    // Bundled asset invariant: quran.json is generated at build-time (4.9 MB, 114/6236).
+    // Parse failure is a build-time defect → panic is intentional to surface early.
     let file: QuranFile = serde_json::from_str(QURAN_JSON).expect("quran.json parse");
     file.surahs
 }

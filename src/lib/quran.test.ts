@@ -32,8 +32,8 @@ describe('quran helpers', () => {
     expect(translationKey('clear')).toBe('quran.translations.clear');
   });
 
-  it('shows bismillah for all except At-Tawbah (9)', () => {
-    expect(shouldShowBismillah(1)).toBe(true);
+  it('shows bismillah except for Al-Fatiha (1) and At-Tawbah (9)', () => {
+    expect(shouldShowBismillah(1)).toBe(false);
     expect(shouldShowBismillah(2)).toBe(true);
     expect(shouldShowBismillah(9)).toBe(false);
     expect(shouldShowBismillah(114)).toBe(true);

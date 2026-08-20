@@ -71,10 +71,12 @@ export function translationKey(translation: QuranTranslation): string {
 }
 
 /**
- * Returns true when surah is At-Tawbah (9) which has no Bismillah in Tanzil.
+ * True when a separate Bismillah header should be rendered.
+ * FR-1.3: Tanzil includes Bismillah in 1:1 text, so surah 1 must not get a
+ * duplicate header; At-Tawbah (9) has no Bismillah at all.
  */
 export function shouldShowBismillah(surahId: number): boolean {
-  return surahId !== 9;
+  return surahId !== 1 && surahId !== 9;
 }
 
 /**

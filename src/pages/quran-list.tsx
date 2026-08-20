@@ -53,9 +53,7 @@ export function QuranList() {
         </CardHeader>
         <CardContent className="space-y-4">
           <label htmlFor="quran-search" className="text-sm font-medium">
-            {t('settings.language') === 'Bahasa'
-              ? t('quran.searchPlaceholder')
-              : t('quran.searchPlaceholder')}
+            {t('quran.searchPlaceholder')}
           </label>
           <input
             id="quran-search"
@@ -123,7 +121,7 @@ export function QuranList() {
 
           {!isLoading && surahs.length > 0 && (
             <p className="text-xs text-muted-foreground">
-              {t('quran.continuousHint', { count: surahs.length })} • {surahs.length} / 114
+              {surahs.length} / 114 {t('quran.surah')}
             </p>
           )}
         </CardContent>

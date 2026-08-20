@@ -1,0 +1,1 @@
+Phase 5 Task 1 (red) - logWindowDates (N local YYYY-MM-DD dates ending today, oldest first; month-boundary + custom-count cases) and prayerStatus (stored status for (date,prayer) else 'missed') red tests in log.test.ts. RED confirmed: 5 new tests fail (not a function), 24 pre-existing pass.

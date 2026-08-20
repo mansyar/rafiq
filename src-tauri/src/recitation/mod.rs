@@ -4,6 +4,141 @@
 //! `src-tauri/assets/ATTRIBUTION.md`). Audio is downloaded only on explicit
 //! user action and cached forever in `{app_data}/recitation/{global_ayah}.mp3`.
 
+use std::path::{Path, PathBuf};
+
+use chrono::{SecondsFormat, Utc};
+use rusqlite::Connection;
+
+use crate::storage::{CachedAudio, RecitationRepo};
+
+/// Reciter edition on the Islamic Network CDN (Mishary Rashid Alafasy, Murattal).
+/// Single configurable constant — swap here if the source changes (takedown contingency).
+pub const EDITION: &str = "ar.alafasy";
+/// Fixed bitrate per product design.
+pub const BITRATE: &str = "128";
+/// CDN base for per-ayah audio.
+const CDN_BASE: &str = "https://cdn.islamic.network/quran/audio";
+
+/// Builds the CDN URL for one global ayah (1..=6236).
+pub fn ayah_url(global_ayah: u32) -> String {
+    format!("{CDN_BASE}/{BITRATE}/{EDITION}/{global_ayah}.mp3")
+}
+
+/// Final cache location for one global ayah: `{app_data}/recitation/{n}.mp3`.
+pub fn cache_file_path(cache_dir: &Path, global_ayah: u32) -> PathBuf {
+    cache_dir
+        .join("recitation")
+        .join(format!("{global_ayah}.mp3"))
+}
+
+/// Temporary file written during a download; renamed over the final path on success.
+pub fn temp_file_path(cache_dir: &Path, global_ayah: u32) -> PathBuf {
+    cache_dir
+        .join("recitation")
+        .join(format!("{global_ayah}.mp3.part"))
+}
+
+/// Cache state for one ayah. A valid cache is an index row plus a non-empty
+/// file at the canonical path; anything else (never downloaded, orphaned row,
+/// partial/corrupt file) is `Missing` and will be re-fetched.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CacheState {
+    Cached,
+    Missing,
+}
+
+/// Decides whether an ayah can be served from cache or must be downloaded.
+pub fn cache_state(cache_dir: &Path, conn: &Connection, global_ayah: u32) -> CacheState {
+    let indexed = RecitationRepo::new(conn)
+        .get(global_ayah)
+        .ok()
+        .flatten()
+        .is_some();
+    let file_valid = cache_file_path(cache_dir, global_ayah)
+        .metadata()
+        .map(|m| m.len() > 0)
+        .unwrap_or(false);
+    if indexed && file_valid {
+        CacheState::Cached
+    } else {
+        CacheState::Missing
+    }
+}
+
+/// Writes `bytes` to `temp_path`, then renames over `final_path` — the final
+/// path only ever contains a complete file.
+pub fn write_atomic(bytes: &[u8], temp_path: &Path, final_path: &Path) -> std::io::Result<()> {
+    if let Some(parent) = final_path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+    std::fs::write(temp_path, bytes)?;
+    std::fs::rename(temp_path, final_path)?;
+    Ok(())
+}
+
+/// Installs downloaded bytes into the cache (atomic write) and records the
+/// audio index. Rejects empty downloads.
+pub fn complete_fetch(
+    cache_dir: &Path,
+    conn: &Connection,
+    global_ayah: u32,
+    bytes: &[u8],
+) -> Result<CachedAudio, String> {
+    if bytes.is_empty() {
+        return Err("downloaded file is empty".to_string());
+    }
+    let final_path = cache_file_path(cache_dir, global_ayah);
+    write_atomic(bytes, &temp_file_path(cache_dir, global_ayah), &final_path)
+        .map_err(|e| format!("failed to write recitation cache: {e}"))?;
+    let fetched_at = Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
+    let file_path = final_path.to_string_lossy().into_owned();
+    let size_bytes = bytes.len() as u64;
+    RecitationRepo::new(conn)
+        .mark_cached(global_ayah, &file_path, size_bytes, &fetched_at)
+        .map_err(|e| format!("failed to record recitation index: {e}"))?;
+    Ok(CachedAudio {
+        global_ayah,
+        file_path,
+        size_bytes,
+        fetched_at,
+    })
+}
+
+/// Downloads one ayah on demand (explicit user action) and returns the cache
+/// record. A valid cache is never re-fetched, so this is safe offline once an
+/// ayah has been fetched.
+pub async fn fetch_ayah(
+    client: &reqwest::Client,
+    cache_dir: &Path,
+    conn: &Connection,
+    global_ayah: u32,
+) -> Result<CachedAudio, String> {
+    if cache_state(cache_dir, conn, global_ayah) == CacheState::Cached {
+        return RecitationRepo::new(conn)
+            .get(global_ayah)
+            .ok()
+            .flatten()
+            .ok_or_else(|| "recitation index row missing".to_string());
+    }
+    let url = ayah_url(global_ayah);
+    let response = client
+        .get(&url)
+        .send()
+        .await
+        .map_err(|e| format!("recitation download failed: {e}"))?;
+    if !response.status().is_success() {
+        return Err(format!(
+            "recitation download failed: HTTP {}",
+            response.status()
+        ));
+    }
+    let bytes = response
+        .bytes()
+        .await
+        .map_err(|e| format!("recitation download failed: {e}"))?;
+    complete_fetch(cache_dir, conn, global_ayah, &bytes)
+}
+
 #[cfg(test)]
 mod tests {
     use std::fs;

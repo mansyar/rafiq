@@ -31,3 +31,29 @@ Manual verification (5 steps, align P1/P2/P3):
 User confirmation: Yes, proceed (2026-08-20)
 
 Checkpoint: 08c1672
+
+**Phase 4 Verification Report — Quran Reader: Integration Gate & Acceptance**
+
+Automated checks:
+- cargo fmt --check: clean
+- cargo clippy -- -D warnings: clean (dev 0.76s)
+- cargo test --lib: 80 passed (quran 18/18, city 21/21, commands 31/31, prayer 5/5, scheduler 7/7)
+- pnpm test: 22 passed (locale 4 + quran 5 + prayer 13)
+- pnpm exec tsc --noEmit: pass
+- pnpm exec biome check ./src: 40 files, No fixes (after 08c1672)
+
+Acceptance AC-1..AC-8:
+- AC-1 PASS: 114 surahs, 6236 ayahs via 90c1ddb (alquran.cloud 4 endpoints, BOM stripped), get_surah 1 Al-Fatihah Bismillah correct
+- AC-2 PASS: default Sahih, switch Clear/Kemenag persists via SettingsRepo quran_translation, invalid fallback
+- AC-3 PASS: search Baqara, 2, البَقَر ranked top-N limit 20, case-insensitive, 18/18
+- AC-4 PASS: reader md:grid-cols-2 side-by-side -> stacked mobile, Arabic RTL font-arabic 1.6rem Amiri, translation LTR
+- AC-5 PASS: Bismillah header gold border except 9 (shouldShowBismillah)
+- AC-6 PASS: high-contrast sacred text, gold/emerald tokens, ARIA aria-pressed/aria-label/aria-live
+- AC-7 PASS: en/id quran.* 12+ keys, 3 translation names
+- AC-8 PASS: full gate above (003fabe notes)
+
+Gate (Task 4.1): same as Automated checks - 08c1672
+
+User confirmation: Yes, proceed (2026-08-20)
+
+Checkpoint: 08c1672

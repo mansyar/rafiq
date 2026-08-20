@@ -35,11 +35,11 @@
 
 *Goal: Surah list + reader with side-by-side, translation switcher, search.*
 
-- [ ] Task 3.1: Data layer + i18n
-  - [ ] Add `src/lib/quran.ts` wrapping `invoke` (list/get/search, translation get/set)
-  - [ ] `src/i18n/locales/en|id.json` keys `quran.*` (surah, ayah, bismillah, translation names)
-  - [ ] Unit tests for any helpers (format, search ranking)
-  - [ ] Bundle Amiri font, `index.css` sacred-text high-contrast tokens
+- [x] Task 3.1: Data layer + i18n — 3e63f8c
+  - [x] Add `src/lib/quran.ts` wrapping `invoke` (list/get/search, translation get/set) — 3e63f8c
+  - [x] `src/i18n/locales/en|id.json` keys `quran.*` (surah, ayah, bismillah, translation names) — 3e63f8c
+  - [x] Unit tests for any helpers (format, search ranking) — 3e63f8c
+  - [x] Bundle Amiri font, `index.css` sacred-text high-contrast tokens — 3e63f8c
 - [ ] Task 3.2: Surah list page
   - [ ] Render 114 surahs Mushaf order, number + name EN/ID/AR, ayah count, search input debounced
   - [ ] Link to reader `/quran/:id`

@@ -7,3 +7,26 @@ Files: src-tauri/src/city/mod.rs, src-tauri/src/commands.rs, src-tauri/src/lib.r
 Why: Deliver user-facing Today experience per spec AC-3/AC-8 and Settings controls per AC-4/AC-6, reusing typed prayer data layer and i18n.
 
 Verification: pnpm exec tsc --noEmit pass; pnpm exec biome check . pass; pnpm test 17/17 pass; cargo fmt --check pass; cargo clippy -D warnings pass; cargo test --lib 48/48 pass; Today renders 6 rows with next highlighted, location/method localized; Settings saves city/manual with validation errors localized and toggles persist.
+
+Phase 3 Verification Report — Today Page & Settings UI
+
+Automated checks:
+- pnpm exec tsc --noEmit: pass
+- pnpm exec biome check .: pass (33 files, fixed Today/Settings formatting)
+- pnpm test: 17/17 pass (locale 4, prayer 13 — next-prayer, format, todayDateString, isCalculationMethod)
+- cargo fmt --check: pass
+- cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings: pass
+- cargo test --lib: 48/48 pass (city 21, commands 22, prayer 5)
+
+Test coverage:
+- prayer helpers 13 tests covering date, next-prayer ranking (excludes sunrise by default, includeSunrise opt), past check, method guard
+- Rust 48 tests covering city dataset, search ranking, coordinates, location persistence, prayer calculation
+
+Manual verification (presentational exempt per workflow, helpers tested):
+1. Today page renders 6 rows (fajr, sunrise, dhuhr, asr, maghrib, isha) via getPrayerTimes; next upcoming highlighted with gold pill + aria-current, localized via prayer.{name} and today.nextPrayer; location shows city (Jakarta, Indonesia) or manual fallback, method shows settings.methods.<method>
+2. Settings city search 'jak' ranks Jakarta first, Indonesia filter returns 10, limit respected; selecting city persists via setLocation (city_id) and invalidates resolved-location/prayer-times, Today updates
+3. Manual -6.2088,106.8456 persists and Today shows Manual coordinates; invalid 91,0 rejected with localized city not found / latitude / both required errors
+4. Method selector 7 methods (MWL default) persists via setCalculationMethod, Today method label updates via query invalidation
+5. Notification/adhan toggles default enabled, persist via notification_enabled/adhan_enabled settings, localized hints
+
+User confirmation: Yes, proceed (2026-08-20)

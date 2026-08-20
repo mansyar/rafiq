@@ -31,8 +31,8 @@ Checkpointing Protocol.
 ## Phase 3: Tauri commands
 
 - [x] Task: Write failing tests for commands (`log_prayer`: resolves location + method, computes windows, classifies, persists; no-location error. `delete_log_entry`. `get_prayer_log` range. `get_log_analytics` → streaks + monthly summary) [e723023]
-- [~] Task: Implement commands in `commands.rs` + register in `lib.rs`
-- [ ] Task: Verify coverage + clippy clean
+- [x] Task: Implement commands in `commands.rs` + register in `lib.rs` [1b68e6e]
+- [~] Task: Verify coverage + clippy clean
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4: Notification "Prayed" action

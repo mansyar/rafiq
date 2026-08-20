@@ -84,8 +84,8 @@ export function CalendarPage() {
   });
 
   const grid = gridQuery.data ?? null;
-  const weekdays = t('calendar.weekdays') as unknown as string[];
-  const gregMonths = t('calendar.gregMonths') as unknown as string[];
+  const weekdays = t('calendar.weekdays', { returnObjects: true }) as unknown as string[];
+  const gregMonths = t('calendar.gregMonths', { returnObjects: true }) as unknown as string[];
 
   const isLoading = todayQuery.isLoading || gridQuery.isLoading;
   const isError = gridQuery.isError;

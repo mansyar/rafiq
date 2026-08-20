@@ -28,7 +28,7 @@ interface H2GState {
  */
 export function DateConverter() {
   const { t } = useTranslation();
-  const gregMonths = t('calendar.gregMonths') as unknown as string[];
+  const gregMonths = t('calendar.gregMonths', { returnObjects: true }) as unknown as string[];
   const [gregInput, setGregInput] = useState('');
   const [g2h, setG2h] = useState<G2HState>({ date: null, error: null });
   const [hYear, setHYear] = useState('');

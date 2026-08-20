@@ -1,0 +1,9 @@
+Task: 2.3 Implement city store + resolution (Green)
+
+Summary: Implemented green-phase city services in src-tauri/src/city/mod.rs: parse_coordinate trims and parses with friendly 'must be a number' errors, find_city_by_id (trim-aware lookup), search_cities (case-insensitive substring with ranking 0=name exact/1=prefix/2=contains/3=country exact/4=prefix/5=contains/6=cc, tie-break by name length then alphabetic, respects limit and empty query), resolve_location (city_id → coordinates with city precedence, otherwise manual lat/lon validated via validate_coordinates, timezone 'UTC' for manual, friendly errors for missing/both-required/city not found).
+
+Files: src-tauri/src/city/mod.rs
+
+Why: Provide ranked city search and validated location resolution for offline location selection and prayer time calculation, satisfying Task 2.2 contract and enabling Task 2.4 settings/commands.
+
+Verification: cargo test --lib city 21/21 pass (previously 9/21 red, now green after implementation); cargo test --lib full 38/38 pass; cargo clippy -D warnings clean; cargo fmt clean. Search respects limit, Jakarta prefix ranking, Indonesia country filter, and case-insensitivity all verified.

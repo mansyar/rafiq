@@ -51,6 +51,33 @@ export function isLoggablePrayer(value: string): value is LoggablePrayer {
   return (LOGGABLE_PRAYERS as readonly string[]).includes(value);
 }
 
+function pad2(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+/**
+ * Local YYYY-MM-DD strings for the retroactive logging window:
+ * `count` days ending today, oldest first (last element = today).
+ */
+export function logWindowDates(count = 7, now = new Date()): string[] {
+  const dates: string[] = [];
+  for (let i = count - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    dates.push(`${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`);
+  }
+  return dates;
+}
+
+/** Cell state for the 7-day grid: the stored status, or 'missed' when unlogged. */
+export function prayerStatus(
+  entries: readonly LogEntry[],
+  date: string,
+  prayer: LoggablePrayer,
+): 'on_time' | 'qada' | 'missed' {
+  const entry = entries.find((e) => e.log_date === date && e.prayer === prayer);
+  return entry ? entry.status : 'missed';
+}
+
 // ── Tauri invoke wrappers ─────────────────────────────────────────────────
 
 /**

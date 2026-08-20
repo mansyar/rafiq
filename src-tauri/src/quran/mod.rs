@@ -48,6 +48,34 @@ pub fn get_surah(id: u8) -> Option<Surah> {
     all_surahs().iter().find(|s| s.id == id).cloned()
 }
 
+pub const QURAN_TRANSLATION_KEY: &str = "quran_translation";
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum QuranTranslation {
+    Sahih,
+    Clear,
+    Kemenag,
+}
+
+impl Default for QuranTranslation {
+    fn default() -> Self {
+        Self::Sahih
+    }
+}
+
+pub fn parse_quran_translation(_s: &str) -> Result<QuranTranslation, String> {
+    Err("not implemented".to_string())
+}
+
+pub fn list_surahs() -> Vec<Surah> {
+    Vec::new()
+}
+
+pub fn search_surahs(_query: &str, _limit: usize) -> Vec<Surah> {
+    Vec::new()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -129,5 +157,98 @@ mod tests {
             assert!(!s.name_en.trim().is_empty());
             assert!(s.revelation_type == "Meccan" || s.revelation_type == "Medinan");
         }
+    }
+
+    // Red — Task 2.1 search + translation + list
+    #[test]
+    fn list_surahs_returns_114_in_order() {
+        let list = list_surahs();
+        assert_eq!(list.len(), 114);
+        assert_eq!(list[0].id, 1);
+        assert_eq!(list[113].id, 114);
+    }
+
+    #[test]
+    fn get_surah_returns_valid_and_none_for_invalid() {
+        assert!(get_surah(1).is_some());
+        assert!(get_surah(114).is_some());
+        assert!(get_surah(0).is_none());
+        assert!(get_surah(115).is_none());
+    }
+
+    #[test]
+    fn search_returns_baqara_for_baqara_query() {
+        let r = search_surahs("baqara", 5);
+        assert!(!r.is_empty());
+        assert!(r.iter().any(|s| s.id == 2));
+    }
+
+    #[test]
+    fn search_is_case_insensitive() {
+        let a = search_surahs("al-fatiha", 5);
+        let b = search_surahs("AL-FATIHA", 5);
+        assert_eq!(a.len(), b.len());
+        assert!(!a.is_empty());
+    }
+
+    #[test]
+    fn search_by_number_substring() {
+        let r = search_surahs("2", 10);
+        assert!(r.iter().any(|s| s.id == 2));
+    }
+
+    #[test]
+    fn search_by_arabic_substring() {
+        let r = search_surahs("البقرة", 5);
+        assert!(!r.is_empty());
+        assert!(r.iter().any(|s| s.id == 2));
+    }
+
+    #[test]
+    fn search_empty_returns_empty() {
+        assert!(search_surahs("", 5).is_empty());
+        assert!(search_surahs("   ", 5).is_empty());
+    }
+
+    #[test]
+    fn search_not_found_returns_empty() {
+        assert!(search_surahs("xyznotfound999", 5).is_empty());
+    }
+
+    #[test]
+    fn search_respects_limit() {
+        let r = search_surahs("a", 3);
+        assert!(r.len() <= 3);
+        let r2 = search_surahs("a", 1);
+        assert_eq!(r2.len(), 1);
+    }
+
+    #[test]
+    fn search_ranking_prefix_first() {
+        let r = search_surahs("al-fati", 5);
+        assert!(!r.is_empty());
+        assert_eq!(r[0].id, 1);
+    }
+
+    #[test]
+    fn parse_quran_translation_valid() {
+        assert_eq!(
+            parse_quran_translation("sahih").unwrap(),
+            QuranTranslation::Sahih
+        );
+        assert_eq!(
+            parse_quran_translation("clear").unwrap(),
+            QuranTranslation::Clear
+        );
+        assert_eq!(
+            parse_quran_translation("kemenag").unwrap(),
+            QuranTranslation::Kemenag
+        );
+    }
+
+    #[test]
+    fn parse_quran_translation_invalid() {
+        assert!(parse_quran_translation("invalid").is_err());
+        assert!(parse_quran_translation("").is_err());
     }
 }

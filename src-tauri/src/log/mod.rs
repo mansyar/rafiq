@@ -668,3 +668,127 @@ mod streak_tests {
         );
     }
 }
+
+#[cfg(test)]
+mod monthly_tests {
+    use super::*;
+    use chrono::NaiveDate;
+
+    fn d(value: &str) -> NaiveDate {
+        NaiveDate::parse_from_str(value, "%Y-%m-%d").unwrap()
+    }
+
+    fn entry(log_date: &str, prayer: Prayer) -> LogEntry {
+        LogEntry {
+            log_date: log_date.to_string(),
+            prayer,
+            logged_at: format!("{log_date}T12:00:00Z"),
+            status: LogStatus::OnTime,
+        }
+    }
+
+    fn entry_qada(log_date: &str, prayer: Prayer) -> LogEntry {
+        LogEntry {
+            status: LogStatus::Qada,
+            ..entry(log_date, prayer)
+        }
+    }
+
+    fn day(log_date: &str) -> Vec<LogEntry> {
+        Prayer::ALL.iter().map(|p| entry(log_date, *p)).collect()
+    }
+
+    #[test]
+    fn empty_month_has_zero_summary() {
+        // Mid-month: today is the 20th, so 20 days (100 prayer slots) have elapsed.
+        let summary = monthly_summary(&[], d("2026-08-20"));
+        assert_eq!(summary.days_elapsed, 20);
+        assert_eq!(summary.complete_days, 0);
+        assert_eq!(summary.completion_pct, 0.0);
+        assert_eq!(summary.on_time, 0);
+        assert_eq!(summary.qada, 0);
+        assert_eq!(summary.missed, 100);
+        assert_eq!(summary.on_time_pct, 0.0);
+        assert_eq!(summary.qada_pct, 0.0);
+        assert_eq!(summary.missed_pct, 100.0);
+    }
+
+    #[test]
+    fn partial_day_counts_in_breakdown() {
+        // Today: 3 on-time + 2 qada -> the day is complete, 5 of 100 slots used.
+        let entries = vec![
+            entry("2026-08-20", Prayer::Fajr),
+            entry("2026-08-20", Prayer::Dhuhr),
+            entry("2026-08-20", Prayer::Asr),
+            entry_qada("2026-08-20", Prayer::Maghrib),
+            entry_qada("2026-08-20", Prayer::Isha),
+        ];
+        let summary = monthly_summary(&entries, d("2026-08-20"));
+        assert_eq!(summary.days_elapsed, 20);
+        assert_eq!(summary.complete_days, 1);
+        assert_eq!(summary.completion_pct, 5.0);
+        assert_eq!(summary.on_time, 3);
+        assert_eq!(summary.qada, 2);
+        assert_eq!(summary.missed, 95);
+        assert_eq!(summary.on_time_pct, 3.0);
+        assert_eq!(summary.qada_pct, 2.0);
+        assert_eq!(summary.missed_pct, 95.0);
+    }
+
+    #[test]
+    fn mixed_month_completion_and_breakdown() {
+        // Days 1-10 complete (all on-time) + day 11 with 2 on-time and 3 qada.
+        let mut entries: Vec<LogEntry> = Vec::new();
+        for day_num in 1..=10u32 {
+            entries.extend(day(&format!("2026-08-{day_num:02}")));
+        }
+        entries.push(entry("2026-08-11", Prayer::Fajr));
+        entries.push(entry("2026-08-11", Prayer::Dhuhr));
+        for prayer in [Prayer::Asr, Prayer::Maghrib, Prayer::Isha] {
+            entries.push(entry_qada("2026-08-11", prayer));
+        }
+        let summary = monthly_summary(&entries, d("2026-08-20"));
+        assert_eq!(summary.days_elapsed, 20);
+        assert_eq!(summary.complete_days, 11);
+        assert_eq!(summary.completion_pct, 55.0);
+        assert_eq!(summary.on_time, 52);
+        assert_eq!(summary.qada, 3);
+        assert_eq!(summary.missed, 45);
+        assert_eq!(summary.on_time_pct, 52.0);
+        assert_eq!(summary.qada_pct, 3.0);
+        assert_eq!(summary.missed_pct, 45.0);
+    }
+
+    #[test]
+    fn entries_outside_month_or_in_future_are_ignored() {
+        let mut entries = day("2026-07-31"); // previous month
+        entries.extend(day("2026-08-21")); // future day (clock skew)
+        entries.push(entry("2026-08-01", Prayer::Fajr));
+        let summary = monthly_summary(&entries, d("2026-08-20"));
+        assert_eq!(summary.days_elapsed, 20);
+        assert_eq!(summary.complete_days, 0);
+        assert_eq!(summary.completion_pct, 0.0);
+        assert_eq!(summary.on_time, 1);
+        assert_eq!(summary.qada, 0);
+        assert_eq!(summary.missed, 99);
+    }
+
+    #[test]
+    fn full_month_elapses_on_last_day() {
+        // Every day of the 31-day month complete, all on-time.
+        let mut entries: Vec<LogEntry> = Vec::new();
+        for day_num in 1..=31u32 {
+            entries.extend(day(&format!("2026-08-{day_num:02}")));
+        }
+        let summary = monthly_summary(&entries, d("2026-08-31"));
+        assert_eq!(summary.days_elapsed, 31);
+        assert_eq!(summary.complete_days, 31);
+        assert_eq!(summary.completion_pct, 100.0);
+        assert_eq!(summary.on_time, 155);
+        assert_eq!(summary.qada, 0);
+        assert_eq!(summary.missed, 0);
+        assert_eq!(summary.on_time_pct, 100.0);
+        assert_eq!(summary.qada_pct, 0.0);
+        assert_eq!(summary.missed_pct, 0.0);
+    }
+}

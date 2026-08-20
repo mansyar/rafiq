@@ -35,9 +35,9 @@ commands — presentational components exempt).
   - [x] Search by name/country substring, case-insensitive, ranked top-N results
   - [x] Manual lat/long validation (range, parse errors → friendly error)
   - [x] Location resolution: `city_id` → coordinates, or manual coordinates fallback
-- [ ] Task 2.3: Implement city store + resolution (Green)
-  - [ ] Lazy-load embedded dataset once; indexed search; typed `Location`/`City` structs
-  - [ ] Run tests → green; clippy clean
+- [x] Task 2.3: Implement city store + resolution (Green) — c47da5d
+  - [x] Lazy-load embedded dataset once; indexed search; typed `Location`/`City` structs
+  - [x] Run tests → green; clippy clean
 - [ ] Task 2.4: Location settings + commands (TDD)
   - [ ] Failing tests: `get_location`/`set_location` persist via settings repo; invalid input rejected
   - [ ] Implement commands; tests green

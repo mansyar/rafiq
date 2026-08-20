@@ -4,7 +4,7 @@
 **Type:** Feature
 **Methodology:** TDD per `conductor/workflow.md`; tests required only for logic-bearing code (project rule: storage/search/commands — presentational components exempt).
 
-## Phase 1 — Content Pipeline & Data Foundation (Rust, TDD)
+## Phase 1 — Content Pipeline & Data Foundation (Rust, TDD) [checkpoint: 90c1ddb]
 
 *Goal: bundled Uthmani + 3 translations as offline assets with validation.*
 
@@ -15,7 +15,7 @@
 - [x] Task 1.2: Implement asset loader (Green) — 90c1ddb
   - [x] Lazy-load via `OnceLock<Vec<Surah>>/Ayah>`, typed `Surah/Ayah/Quran` structs — 90c1ddb
   - [x] Tests green; `clippy` clean — 90c1ddb
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 2 — Quran Commands & Search (Rust, TDD)
 

@@ -25,10 +25,10 @@
   - [x] `list_surahs`, `get_surah(id)` returns Arabic + ayahs, invalid id error — c480cd6
   - [x] `search_surahs` case-insensitive EN/ID/AR + number, ranked top-N — c480cd6
   - [x] `quran_translation` setting persist via `SettingsRepo` (single active) — c480cd6
-- [ ] Task 2.2: Implement commands (Green)
-  - [ ] Indexed search (score EN exact/prefix/contains + number), `get_surah` with Bismillah handling
-  - [ ] Expose `list_surahs/get_surah/search_surahs/get_quran_translation/set_quran_translation` in `commands.rs`/`lib.rs`
-  - [ ] Tests green; `clippy` clean
+- [x] Task 2.2: Implement commands (Green) — cd33898
+  - [x] Indexed search (score EN exact/prefix/contains + number), `get_surah` with Bismillah handling — cd33898
+  - [x] Expose `list_surahs/get_surah/search_surahs/get_quran_translation/set_quran_translation` in `commands.rs`/`lib.rs` — cd33898
+  - [x] Tests green; `clippy` clean — cd33898
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 3 — Reader UI (Frontend)

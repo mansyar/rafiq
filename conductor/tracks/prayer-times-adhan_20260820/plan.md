@@ -64,7 +64,7 @@ required (project rule); logic helpers tested.*
   - [x] `pnpm tauri dev` renders pages; Biome + `tsc --noEmit` pass
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 4 — Notifications & Adhan Audio
+## Phase 4 — Notifications & Adhan Audio [checkpoint: c973941]
 
 *Goal: desktop notification + adhan playback at each prayer time.*
 
@@ -79,7 +79,7 @@ required (project rule); logic helpers tested.*
   - [x] Frontend listens for `prayer-time` event → plays audio; toggles respected
 - [x] Task 4.4: Manual verification — c973941
   - [x] Trigger at a temporarily adjusted time/test trigger → notification fires + adhan plays; toggles disable behavior
-- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 5 — Integration Gate & Acceptance
 

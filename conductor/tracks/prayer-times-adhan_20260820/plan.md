@@ -38,9 +38,9 @@ commands — presentational components exempt).
 - [x] Task 2.3: Implement city store + resolution (Green) — c47da5d
   - [x] Lazy-load embedded dataset once; indexed search; typed `Location`/`City` structs
   - [x] Run tests → green; clippy clean
-- [ ] Task 2.4: Location settings + commands (TDD)
-  - [ ] Failing tests: `get_location`/`set_location` persist via settings repo; invalid input rejected
-  - [ ] Implement commands; tests green
+- [x] Task 2.4: Location settings + commands (TDD) — a55663b
+  - [x] Failing tests: `get_location`/`set_location` persist via settings repo; invalid input rejected
+  - [x] Implement commands; tests green
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 3 — Today Page & Settings UI (Frontend)

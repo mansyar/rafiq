@@ -1,0 +1,1 @@
+Phase 5 Task 1 (green) - logWindowDates + prayerStatus in src/lib/log.ts (local calendar-date arithmetic, no tz drift: Date constructed from local y/m/d). vitest 29 passed (4 files).

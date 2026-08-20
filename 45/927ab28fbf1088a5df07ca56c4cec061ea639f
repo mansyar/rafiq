@@ -1,0 +1,11 @@
+Tasks: Write failing tests (Red) + Implement asset loader (Green) - Phase 1 daily
+
+Red: Created src-tauri/src/daily/mod.rs with stub loaders returning empty vec; tests failed as expected (hadiths 40, ayahs 365, no duplicates) showing TDD Red.
+
+Green: Implemented OnceLock loaders parsing bundled JSON via include_str; 9 tests now pass (hadiths exactly 40 unique non-empty + Nawawi source, ayahs 365 unique refs/ids + resolve via quran::global_ayah + no duplicates). Verified cargo test --lib daily 9 passed, cargo clippy -D warnings clean, cargo fmt.
+
+Files: src-tauri/src/daily/mod.rs (new), src-tauri/src/lib.rs (add pub mod daily)
+
+Why: Mirrors quran/city pattern for asset validation per spec FR-1, ensures data integrity before rotation engine.
+
+Commit: 45927ab

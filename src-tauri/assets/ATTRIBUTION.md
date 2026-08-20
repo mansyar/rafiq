@@ -39,3 +39,16 @@ then cached permanently in the user's local app-data directory (`recitation/`).
 - Terms verified 2026-08-20 against the alquran.cloud *Terms and Conditions* (last updated 14 June 2026, https://alquran.cloud/terms-and-conditions), Section IV "Translations and recitations":
   > "Recitations are licensed to us by the reciters or their estates for free, non-commercial redistribution at the bitrates we publish. You may stream, embed and download them for personal and educational use. You may bundle them into a commercial product, but please note that copyrights lie with the reciters and they may ask you to remove the conent."
 - **Compliance:** Rafiq fetches only on explicit user action (streaming/download for personal use), attributes the reciter in the in-app player, and does not redistribute the files. In any commercial distribution the reciter may request removal; the recitation edition is a single configurable constant so an alternative edition can be substituted if ever required (see `conductor/tech-stack.md`).
+
+## Daily Content (Nawawi 40 Hadith + Curated Ayahs)
+
+**Files:** `daily/hadiths.json` (40 entries), `daily/ayahs.json` (~365 curated references) — bundled "Daily Reflection" content.
+
+### Source & Licensing
+
+- **Arabic originals:** *Al-Arba'un an-Nawawiyyah* (الأربعون النووية) by Imam Yahya bin Sharaf an-Nawawi (d. 676 AH / 1277 CE) — **public domain** (medieval text). Transcribed as verified against sunnah.com's *Forty Hadith of an-Nawawi* collection (https://sunnah.com/nawawi40), whose Arabic text is sourced from the public-domain al-eman.com edition.
+- **English translations:** the English texts of sunnah.com's *Forty Hadith of an-Nawawi* (mixed named translators, per-hadith credits on the site). Licensing verified 2026-08-21 against the sunnah.com *About* page, Section 8 "Reproduction, Copying, Scraping" (https://sunnah.com/about):
+  > "Reproducing individual hadith or selections of hadith for a teaching/didactic/presentation purpose is permitted."
+- **Compliance (EN):** Rafiq bundles a single selection of 40 individual hadith for a free, personal, didactic app — not mass reproduction, not a website mirror, no scraping (one-time transcription into a static asset). sunnah.com is credited in this file and in the in-app source lines.
+- **Indonesian translations:** **original in-house translation by the Rafiq team** from the public-domain Arabic originals. Verified 2026-08-21: no third-party Indonesian edition of this collection is available under verifiable permissive terms (blog editions carry no license; the Internet Archive edition is CC BY-NC-ND 4.0, unsuitable for open-source redistribution). Copyright vests in the Rafiq project; distributed under the app's license.
+- **Curated ayahs (`daily/ayahs.json`):** `surah_id` / `ayah_number` references **only** into the already-bundled Quran text (Tanzil — public domain). No Quran text is duplicated and no new copyrighted material is introduced.

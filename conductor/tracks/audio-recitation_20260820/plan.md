@@ -13,7 +13,7 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — d2f1620
 
 ## Phase 2: Audio Index & Ayah Mapping (Rust) *(FR-2.4, FR-2.1)*
-- [ ] Task: Write failing tests for recitation audio index & mapping *(Red)*
+- [~] Task: Write failing tests for recitation audio index & mapping *(Red)*
   - [ ] Tests: `recitation` table schema, insert/lookup of cached files, size + fetched-at tracking
   - [ ] Tests: (surah, ayah) → global ayah number mapping from bundled Quran metadata (boundary cases: first/last ayah, 6236)
 - [ ] Task: Implement audio index & mapping *(Green)*

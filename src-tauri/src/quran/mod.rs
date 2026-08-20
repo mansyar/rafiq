@@ -305,4 +305,59 @@ mod tests {
         assert!(parse_quran_translation("invalid").is_err());
         assert!(parse_quran_translation("").is_err());
     }
+
+    // Red — audio recitation track, Phase 2: (surah, ayah) → global ayah number.
+    #[test]
+    fn global_ayah_first_ayah_of_quran_is_1() {
+        assert_eq!(global_ayah(1, 1), Some(1));
+    }
+
+    #[test]
+    fn global_ayah_last_ayah_of_quran_is_6236() {
+        assert_eq!(global_ayah(114, 6), Some(6236));
+    }
+
+    #[test]
+    fn global_ayah_maps_across_surah_boundaries() {
+        assert_eq!(global_ayah(1, 7), Some(7));
+        assert_eq!(global_ayah(2, 1), Some(8));
+        assert_eq!(global_ayah(2, 286), Some(293));
+    }
+
+    #[test]
+    fn global_ayah_rejects_unknown_surah() {
+        assert_eq!(global_ayah(0, 1), None);
+        assert_eq!(global_ayah(115, 1), None);
+    }
+
+    #[test]
+    fn global_ayah_rejects_ayah_outside_surah() {
+        assert_eq!(global_ayah(1, 0), None);
+        assert_eq!(global_ayah(1, 8), None);
+        assert_eq!(global_ayah(2, 287), None);
+        assert_eq!(global_ayah(114, 7), None);
+    }
+
+    #[test]
+    fn global_ayah_is_continuous_across_all_surahs() {
+        let mut end_of_previous: u32 = 0;
+        for surah in all_surahs() {
+            assert_eq!(
+                global_ayah(surah.id, 1),
+                Some(end_of_previous + 1),
+                "surah {} must start at global {}",
+                surah.id,
+                end_of_previous + 1
+            );
+            assert_eq!(
+                global_ayah(surah.id, surah.ayah_count as u16),
+                Some(end_of_previous + surah.ayah_count as u32),
+                "surah {} must end at global {}",
+                surah.id,
+                end_of_previous + surah.ayah_count as u32
+            );
+            end_of_previous += surah.ayah_count as u32;
+        }
+        assert_eq!(end_of_previous, 6236);
+    }
 }

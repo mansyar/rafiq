@@ -106,7 +106,7 @@ mod tests {
 
         run_migrations(&mut conn).unwrap();
 
-        assert_eq!(SCHEMA_VERSION, 2);
+        assert_eq!(SCHEMA_VERSION, 3);
         assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
     }
 
@@ -146,6 +146,41 @@ mod tests {
             [],
         )
         .unwrap();
+    }
+
+    #[test]
+    fn migration_3_creates_recitation_audio_index() {
+        let conn = migrated_conn();
+
+        let exists: i64 = conn
+            .query_row(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'recitation'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(exists, 1);
+
+        conn.execute(
+            "INSERT INTO recitation (global_ayah, file_path, size_bytes, fetched_at)
+             VALUES (1, 'recitation/1.mp3', 146830, '2026-08-20T12:00:00Z')",
+            [],
+        )
+        .unwrap();
+
+        let below = conn.execute(
+            "INSERT INTO recitation (global_ayah, file_path, size_bytes, fetched_at)
+             VALUES (0, 'recitation/0.mp3', 1, '2026-08-20T12:00:00Z')",
+            [],
+        );
+        assert!(below.is_err(), "global_ayah 0 must be rejected");
+
+        let above = conn.execute(
+            "INSERT INTO recitation (global_ayah, file_path, size_bytes, fetched_at)
+             VALUES (6237, 'recitation/6237.mp3', 1, '2026-08-20T12:00:00Z')",
+            [],
+        );
+        assert!(above.is_err(), "global_ayah 6237 must be rejected");
     }
 
     #[test]

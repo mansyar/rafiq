@@ -1,6 +1,7 @@
 //! SQLite storage: schema migrations + key/value settings.
 
 mod db;
+mod recitation;
 mod settings;
 
 pub use db::{init_db, schema_version, SCHEMA_VERSION};

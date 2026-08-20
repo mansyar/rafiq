@@ -3,16 +3,16 @@
 **Track:** `hijri-calendar_20260820` · **Spec:** [./spec.md](./spec.md)
 
 ## Phase 1 — Hijri Conversion Engine (Rust Core)
-- [ ] Task: Document tech-stack change and add `icu_calendar` dependency
-  - [ ] Add `icu_calendar` (ICU4X) to `src-tauri/Cargo.toml`; verify `cargo build`
-  - [ ] Update `conductor/tech-stack.md`: dated note recording the ICU4X Umm al-Qura choice (Workflow Principle 2 — stack changes documented *before* implementation)
-- [ ] Task: Write failing tests for the conversion engine (Red Phase)
-  - [ ] Gregorian→Hijri anchors: 2026-06-16 → 1 Muharram 1448; 2026-06-18 → 3 Muharram 1448
-  - [ ] Hijri→Gregorian anchor: 1447-12-10 → 2026-05-27
-  - [ ] Round-trip test: `hijri_to_gregorian(gregorian_to_hijri(d)) == d` sampled across 1444–1450 AH
-  - [ ] Month-length test: every month returns 29 or 30 days per Umm al-Qura
-  - [ ] Month-grid builder tests: day count, per-day Gregorian date + weekday, `is_today` flag (pure function of a reference date)
-  - [ ] Run `cargo test` and confirm the new tests **fail** (Red)
+- [x] Task: Document tech-stack change and add `icu_calendar` dependency — 5418d78
+  - [x] Add `icu_calendar` (ICU4X) to `src-tauri/Cargo.toml`; verify `cargo build`
+  - [x] Update `conductor/tech-stack.md`: dated note recording the ICU4X Umm al-Qura choice (Workflow Principle 2 — stack changes documented *before* implementation)
+- [x] Task: Write failing tests for the conversion engine (Red Phase) — 5418d78
+  - [x] Gregorian→Hijri anchors: 2026-06-16 → 1 Muharram 1448; 2026-06-18 → 3 Muharram 1448
+  - [x] Hijri→Gregorian anchor: 1447-12-10 → 2026-05-27
+  - [x] Round-trip test: `hijri_to_gregorian(gregorian_to_hijri(d)) == d` sampled across 1444–1450 AH
+  - [x] Month-length test: every month returns 29 or 30 days per Umm al-Qura
+  - [x] Month-grid builder tests: day count, per-day Gregorian date + weekday, `is_today` flag (pure function of a reference date)
+  - [x] Run `cargo test` and confirm the new tests **fail** (Red)
 - [ ] Task: Implement conversion engine to pass tests (Green Phase)
   - [ ] `src-tauri/src/hijri/mod.rs`: `HijriDate` / `GregorianDate` / `MonthGrid` types (serde)
   - [ ] `gregorian_to_hijri` / `hijri_to_gregorian` via `icu_calendar` Umm al-Qura

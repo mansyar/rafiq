@@ -11,8 +11,8 @@ Checkpointing Protocol.
 ## Phase 1: Storage — `prayer_log` table + repository
 
 - [x] Task: Write failing tests for migration 2 (temp DB: migration applies, `schema_version` → 2, idempotent re-run, `prayer_log` table exists with `UNIQUE(log_date, prayer)`) [c99596e]
-- [ ] Task: Implement migration 2 in `storage/db.rs` (`MIGRATION_002`, bump `SCHEMA_VERSION` to 2)
-- [ ] Task: Write failing tests for the prayer-log repository (insert, duplicate `(date, prayer)` rejected, delete, range query ordering, empty range)
+- [x] Task: Implement migration 2 in `storage/db.rs` (`MIGRATION_002`, bump `SCHEMA_VERSION` to 2) [fa36334]
+- [x] Task: Write failing tests for the prayer-log repository (insert, duplicate `(date, prayer)` rejected, delete, range query ordering, empty range) [d495f3f]
 - [ ] Task: Implement repository in `src-tauri/src/log/mod.rs` (insert / delete / range query over rusqlite)
 - [ ] Task: Refactor + verify coverage ≥80% for the new module
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

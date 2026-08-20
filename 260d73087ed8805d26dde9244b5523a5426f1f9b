@@ -1,0 +1,1 @@
+Follow-up to c7c0c00: biome lint/style/noNonNullAssertion warnings on locationQuery.data! - replaced the non-null assertions with the exact idiom used by today.tsx (if (!data) throw inside queryFn, enabled !!data && !!method). No behavior change. Gate: biome 0 findings, tsc clean, vitest 29 passed.

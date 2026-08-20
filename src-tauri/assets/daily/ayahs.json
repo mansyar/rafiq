@@ -1,0 +1,1827 @@
+[
+  {
+    "id": "daily-001",
+    "surah_id": 1,
+    "ayah_number": 1
+  },
+  {
+    "id": "daily-002",
+    "surah_id": 2,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-003",
+    "surah_id": 2,
+    "ayah_number": 28
+  },
+  {
+    "id": "daily-004",
+    "surah_id": 2,
+    "ayah_number": 45
+  },
+  {
+    "id": "daily-005",
+    "surah_id": 2,
+    "ayah_number": 62
+  },
+  {
+    "id": "daily-006",
+    "surah_id": 2,
+    "ayah_number": 79
+  },
+  {
+    "id": "daily-007",
+    "surah_id": 2,
+    "ayah_number": 96
+  },
+  {
+    "id": "daily-008",
+    "surah_id": 2,
+    "ayah_number": 113
+  },
+  {
+    "id": "daily-009",
+    "surah_id": 2,
+    "ayah_number": 130
+  },
+  {
+    "id": "daily-010",
+    "surah_id": 2,
+    "ayah_number": 147
+  },
+  {
+    "id": "daily-011",
+    "surah_id": 2,
+    "ayah_number": 164
+  },
+  {
+    "id": "daily-012",
+    "surah_id": 2,
+    "ayah_number": 181
+  },
+  {
+    "id": "daily-013",
+    "surah_id": 2,
+    "ayah_number": 199
+  },
+  {
+    "id": "daily-014",
+    "surah_id": 2,
+    "ayah_number": 216
+  },
+  {
+    "id": "daily-015",
+    "surah_id": 2,
+    "ayah_number": 233
+  },
+  {
+    "id": "daily-016",
+    "surah_id": 2,
+    "ayah_number": 250
+  },
+  {
+    "id": "daily-017",
+    "surah_id": 2,
+    "ayah_number": 267
+  },
+  {
+    "id": "daily-018",
+    "surah_id": 2,
+    "ayah_number": 284
+  },
+  {
+    "id": "daily-019",
+    "surah_id": 3,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-020",
+    "surah_id": 3,
+    "ayah_number": 32
+  },
+  {
+    "id": "daily-021",
+    "surah_id": 3,
+    "ayah_number": 49
+  },
+  {
+    "id": "daily-022",
+    "surah_id": 3,
+    "ayah_number": 66
+  },
+  {
+    "id": "daily-023",
+    "surah_id": 3,
+    "ayah_number": 83
+  },
+  {
+    "id": "daily-024",
+    "surah_id": 3,
+    "ayah_number": 100
+  },
+  {
+    "id": "daily-025",
+    "surah_id": 3,
+    "ayah_number": 118
+  },
+  {
+    "id": "daily-026",
+    "surah_id": 3,
+    "ayah_number": 135
+  },
+  {
+    "id": "daily-027",
+    "surah_id": 3,
+    "ayah_number": 152
+  },
+  {
+    "id": "daily-028",
+    "surah_id": 3,
+    "ayah_number": 169
+  },
+  {
+    "id": "daily-029",
+    "surah_id": 3,
+    "ayah_number": 186
+  },
+  {
+    "id": "daily-030",
+    "surah_id": 4,
+    "ayah_number": 3
+  },
+  {
+    "id": "daily-031",
+    "surah_id": 4,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-032",
+    "surah_id": 4,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-033",
+    "surah_id": 4,
+    "ayah_number": 54
+  },
+  {
+    "id": "daily-034",
+    "surah_id": 4,
+    "ayah_number": 71
+  },
+  {
+    "id": "daily-035",
+    "surah_id": 4,
+    "ayah_number": 88
+  },
+  {
+    "id": "daily-036",
+    "surah_id": 4,
+    "ayah_number": 105
+  },
+  {
+    "id": "daily-037",
+    "surah_id": 4,
+    "ayah_number": 123
+  },
+  {
+    "id": "daily-038",
+    "surah_id": 4,
+    "ayah_number": 140
+  },
+  {
+    "id": "daily-039",
+    "surah_id": 4,
+    "ayah_number": 157
+  },
+  {
+    "id": "daily-040",
+    "surah_id": 4,
+    "ayah_number": 174
+  },
+  {
+    "id": "daily-041",
+    "surah_id": 5,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-042",
+    "surah_id": 5,
+    "ayah_number": 32
+  },
+  {
+    "id": "daily-043",
+    "surah_id": 5,
+    "ayah_number": 49
+  },
+  {
+    "id": "daily-044",
+    "surah_id": 5,
+    "ayah_number": 66
+  },
+  {
+    "id": "daily-045",
+    "surah_id": 5,
+    "ayah_number": 83
+  },
+  {
+    "id": "daily-046",
+    "surah_id": 5,
+    "ayah_number": 100
+  },
+  {
+    "id": "daily-047",
+    "surah_id": 5,
+    "ayah_number": 117
+  },
+  {
+    "id": "daily-048",
+    "surah_id": 6,
+    "ayah_number": 14
+  },
+  {
+    "id": "daily-049",
+    "surah_id": 6,
+    "ayah_number": 32
+  },
+  {
+    "id": "daily-050",
+    "surah_id": 6,
+    "ayah_number": 49
+  },
+  {
+    "id": "daily-051",
+    "surah_id": 6,
+    "ayah_number": 66
+  },
+  {
+    "id": "daily-052",
+    "surah_id": 6,
+    "ayah_number": 83
+  },
+  {
+    "id": "daily-053",
+    "surah_id": 6,
+    "ayah_number": 100
+  },
+  {
+    "id": "daily-054",
+    "surah_id": 6,
+    "ayah_number": 117
+  },
+  {
+    "id": "daily-055",
+    "surah_id": 6,
+    "ayah_number": 134
+  },
+  {
+    "id": "daily-056",
+    "surah_id": 6,
+    "ayah_number": 151
+  },
+  {
+    "id": "daily-057",
+    "surah_id": 7,
+    "ayah_number": 3
+  },
+  {
+    "id": "daily-058",
+    "surah_id": 7,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-059",
+    "surah_id": 7,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-060",
+    "surah_id": 7,
+    "ayah_number": 55
+  },
+  {
+    "id": "daily-061",
+    "surah_id": 7,
+    "ayah_number": 72
+  },
+  {
+    "id": "daily-062",
+    "surah_id": 7,
+    "ayah_number": 89
+  },
+  {
+    "id": "daily-063",
+    "surah_id": 7,
+    "ayah_number": 106
+  },
+  {
+    "id": "daily-064",
+    "surah_id": 7,
+    "ayah_number": 123
+  },
+  {
+    "id": "daily-065",
+    "surah_id": 7,
+    "ayah_number": 140
+  },
+  {
+    "id": "daily-066",
+    "surah_id": 7,
+    "ayah_number": 157
+  },
+  {
+    "id": "daily-067",
+    "surah_id": 7,
+    "ayah_number": 174
+  },
+  {
+    "id": "daily-068",
+    "surah_id": 7,
+    "ayah_number": 191
+  },
+  {
+    "id": "daily-069",
+    "surah_id": 8,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-070",
+    "surah_id": 8,
+    "ayah_number": 19
+  },
+  {
+    "id": "daily-071",
+    "surah_id": 8,
+    "ayah_number": 36
+  },
+  {
+    "id": "daily-072",
+    "surah_id": 8,
+    "ayah_number": 54
+  },
+  {
+    "id": "daily-073",
+    "surah_id": 8,
+    "ayah_number": 71
+  },
+  {
+    "id": "daily-074",
+    "surah_id": 9,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-075",
+    "surah_id": 9,
+    "ayah_number": 30
+  },
+  {
+    "id": "daily-076",
+    "surah_id": 9,
+    "ayah_number": 47
+  },
+  {
+    "id": "daily-077",
+    "surah_id": 9,
+    "ayah_number": 64
+  },
+  {
+    "id": "daily-078",
+    "surah_id": 9,
+    "ayah_number": 81
+  },
+  {
+    "id": "daily-079",
+    "surah_id": 9,
+    "ayah_number": 98
+  },
+  {
+    "id": "daily-080",
+    "surah_id": 9,
+    "ayah_number": 115
+  },
+  {
+    "id": "daily-081",
+    "surah_id": 10,
+    "ayah_number": 3
+  },
+  {
+    "id": "daily-082",
+    "surah_id": 10,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-083",
+    "surah_id": 10,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-084",
+    "surah_id": 10,
+    "ayah_number": 55
+  },
+  {
+    "id": "daily-085",
+    "surah_id": 10,
+    "ayah_number": 72
+  },
+  {
+    "id": "daily-086",
+    "surah_id": 10,
+    "ayah_number": 89
+  },
+  {
+    "id": "daily-087",
+    "surah_id": 10,
+    "ayah_number": 106
+  },
+  {
+    "id": "daily-088",
+    "surah_id": 11,
+    "ayah_number": 14
+  },
+  {
+    "id": "daily-089",
+    "surah_id": 11,
+    "ayah_number": 31
+  },
+  {
+    "id": "daily-090",
+    "surah_id": 11,
+    "ayah_number": 48
+  },
+  {
+    "id": "daily-091",
+    "surah_id": 11,
+    "ayah_number": 65
+  },
+  {
+    "id": "daily-092",
+    "surah_id": 11,
+    "ayah_number": 82
+  },
+  {
+    "id": "daily-093",
+    "surah_id": 11,
+    "ayah_number": 99
+  },
+  {
+    "id": "daily-094",
+    "surah_id": 11,
+    "ayah_number": 116
+  },
+  {
+    "id": "daily-095",
+    "surah_id": 12,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-096",
+    "surah_id": 12,
+    "ayah_number": 28
+  },
+  {
+    "id": "daily-097",
+    "surah_id": 12,
+    "ayah_number": 45
+  },
+  {
+    "id": "daily-098",
+    "surah_id": 12,
+    "ayah_number": 62
+  },
+  {
+    "id": "daily-099",
+    "surah_id": 12,
+    "ayah_number": 79
+  },
+  {
+    "id": "daily-100",
+    "surah_id": 12,
+    "ayah_number": 96
+  },
+  {
+    "id": "daily-101",
+    "surah_id": 13,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-102",
+    "surah_id": 13,
+    "ayah_number": 19
+  },
+  {
+    "id": "daily-103",
+    "surah_id": 13,
+    "ayah_number": 36
+  },
+  {
+    "id": "daily-104",
+    "surah_id": 14,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-105",
+    "surah_id": 14,
+    "ayah_number": 27
+  },
+  {
+    "id": "daily-106",
+    "surah_id": 14,
+    "ayah_number": 44
+  },
+  {
+    "id": "daily-107",
+    "surah_id": 15,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-108",
+    "surah_id": 15,
+    "ayah_number": 27
+  },
+  {
+    "id": "daily-109",
+    "surah_id": 15,
+    "ayah_number": 44
+  },
+  {
+    "id": "daily-110",
+    "surah_id": 15,
+    "ayah_number": 61
+  },
+  {
+    "id": "daily-111",
+    "surah_id": 15,
+    "ayah_number": 78
+  },
+  {
+    "id": "daily-112",
+    "surah_id": 15,
+    "ayah_number": 95
+  },
+  {
+    "id": "daily-113",
+    "surah_id": 16,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-114",
+    "surah_id": 16,
+    "ayah_number": 30
+  },
+  {
+    "id": "daily-115",
+    "surah_id": 16,
+    "ayah_number": 47
+  },
+  {
+    "id": "daily-116",
+    "surah_id": 16,
+    "ayah_number": 64
+  },
+  {
+    "id": "daily-117",
+    "surah_id": 16,
+    "ayah_number": 81
+  },
+  {
+    "id": "daily-118",
+    "surah_id": 16,
+    "ayah_number": 98
+  },
+  {
+    "id": "daily-119",
+    "surah_id": 16,
+    "ayah_number": 116
+  },
+  {
+    "id": "daily-120",
+    "surah_id": 17,
+    "ayah_number": 5
+  },
+  {
+    "id": "daily-121",
+    "surah_id": 17,
+    "ayah_number": 22
+  },
+  {
+    "id": "daily-122",
+    "surah_id": 17,
+    "ayah_number": 39
+  },
+  {
+    "id": "daily-123",
+    "surah_id": 17,
+    "ayah_number": 56
+  },
+  {
+    "id": "daily-124",
+    "surah_id": 17,
+    "ayah_number": 73
+  },
+  {
+    "id": "daily-125",
+    "surah_id": 17,
+    "ayah_number": 90
+  },
+  {
+    "id": "daily-126",
+    "surah_id": 17,
+    "ayah_number": 107
+  },
+  {
+    "id": "daily-127",
+    "surah_id": 18,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-128",
+    "surah_id": 18,
+    "ayah_number": 30
+  },
+  {
+    "id": "daily-129",
+    "surah_id": 18,
+    "ayah_number": 47
+  },
+  {
+    "id": "daily-130",
+    "surah_id": 18,
+    "ayah_number": 64
+  },
+  {
+    "id": "daily-131",
+    "surah_id": 18,
+    "ayah_number": 82
+  },
+  {
+    "id": "daily-132",
+    "surah_id": 18,
+    "ayah_number": 99
+  },
+  {
+    "id": "daily-133",
+    "surah_id": 19,
+    "ayah_number": 6
+  },
+  {
+    "id": "daily-134",
+    "surah_id": 19,
+    "ayah_number": 23
+  },
+  {
+    "id": "daily-135",
+    "surah_id": 19,
+    "ayah_number": 40
+  },
+  {
+    "id": "daily-136",
+    "surah_id": 19,
+    "ayah_number": 57
+  },
+  {
+    "id": "daily-137",
+    "surah_id": 19,
+    "ayah_number": 74
+  },
+  {
+    "id": "daily-138",
+    "surah_id": 19,
+    "ayah_number": 91
+  },
+  {
+    "id": "daily-139",
+    "surah_id": 20,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-140",
+    "surah_id": 20,
+    "ayah_number": 27
+  },
+  {
+    "id": "daily-141",
+    "surah_id": 20,
+    "ayah_number": 44
+  },
+  {
+    "id": "daily-142",
+    "surah_id": 20,
+    "ayah_number": 61
+  },
+  {
+    "id": "daily-143",
+    "surah_id": 20,
+    "ayah_number": 79
+  },
+  {
+    "id": "daily-144",
+    "surah_id": 20,
+    "ayah_number": 96
+  },
+  {
+    "id": "daily-145",
+    "surah_id": 20,
+    "ayah_number": 113
+  },
+  {
+    "id": "daily-146",
+    "surah_id": 20,
+    "ayah_number": 130
+  },
+  {
+    "id": "daily-147",
+    "surah_id": 21,
+    "ayah_number": 12
+  },
+  {
+    "id": "daily-148",
+    "surah_id": 21,
+    "ayah_number": 29
+  },
+  {
+    "id": "daily-149",
+    "surah_id": 21,
+    "ayah_number": 46
+  },
+  {
+    "id": "daily-150",
+    "surah_id": 21,
+    "ayah_number": 63
+  },
+  {
+    "id": "daily-151",
+    "surah_id": 21,
+    "ayah_number": 80
+  },
+  {
+    "id": "daily-152",
+    "surah_id": 21,
+    "ayah_number": 97
+  },
+  {
+    "id": "daily-153",
+    "surah_id": 22,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-154",
+    "surah_id": 22,
+    "ayah_number": 19
+  },
+  {
+    "id": "daily-155",
+    "surah_id": 22,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-156",
+    "surah_id": 22,
+    "ayah_number": 54
+  },
+  {
+    "id": "daily-157",
+    "surah_id": 22,
+    "ayah_number": 71
+  },
+  {
+    "id": "daily-158",
+    "surah_id": 23,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-159",
+    "surah_id": 23,
+    "ayah_number": 27
+  },
+  {
+    "id": "daily-160",
+    "surah_id": 23,
+    "ayah_number": 44
+  },
+  {
+    "id": "daily-161",
+    "surah_id": 23,
+    "ayah_number": 61
+  },
+  {
+    "id": "daily-162",
+    "surah_id": 23,
+    "ayah_number": 78
+  },
+  {
+    "id": "daily-163",
+    "surah_id": 23,
+    "ayah_number": 95
+  },
+  {
+    "id": "daily-164",
+    "surah_id": 23,
+    "ayah_number": 112
+  },
+  {
+    "id": "daily-165",
+    "surah_id": 24,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-166",
+    "surah_id": 24,
+    "ayah_number": 29
+  },
+  {
+    "id": "daily-167",
+    "surah_id": 24,
+    "ayah_number": 46
+  },
+  {
+    "id": "daily-168",
+    "surah_id": 24,
+    "ayah_number": 63
+  },
+  {
+    "id": "daily-169",
+    "surah_id": 25,
+    "ayah_number": 16
+  },
+  {
+    "id": "daily-170",
+    "surah_id": 25,
+    "ayah_number": 33
+  },
+  {
+    "id": "daily-171",
+    "surah_id": 25,
+    "ayah_number": 50
+  },
+  {
+    "id": "daily-172",
+    "surah_id": 25,
+    "ayah_number": 67
+  },
+  {
+    "id": "daily-173",
+    "surah_id": 26,
+    "ayah_number": 7
+  },
+  {
+    "id": "daily-174",
+    "surah_id": 26,
+    "ayah_number": 24
+  },
+  {
+    "id": "daily-175",
+    "surah_id": 26,
+    "ayah_number": 41
+  },
+  {
+    "id": "daily-176",
+    "surah_id": 26,
+    "ayah_number": 58
+  },
+  {
+    "id": "daily-177",
+    "surah_id": 26,
+    "ayah_number": 75
+  },
+  {
+    "id": "daily-178",
+    "surah_id": 26,
+    "ayah_number": 93
+  },
+  {
+    "id": "daily-179",
+    "surah_id": 26,
+    "ayah_number": 110
+  },
+  {
+    "id": "daily-180",
+    "surah_id": 26,
+    "ayah_number": 127
+  },
+  {
+    "id": "daily-181",
+    "surah_id": 26,
+    "ayah_number": 144
+  },
+  {
+    "id": "daily-182",
+    "surah_id": 26,
+    "ayah_number": 161
+  },
+  {
+    "id": "daily-183",
+    "surah_id": 26,
+    "ayah_number": 178
+  },
+  {
+    "id": "daily-184",
+    "surah_id": 26,
+    "ayah_number": 195
+  },
+  {
+    "id": "daily-185",
+    "surah_id": 26,
+    "ayah_number": 212
+  },
+  {
+    "id": "daily-186",
+    "surah_id": 27,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-187",
+    "surah_id": 27,
+    "ayah_number": 19
+  },
+  {
+    "id": "daily-188",
+    "surah_id": 27,
+    "ayah_number": 36
+  },
+  {
+    "id": "daily-189",
+    "surah_id": 27,
+    "ayah_number": 53
+  },
+  {
+    "id": "daily-190",
+    "surah_id": 27,
+    "ayah_number": 71
+  },
+  {
+    "id": "daily-191",
+    "surah_id": 27,
+    "ayah_number": 88
+  },
+  {
+    "id": "daily-192",
+    "surah_id": 28,
+    "ayah_number": 12
+  },
+  {
+    "id": "daily-193",
+    "surah_id": 28,
+    "ayah_number": 29
+  },
+  {
+    "id": "daily-194",
+    "surah_id": 28,
+    "ayah_number": 46
+  },
+  {
+    "id": "daily-195",
+    "surah_id": 28,
+    "ayah_number": 63
+  },
+  {
+    "id": "daily-196",
+    "surah_id": 28,
+    "ayah_number": 80
+  },
+  {
+    "id": "daily-197",
+    "surah_id": 29,
+    "ayah_number": 9
+  },
+  {
+    "id": "daily-198",
+    "surah_id": 29,
+    "ayah_number": 26
+  },
+  {
+    "id": "daily-199",
+    "surah_id": 29,
+    "ayah_number": 43
+  },
+  {
+    "id": "daily-200",
+    "surah_id": 29,
+    "ayah_number": 60
+  },
+  {
+    "id": "daily-201",
+    "surah_id": 30,
+    "ayah_number": 8
+  },
+  {
+    "id": "daily-202",
+    "surah_id": 30,
+    "ayah_number": 26
+  },
+  {
+    "id": "daily-203",
+    "surah_id": 30,
+    "ayah_number": 43
+  },
+  {
+    "id": "daily-204",
+    "surah_id": 30,
+    "ayah_number": 60
+  },
+  {
+    "id": "daily-205",
+    "surah_id": 31,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-206",
+    "surah_id": 31,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-207",
+    "surah_id": 32,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-208",
+    "surah_id": 33,
+    "ayah_number": 4
+  },
+  {
+    "id": "daily-209",
+    "surah_id": 33,
+    "ayah_number": 21
+  },
+  {
+    "id": "daily-210",
+    "surah_id": 33,
+    "ayah_number": 38
+  },
+  {
+    "id": "daily-211",
+    "surah_id": 33,
+    "ayah_number": 55
+  },
+  {
+    "id": "daily-212",
+    "surah_id": 33,
+    "ayah_number": 72
+  },
+  {
+    "id": "daily-213",
+    "surah_id": 34,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-214",
+    "surah_id": 34,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-215",
+    "surah_id": 34,
+    "ayah_number": 51
+  },
+  {
+    "id": "daily-216",
+    "surah_id": 35,
+    "ayah_number": 14
+  },
+  {
+    "id": "daily-217",
+    "surah_id": 35,
+    "ayah_number": 31
+  },
+  {
+    "id": "daily-218",
+    "surah_id": 36,
+    "ayah_number": 3
+  },
+  {
+    "id": "daily-219",
+    "surah_id": 36,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-220",
+    "surah_id": 36,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-221",
+    "surah_id": 36,
+    "ayah_number": 54
+  },
+  {
+    "id": "daily-222",
+    "surah_id": 36,
+    "ayah_number": 71
+  },
+  {
+    "id": "daily-223",
+    "surah_id": 37,
+    "ayah_number": 5
+  },
+  {
+    "id": "daily-224",
+    "surah_id": 37,
+    "ayah_number": 22
+  },
+  {
+    "id": "daily-225",
+    "surah_id": 37,
+    "ayah_number": 40
+  },
+  {
+    "id": "daily-226",
+    "surah_id": 37,
+    "ayah_number": 57
+  },
+  {
+    "id": "daily-227",
+    "surah_id": 37,
+    "ayah_number": 74
+  },
+  {
+    "id": "daily-228",
+    "surah_id": 37,
+    "ayah_number": 91
+  },
+  {
+    "id": "daily-229",
+    "surah_id": 37,
+    "ayah_number": 108
+  },
+  {
+    "id": "daily-230",
+    "surah_id": 37,
+    "ayah_number": 125
+  },
+  {
+    "id": "daily-231",
+    "surah_id": 37,
+    "ayah_number": 142
+  },
+  {
+    "id": "daily-232",
+    "surah_id": 37,
+    "ayah_number": 159
+  },
+  {
+    "id": "daily-233",
+    "surah_id": 37,
+    "ayah_number": 176
+  },
+  {
+    "id": "daily-234",
+    "surah_id": 38,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-235",
+    "surah_id": 38,
+    "ayah_number": 28
+  },
+  {
+    "id": "daily-236",
+    "surah_id": 38,
+    "ayah_number": 45
+  },
+  {
+    "id": "daily-237",
+    "surah_id": 38,
+    "ayah_number": 63
+  },
+  {
+    "id": "daily-238",
+    "surah_id": 38,
+    "ayah_number": 80
+  },
+  {
+    "id": "daily-239",
+    "surah_id": 39,
+    "ayah_number": 9
+  },
+  {
+    "id": "daily-240",
+    "surah_id": 39,
+    "ayah_number": 26
+  },
+  {
+    "id": "daily-241",
+    "surah_id": 39,
+    "ayah_number": 43
+  },
+  {
+    "id": "daily-242",
+    "surah_id": 39,
+    "ayah_number": 60
+  },
+  {
+    "id": "daily-243",
+    "surah_id": 40,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-244",
+    "surah_id": 40,
+    "ayah_number": 19
+  },
+  {
+    "id": "daily-245",
+    "surah_id": 40,
+    "ayah_number": 36
+  },
+  {
+    "id": "daily-246",
+    "surah_id": 40,
+    "ayah_number": 53
+  },
+  {
+    "id": "daily-247",
+    "surah_id": 40,
+    "ayah_number": 70
+  },
+  {
+    "id": "daily-248",
+    "surah_id": 41,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-249",
+    "surah_id": 41,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-250",
+    "surah_id": 41,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-251",
+    "surah_id": 41,
+    "ayah_number": 54
+  },
+  {
+    "id": "daily-252",
+    "surah_id": 42,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-253",
+    "surah_id": 42,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-254",
+    "surah_id": 42,
+    "ayah_number": 51
+  },
+  {
+    "id": "daily-255",
+    "surah_id": 43,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-256",
+    "surah_id": 43,
+    "ayah_number": 32
+  },
+  {
+    "id": "daily-257",
+    "surah_id": 43,
+    "ayah_number": 49
+  },
+  {
+    "id": "daily-258",
+    "surah_id": 43,
+    "ayah_number": 66
+  },
+  {
+    "id": "daily-259",
+    "surah_id": 43,
+    "ayah_number": 83
+  },
+  {
+    "id": "daily-260",
+    "surah_id": 44,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-261",
+    "surah_id": 44,
+    "ayah_number": 29
+  },
+  {
+    "id": "daily-262",
+    "surah_id": 44,
+    "ayah_number": 46
+  },
+  {
+    "id": "daily-263",
+    "surah_id": 45,
+    "ayah_number": 4
+  },
+  {
+    "id": "daily-264",
+    "surah_id": 45,
+    "ayah_number": 21
+  },
+  {
+    "id": "daily-265",
+    "surah_id": 46,
+    "ayah_number": 1
+  },
+  {
+    "id": "daily-266",
+    "surah_id": 46,
+    "ayah_number": 18
+  },
+  {
+    "id": "daily-267",
+    "surah_id": 46,
+    "ayah_number": 35
+  },
+  {
+    "id": "daily-268",
+    "surah_id": 47,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-269",
+    "surah_id": 47,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-270",
+    "surah_id": 48,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-271",
+    "surah_id": 49,
+    "ayah_number": 1
+  },
+  {
+    "id": "daily-272",
+    "surah_id": 50,
+    "ayah_number": 1
+  },
+  {
+    "id": "daily-273",
+    "surah_id": 50,
+    "ayah_number": 18
+  },
+  {
+    "id": "daily-274",
+    "surah_id": 50,
+    "ayah_number": 35
+  },
+  {
+    "id": "daily-275",
+    "surah_id": 51,
+    "ayah_number": 7
+  },
+  {
+    "id": "daily-276",
+    "surah_id": 51,
+    "ayah_number": 24
+  },
+  {
+    "id": "daily-277",
+    "surah_id": 51,
+    "ayah_number": 41
+  },
+  {
+    "id": "daily-278",
+    "surah_id": 51,
+    "ayah_number": 58
+  },
+  {
+    "id": "daily-279",
+    "surah_id": 52,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-280",
+    "surah_id": 52,
+    "ayah_number": 32
+  },
+  {
+    "id": "daily-281",
+    "surah_id": 52,
+    "ayah_number": 49
+  },
+  {
+    "id": "daily-282",
+    "surah_id": 53,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-283",
+    "surah_id": 53,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-284",
+    "surah_id": 53,
+    "ayah_number": 52
+  },
+  {
+    "id": "daily-285",
+    "surah_id": 54,
+    "ayah_number": 7
+  },
+  {
+    "id": "daily-286",
+    "surah_id": 54,
+    "ayah_number": 24
+  },
+  {
+    "id": "daily-287",
+    "surah_id": 54,
+    "ayah_number": 41
+  },
+  {
+    "id": "daily-288",
+    "surah_id": 55,
+    "ayah_number": 3
+  },
+  {
+    "id": "daily-289",
+    "surah_id": 55,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-290",
+    "surah_id": 55,
+    "ayah_number": 37
+  },
+  {
+    "id": "daily-291",
+    "surah_id": 55,
+    "ayah_number": 54
+  },
+  {
+    "id": "daily-292",
+    "surah_id": 55,
+    "ayah_number": 71
+  },
+  {
+    "id": "daily-293",
+    "surah_id": 56,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-294",
+    "surah_id": 56,
+    "ayah_number": 27
+  },
+  {
+    "id": "daily-295",
+    "surah_id": 56,
+    "ayah_number": 44
+  },
+  {
+    "id": "daily-296",
+    "surah_id": 56,
+    "ayah_number": 62
+  },
+  {
+    "id": "daily-297",
+    "surah_id": 56,
+    "ayah_number": 79
+  },
+  {
+    "id": "daily-298",
+    "surah_id": 56,
+    "ayah_number": 96
+  },
+  {
+    "id": "daily-299",
+    "surah_id": 57,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-300",
+    "surah_id": 58,
+    "ayah_number": 5
+  },
+  {
+    "id": "daily-301",
+    "surah_id": 58,
+    "ayah_number": 22
+  },
+  {
+    "id": "daily-302",
+    "surah_id": 59,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-303",
+    "surah_id": 60,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-304",
+    "surah_id": 61,
+    "ayah_number": 14
+  },
+  {
+    "id": "daily-305",
+    "surah_id": 63,
+    "ayah_number": 6
+  },
+  {
+    "id": "daily-306",
+    "surah_id": 64,
+    "ayah_number": 12
+  },
+  {
+    "id": "daily-307",
+    "surah_id": 65,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-308",
+    "surah_id": 67,
+    "ayah_number": 5
+  },
+  {
+    "id": "daily-309",
+    "surah_id": 67,
+    "ayah_number": 22
+  },
+  {
+    "id": "daily-310",
+    "surah_id": 68,
+    "ayah_number": 9
+  },
+  {
+    "id": "daily-311",
+    "surah_id": 68,
+    "ayah_number": 26
+  },
+  {
+    "id": "daily-312",
+    "surah_id": 68,
+    "ayah_number": 43
+  },
+  {
+    "id": "daily-313",
+    "surah_id": 69,
+    "ayah_number": 8
+  },
+  {
+    "id": "daily-314",
+    "surah_id": 69,
+    "ayah_number": 25
+  },
+  {
+    "id": "daily-315",
+    "surah_id": 69,
+    "ayah_number": 42
+  },
+  {
+    "id": "daily-316",
+    "surah_id": 70,
+    "ayah_number": 7
+  },
+  {
+    "id": "daily-317",
+    "surah_id": 70,
+    "ayah_number": 24
+  },
+  {
+    "id": "daily-318",
+    "surah_id": 70,
+    "ayah_number": 41
+  },
+  {
+    "id": "daily-319",
+    "surah_id": 71,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-320",
+    "surah_id": 72,
+    "ayah_number": 4
+  },
+  {
+    "id": "daily-321",
+    "surah_id": 72,
+    "ayah_number": 21
+  },
+  {
+    "id": "daily-322",
+    "surah_id": 73,
+    "ayah_number": 10
+  },
+  {
+    "id": "daily-323",
+    "surah_id": 74,
+    "ayah_number": 7
+  },
+  {
+    "id": "daily-324",
+    "surah_id": 74,
+    "ayah_number": 24
+  },
+  {
+    "id": "daily-325",
+    "surah_id": 74,
+    "ayah_number": 41
+  },
+  {
+    "id": "daily-326",
+    "surah_id": 75,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-327",
+    "surah_id": 75,
+    "ayah_number": 19
+  },
+  {
+    "id": "daily-328",
+    "surah_id": 75,
+    "ayah_number": 36
+  },
+  {
+    "id": "daily-329",
+    "surah_id": 76,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-330",
+    "surah_id": 76,
+    "ayah_number": 30
+  },
+  {
+    "id": "daily-331",
+    "surah_id": 77,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-332",
+    "surah_id": 77,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-333",
+    "surah_id": 78,
+    "ayah_number": 1
+  },
+  {
+    "id": "daily-334",
+    "surah_id": 78,
+    "ayah_number": 18
+  },
+  {
+    "id": "daily-335",
+    "surah_id": 78,
+    "ayah_number": 35
+  },
+  {
+    "id": "daily-336",
+    "surah_id": 79,
+    "ayah_number": 12
+  },
+  {
+    "id": "daily-337",
+    "surah_id": 79,
+    "ayah_number": 29
+  },
+  {
+    "id": "daily-338",
+    "surah_id": 79,
+    "ayah_number": 46
+  },
+  {
+    "id": "daily-339",
+    "surah_id": 80,
+    "ayah_number": 17
+  },
+  {
+    "id": "daily-340",
+    "surah_id": 80,
+    "ayah_number": 34
+  },
+  {
+    "id": "daily-341",
+    "surah_id": 81,
+    "ayah_number": 9
+  },
+  {
+    "id": "daily-342",
+    "surah_id": 81,
+    "ayah_number": 26
+  },
+  {
+    "id": "daily-343",
+    "surah_id": 82,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-344",
+    "surah_id": 83,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-345",
+    "surah_id": 83,
+    "ayah_number": 30
+  },
+  {
+    "id": "daily-346",
+    "surah_id": 84,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-347",
+    "surah_id": 85,
+    "ayah_number": 3
+  },
+  {
+    "id": "daily-348",
+    "surah_id": 85,
+    "ayah_number": 20
+  },
+  {
+    "id": "daily-349",
+    "surah_id": 86,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-350",
+    "surah_id": 87,
+    "ayah_number": 15
+  },
+  {
+    "id": "daily-351",
+    "surah_id": 88,
+    "ayah_number": 13
+  },
+  {
+    "id": "daily-352",
+    "surah_id": 89,
+    "ayah_number": 4
+  },
+  {
+    "id": "daily-353",
+    "surah_id": 89,
+    "ayah_number": 21
+  },
+  {
+    "id": "daily-354",
+    "surah_id": 90,
+    "ayah_number": 8
+  },
+  {
+    "id": "daily-355",
+    "surah_id": 91,
+    "ayah_number": 6
+  },
+  {
+    "id": "daily-356",
+    "surah_id": 92,
+    "ayah_number": 8
+  },
+  {
+    "id": "daily-357",
+    "surah_id": 93,
+    "ayah_number": 4
+  },
+  {
+    "id": "daily-358",
+    "surah_id": 95,
+    "ayah_number": 2
+  },
+  {
+    "id": "daily-359",
+    "surah_id": 96,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-360",
+    "surah_id": 98,
+    "ayah_number": 4
+  },
+  {
+    "id": "daily-361",
+    "surah_id": 100,
+    "ayah_number": 5
+  },
+  {
+    "id": "daily-362",
+    "surah_id": 101,
+    "ayah_number": 11
+  },
+  {
+    "id": "daily-363",
+    "surah_id": 104,
+    "ayah_number": 6
+  },
+  {
+    "id": "daily-364",
+    "surah_id": 107,
+    "ayah_number": 5
+  },
+  {
+    "id": "daily-365",
+    "surah_id": 111,
+    "ayah_number": 3
+  }
+]

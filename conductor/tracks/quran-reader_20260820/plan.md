@@ -31,7 +31,7 @@
   - [x] Tests green; `clippy` clean — cd33898
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 3 — Reader UI (Frontend)
+## Phase 3 — Reader UI (Frontend) [checkpoint: 08c1672]
 
 *Goal: Surah list + reader with side-by-side, translation switcher, search.*
 
@@ -49,7 +49,7 @@
   - [x] Gold/emerald reverent styling, ARIA labels — 08c1672
 - [x] Task 3.4: Verify shell — 08c1672
   - [x] `pnpm tauri dev` renders list → reader; `biome` + `tsc --noEmit` pass — 08c1672
-- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 4 — Integration Gate & Acceptance
 

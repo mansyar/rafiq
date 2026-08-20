@@ -41,17 +41,18 @@
 - [x] Task: Refactor & verify coverage >80% — 3c0e88e
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 3c0e88e
 
-## Phase 5: Reader Player UI *(FR-3, FR-4, NFR-4, NFR-5)*
-- [ ] Task: Player footer & surah header controls
-  - [ ] Footer: play/pause, stop, current position (surah:ayah), download progress, reciter name
-  - [ ] Header play/pause starts from last-played ayah, or ayah 1 if none
-- [ ] Task: Click-ayah-to-play & current-ayah highlight
-  - [ ] Clicking an ayah block starts from that ayah; highlight (Arabic + translation columns) advances with playback
-- [ ] Task: Position & navigation behavior
-  - [ ] Persist last-played ayah on progression/unmount; navigate away pauses, return resumes
-- [ ] Task: i18n strings `quran.audio.*` (EN + ID catalogs)
-- [ ] Task: Accessibility & design pass (ARIA labels, keyboard operable, gold/emerald tokens, no emojis adjacent to Arabic)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+## Phase 5: Reader Player UI *(FR-3, FR-4, NFR-4, NFR-5)* [checkpoint: 9565986]
+- [x] Task: Player footer & surah header controls (810ea88)
+  - [x] Footer: play/pause, stop, current position (surah:ayah), download progress, reciter name
+  - [x] Header play/pause starts from last-played ayah, or ayah 1 if none
+- [x] Task: Click-ayah-to-play & current-ayah highlight (810ea88)
+  - [x] Clicking an ayah block starts from that ayah; highlight (Arabic + translation columns) advances with playback
+- [x] Task: Position & navigation behavior (810ea88)
+  - [x] Persist last-played ayah on progression/unmount; navigate away pauses, return resumes
+- [x] Task: i18n strings `quran.audio.*` (EN + ID catalogs) (810ea88)
+- [x] Task: Accessibility & design pass (ARIA labels, keyboard operable, gold/emerald tokens, no emojis adjacent to Arabic) (810ea88)
+  - [x] Post-verification fix: asset protocol required `assetProtocol.enable: true` + `protocol-asset` Cargo feature for `<audio>` playback of cached files (9565986)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 9565986
 
 ## Phase 6: Offline, Failure & Release Gate *(FR-5, AC-5–AC-8)*
 - [ ] Task: Write failing tests for offline & failure paths *(Red)*

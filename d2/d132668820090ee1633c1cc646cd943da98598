@@ -1,1 +1,10 @@
 Task: Fix blank calendar page (track hijri-calendar_20260820, Phase 4 in-flight): User reported blank screen on /calendar in the running app. Root cause: i18next 26 returns the key string (not the array) for non-string resources unless returnObjects is enabled - t('calendar.weekdays') yielded the string 'calendar.weekdays', so weekdays.map threw TypeError and React unmounted the tree (blank page). Fix: pass { returnObjects: true } to the three array lookups (calendar.weekdays + calendar.gregMonths in calendar.tsx, calendar.gregMonths in date-converter.tsx). Verified: biome + tsc clean; user confirmed the Calendar page renders correctly in the app. Files: src/pages/calendar.tsx, src/components/date-converter.tsx.
+PHASE 4 VERIFICATION REPORT - Date Converter & Final Verification
+Automated:
+- cargo test --lib: 134 passed / 0 failed (Umm al-Qura anchors, round trips 1444-1450 AH / 2022-2029 CE, month lengths, grid builder)
+- pnpm test (vitest): 29/29 passed (4 files)
+- pnpm check (biome): clean
+- pnpm build (tsc && vite build): clean
+Phase code (git diff 7f11f1e..d2d1326): src/components/date-converter.tsx (new; presentational + thin invoke wrappers), src/pages/calendar.tsx (converter card + page-level footnote + returnObjects fix), src/i18n/locales/en.json + id.json (converter labels). No frontend unit tests per project rule (presentational UI; all conversion logic lives in the tested Rust hijri module).
+Manual verification: user reported a blank screen on /calendar after the converter shipped; root cause = i18next 26 array lookups require returnObjects (fixed in d2d1326). User then confirmed in the running app that the Calendar tab renders correctly (month view + converter).
+User confirmation: YES - explicit in-app confirmation by the user (2026-08-20); final checkpoint authorized.

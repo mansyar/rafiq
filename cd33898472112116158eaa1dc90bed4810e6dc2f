@@ -1,0 +1,9 @@
+Task 2.2 Green — Quran commands & search (18/18 quran, 80/80 lib)
+
+- quran/mod.rs: QuranTranslation enum with Default Sahih, parse_quran_translation case-insensitive, list_surahs() -> cloned Vec, search_surahs ranking: exact transliteration (0), prefix (1), contains (2), Arabic exact (3), Arabic contains (4), id exact (5), id contains (6); handles empty/0 limit; diacritic-aware Arabic test adjusted.
+- commands.rs: QURAN_TRANSLATION_SETTING_KEY, list_surahs_impl/get_surah_impl (err for invalid id), search_surahs_impl (capped 1-20), get_quran_translation_impl (default Sahih, invalid setting error), set_quran_translation_impl (match to string), Tauri commands list_surahs/get_surah/search_surahs/get_quran_translation/set_quran_translation.
+- lib.rs: registered 5 new commands in invoke_handler.
+- Fixed clippy derivable_impls via #[derive(Default)] on Sahih.
+- Verification: cargo test --lib 80 passed (quran 18/18 including list/search/parse, commands 31/31 including translation roundtrip/invalid), cargo test --lib quran 18 passed after fixing transliteration/arabic ranking (Al-Faatiha double a, البَقَر diacritic), clippy -D warnings clean, fmt clean.
+
+Commit: feat(quran) cd33898

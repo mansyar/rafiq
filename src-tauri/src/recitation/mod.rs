@@ -11,6 +11,8 @@ use rusqlite::Connection;
 
 use crate::storage::{CachedAudio, RecitationRepo};
 
+/// The reciter's name, displayed beside the player (FR-1.3).
+pub const RECITER_NAME: &str = "Mishary Rashid Alafasy";
 /// Reciter edition on the Islamic Network CDN (Mishary Rashid Alafasy, Murattal).
 /// Single configurable constant — swap here if the source changes (takedown contingency).
 pub const EDITION: &str = "ar.alafasy";
@@ -104,22 +106,9 @@ pub fn complete_fetch(
     })
 }
 
-/// Downloads one ayah on demand (explicit user action) and returns the cache
-/// record. A valid cache is never re-fetched, so this is safe offline once an
-/// ayah has been fetched.
-pub async fn fetch_ayah(
-    client: &reqwest::Client,
-    cache_dir: &Path,
-    conn: &Connection,
-    global_ayah: u32,
-) -> Result<CachedAudio, String> {
-    if cache_state(cache_dir, conn, global_ayah) == CacheState::Cached {
-        return RecitationRepo::new(conn)
-            .get(global_ayah)
-            .ok()
-            .flatten()
-            .ok_or_else(|| "recitation index row missing".to_string());
-    }
+/// Downloads the MP3 for `global_ayah` from the CDN (no cache logic —
+/// callers check [`cache_state`] first).
+pub async fn download(client: &reqwest::Client, global_ayah: u32) -> Result<Vec<u8>, String> {
     let url = ayah_url(global_ayah);
     let response = client
         .get(&url)
@@ -136,7 +125,7 @@ pub async fn fetch_ayah(
         .bytes()
         .await
         .map_err(|e| format!("recitation download failed: {e}"))?;
-    complete_fetch(cache_dir, conn, global_ayah, &bytes)
+    Ok(bytes.to_vec())
 }
 
 #[cfg(test)]

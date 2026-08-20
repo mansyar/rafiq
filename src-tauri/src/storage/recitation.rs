@@ -3,7 +3,7 @@
 use rusqlite::{params, Connection, OptionalExtension};
 
 /// A cached per-ayah recitation file.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct CachedAudio {
     /// Global ayah number (1..=6236) this file plays.
     pub global_ayah: u32,

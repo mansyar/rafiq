@@ -6,7 +6,7 @@ use crate::log::{
     PrayerLogRepo,
 };
 use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates, PrayerTimes};
-use crate::storage::{schema_version, SettingsRepo};
+use crate::storage::{schema_version, CachedAudio, SettingsRepo};
 use chrono::NaiveDate;
 use jiff::Timestamp;
 use rusqlite::Connection;
@@ -409,6 +409,93 @@ fn validate_key(key: &str) -> Result<String, String> {
     Ok(trimmed.to_string())
 }
 
+/// Reciter identity shown beside the player (FR-1.3).
+#[derive(Debug, Serialize)]
+pub struct ReciterInfo {
+    pub name: String,
+    pub edition: String,
+}
+
+/// A cached audio file inside one surah's global-ayah range.
+#[derive(Debug, Serialize)]
+pub struct CachedFile {
+    pub global_ayah: u32,
+    pub file_path: String,
+}
+
+/// Snapshot of recitation player state for one surah.
+#[derive(Debug, Serialize)]
+pub struct RecitationState {
+    pub surah_id: u8,
+    pub ayah_count: usize,
+    pub first_global_ayah: u32,
+    pub cached: Vec<CachedFile>,
+    pub last_played_ayah: Option<u16>,
+    pub reciter: ReciterInfo,
+}
+
+/// Returns the player state for a surah: cached ayahs, last played ayah,
+/// and reciter identity.
+pub fn get_recitation_state_impl(
+    conn: &Connection,
+    surah_id: u8,
+) -> Result<RecitationState, String> {
+    let surah =
+        crate::quran::get_surah(surah_id).ok_or_else(|| format!("unknown surah: {surah_id}"))?;
+    let first_global = crate::quran::global_ayah(surah_id, 1)
+        .ok_or_else(|| format!("unknown surah: {surah_id}"))?;
+    let last_global = first_global + surah.ayah_count as u32 - 1;
+    let repo = crate::storage::RecitationRepo::new(conn);
+    let cached_globals = repo
+        .cached_in_range(first_global, last_global)
+        .map_err(|e| e.to_string())?;
+    let cached = cached_globals
+        .into_iter()
+        .filter_map(|g| repo.get(g).ok().flatten())
+        .map(|a| CachedFile {
+            global_ayah: a.global_ayah,
+            file_path: a.file_path,
+        })
+        .collect();
+    let max_ayah = surah.ayah_count as u16;
+    let last_played = SettingsRepo::new(conn)
+        .get(&format!("recitation_position_{surah_id}"))
+        .map_err(|e| e.to_string())?
+        .and_then(|v| v.parse::<u16>().ok())
+        .filter(|&a| (1..=max_ayah).contains(&a));
+    Ok(RecitationState {
+        surah_id,
+        ayah_count: surah.ayah_count,
+        first_global_ayah: first_global,
+        cached,
+        last_played_ayah: last_played,
+        reciter: ReciterInfo {
+            name: crate::recitation::RECITER_NAME.to_string(),
+            edition: crate::recitation::EDITION.to_string(),
+        },
+    })
+}
+
+/// Persists the last played ayah for a surah (FR-4.1).
+pub fn report_played_position_impl(
+    conn: &Connection,
+    surah_id: u8,
+    ayah: u16,
+) -> Result<(), String> {
+    let count = crate::quran::get_surah(surah_id)
+        .map(|s| s.ayah_count as u16)
+        .ok_or_else(|| format!("unknown surah: {surah_id}"))?;
+    if ayah == 0 || ayah > count {
+        return Err(format!("invalid ayah number: {ayah}"));
+    }
+    SettingsRepo::new(conn)
+        .set(
+            &format!("recitation_position_{surah_id}"),
+            &ayah.to_string(),
+        )
+        .map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 pub fn get_setting(state: State<'_, AppState>, key: String) -> Result<Option<String>, String> {
     let conn = state
@@ -438,6 +525,69 @@ pub fn set_setting(state: State<'_, AppState>, key: String, value: String) -> Re
         crate::scheduler::request_reschedule();
     }
     res
+}
+
+#[tauri::command]
+pub fn report_played_position(
+    state: State<'_, AppState>,
+    surah_id: u8,
+    ayah: u16,
+) -> Result<(), String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    report_played_position_impl(&conn, surah_id, ayah)
+}
+
+/// Fetches audio for one global ayah. A valid cache is returned without any
+/// network access (FR-2.3, FR-5.1); otherwise the file is downloaded and
+/// installed atomically, then recorded in the index.
+#[tauri::command]
+pub async fn fetch_ayah_audio(
+    state: State<'_, AppState>,
+    global_ayah: u32,
+) -> Result<CachedAudio, String> {
+    // Stage 1: cache check. The lock is released before any await.
+    {
+        let conn = state
+            .conn
+            .lock()
+            .map_err(|_| "app state lock poisoned".to_string())?;
+        if crate::recitation::cache_state(&state.data_dir, &conn, global_ayah)
+            == crate::recitation::CacheState::Cached
+        {
+            return crate::storage::RecitationRepo::new(&conn)
+                .get(global_ayah)
+                .ok()
+                .flatten()
+                .ok_or_else(|| "recitation index row missing".to_string());
+        }
+    }
+    // Stage 2: network fetch (no lock held while awaiting).
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(60))
+        .build()
+        .map_err(|e| format!("recitation client error: {e}"))?;
+    let bytes = crate::recitation::download(&client, global_ayah).await?;
+    // Stage 3: install atomically and record in the index.
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    crate::recitation::complete_fetch(&state.data_dir, &conn, global_ayah, &bytes)
+}
+
+#[tauri::command]
+pub fn get_recitation_state(
+    state: State<'_, AppState>,
+    surah_id: u8,
+) -> Result<RecitationState, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_recitation_state_impl(&conn, surah_id)
 }
 
 #[tauri::command]

@@ -271,7 +271,8 @@ describe('localAudioUrl', () => {
   });
 
   it('returns the raw path outside the Tauri webview', async () => {
-    expect('__TAURI_INTERNALS__' in window).toBe(false);
+    const outsideTauri = typeof window === 'undefined' || !('__TAURI_INTERNALS__' in window);
+    expect(outsideTauri).toBe(true);
     const { localAudioUrl } = await import('./recitation');
     expect(localAudioUrl('C:/Users/x/AppData/rafiq/recitation/8.mp3')).toBe(
       'C:/Users/x/AppData/rafiq/recitation/8.mp3',

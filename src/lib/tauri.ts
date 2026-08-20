@@ -19,9 +19,9 @@ export async function loadPersistedLocale(): Promise<string | null> {
   return getSetting('locale');
 }
 
-/** True when running inside the Tauri webview (not a plain browser). */
+/** True when running inside the Tauri webview (not a plain browser/node). */
 export function isTauri(): boolean {
-  return '__TAURI_INTERNALS__' in window;
+  return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 }
 
 /** Updates the native window title when running in Tauri; safe no-op elsewhere. */

@@ -47,9 +47,11 @@
 - [x] Task: Implement bidirectional date converter — 4a39de3
   - [x] Gregorian→Hijri and Hijri→Gregorian inputs reusing `src/lib/hijri.ts` (single conversion path)
   - [x] ±1 day footnote; locale-correct month names in both directions — footnote moved to page level (covers grid + converter); results stored as date objects so they re-render on locale switch; converter i18n labels added to en.json + id.json
-- [ ] Task: Final quality pass
-  - [ ] Arabic header rendering (bidi-safe), EN/ID locale switch, grid accuracy spot-check vs anchors
-  - [ ] Verify zero network activity for the feature (offline requirement)
+- [x] Task: Fix blank calendar page — d2d1326
+  - [x] In-flight bug (user-reported): `t('calendar.weekdays')` returned the key string, not the array (i18next 26 requires `returnObjects` for non-string resources) → `weekdays.map` TypeError → blank page. Fixed all three array lookups with `{ returnObjects: true }`; user confirmed the page renders in-app
+- [x] Task: Final quality pass — d2d1326
+  - [x] Arabic header rendering (bidi-safe), EN/ID locale switch, grid accuracy spot-check vs anchors — verified in-app by the user (2026-08-20); anchor accuracy covered by the Rust test suite (134/0)
+  - [x] Verify zero network activity for the feature (offline requirement) — all computation is local (compiled ICU4X data); no network calls in the feature code
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 *Notes: Per the project rule, tests are required for logic-bearing code only —

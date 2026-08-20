@@ -1,10 +1,11 @@
 //! Typed Tauri command handlers and their testable logic.
 
+use crate::city::{find_city_by_id, validate_coordinates, City};
 use crate::prayer::{calculate_prayer_times, CalculationMethod, Coordinates, PrayerTimes};
 use crate::storage::{schema_version, SettingsRepo};
 use chrono::NaiveDate;
 use rusqlite::Connection;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::path::Path;
 use std::sync::Mutex;
 use tauri::State;
@@ -27,6 +28,39 @@ const MAX_KEY_LEN: usize = 256;
 /// Settings key used for the persisted prayer calculation method.
 pub const PRAYER_METHOD_SETTING_KEY: &str = "prayer_calculation_method";
 
+/// Settings key used for the persisted prayer location (city or manual).
+pub const LOCATION_SETTING_KEY: &str = "prayer_location";
+
+/// Persisted location — either a bundled city or manual coordinates.
+/// Serialized as JSON under `LOCATION_SETTING_KEY`.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct Location {
+    /// Bundled city id (e.g., "jakarta-id-1"); when `Some`, manual coordinates are ignored.
+    pub city_id: Option<String>,
+    pub latitude: Option<f64>,
+    pub longitude: Option<f64>,
+}
+
+impl Location {
+    /// City-backed location.
+    pub fn from_city(city_id: impl Into<String>) -> Self {
+        Self {
+            city_id: Some(city_id.into()),
+            latitude: None,
+            longitude: None,
+        }
+    }
+
+    /// Manual coordinate location.
+    pub fn from_manual(latitude: f64, longitude: f64) -> Self {
+        Self {
+            city_id: None,
+            latitude: Some(latitude),
+            longitude: Some(longitude),
+        }
+    }
+}
+
 /// Returns the stored value for `key`, or `None` when unset.
 pub fn get_setting_impl(conn: &Connection, key: &str) -> Result<Option<String>, String> {
     let key = validate_key(key)?;
@@ -48,6 +82,87 @@ pub fn db_status_impl(conn: &Connection, data_dir: &Path) -> Result<DbStatus, St
         path: data_dir.join("rafiq.db").to_string_lossy().into_owned(),
         version,
     })
+}
+
+/// Returns the persisted location, or `None` when unset.
+pub fn get_location_impl(conn: &Connection) -> Result<Option<Location>, String> {
+    let raw = SettingsRepo::new(conn)
+        .get(LOCATION_SETTING_KEY)
+        .map_err(|e| e.to_string())?;
+    match raw {
+        None => Ok(None),
+        Some(json) => serde_json::from_str::<Location>(&json)
+            .map(Some)
+            .map_err(|e| format!("invalid location setting: {e}")),
+    }
+}
+
+/// Validates and persists a location. Rejects invalid city ids and out-of-range coordinates
+/// with friendly errors.
+pub fn set_location_impl(conn: &Connection, location: Location) -> Result<(), String> {
+    validate_location(&location)?;
+    let json = serde_json::to_string(&location).map_err(|e| e.to_string())?;
+    SettingsRepo::new(conn)
+        .set(LOCATION_SETTING_KEY, &json)
+        .map_err(|e| e.to_string())
+}
+
+/// Validates a `Location` without persisting it.
+fn validate_location(location: &Location) -> Result<(), String> {
+    let has_city = location
+        .city_id
+        .as_ref()
+        .map(|s| !s.trim().is_empty())
+        .unwrap_or(false);
+    let has_manual = location.latitude.is_some() || location.longitude.is_some();
+
+    if has_city {
+        let cid = location.city_id.as_ref().unwrap().trim();
+        if find_city_by_id(cid).is_none() {
+            return Err(format!("city not found: {cid}"));
+        }
+        // city takes precedence — manual coordinates are ignored when city is set
+        return Ok(());
+    }
+
+    if has_manual {
+        let lat = location.latitude.ok_or_else(|| {
+            "both latitude and longitude are required for manual location".to_string()
+        })?;
+        let lon = location.longitude.ok_or_else(|| {
+            "both latitude and longitude are required for manual location".to_string()
+        })?;
+        validate_coordinates(lat, lon)?;
+        return Ok(());
+    }
+
+    Err("no location provided: set city_id or manual coordinates".to_string())
+}
+
+/// Searches the bundled city dataset (case-insensitive, ranked).
+pub fn search_cities_impl(query: &str, limit: Option<usize>) -> Vec<City> {
+    let capped = limit.unwrap_or(10).clamp(1, 20);
+    crate::city::search_cities(query, capped)
+}
+
+/// Resolves a persisted `Location` to concrete coordinates + timezone.
+/// Used by callers that need validated lat/lon (e.g., prayer calculation).
+pub fn resolve_stored_location(
+    conn: &Connection,
+) -> Result<Option<crate::city::ResolvedLocation>, String> {
+    let loc = get_location_impl(conn)?;
+    match loc {
+        None => Ok(None),
+        Some(location) => {
+            let resolved = crate::city::resolve_location(
+                location.city_id.as_deref(),
+                location.latitude,
+                location.longitude,
+            )
+            .map_err(|e| format!("invalid stored location: {e}"))?;
+            Ok(Some(resolved))
+        }
+    }
 }
 
 /// Parses a date, resolves the configured calculation method, and calculates
@@ -130,6 +245,30 @@ pub fn get_prayer_times(
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
     get_prayer_times_impl(&conn, &date, coordinates, method)
+}
+
+#[tauri::command]
+pub fn get_location(state: State<'_, AppState>) -> Result<Option<Location>, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_location_impl(&conn)
+}
+
+#[tauri::command]
+pub fn set_location(state: State<'_, AppState>, location: Location) -> Result<(), String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    set_location_impl(&conn, location)
+}
+
+#[tauri::command]
+pub fn search_cities(query: String, limit: Option<usize>) -> Result<Vec<City>, String> {
+    // pure function — no state needed, but keep Result for frontend consistency
+    Ok(search_cities_impl(&query, limit))
 }
 
 #[cfg(test)]
@@ -319,5 +458,117 @@ mod tests {
             error.contains("calculation method"),
             "unexpected error: {error}"
         );
+    }
+
+    #[test]
+    fn get_location_returns_none_initially() {
+        let conn = conn("cmd-loc-none");
+        assert_eq!(super::get_location_impl(&conn).unwrap(), None);
+    }
+
+    #[test]
+    fn set_then_get_location_city_roundtrip() {
+        let conn = conn("cmd-loc-city");
+        let jakarta_id = crate::city::all_cities()
+            .iter()
+            .find(|c| c.name == "Jakarta" && c.country == "Indonesia")
+            .unwrap()
+            .id
+            .clone();
+        let loc = super::Location::from_city(jakarta_id.clone());
+        super::set_location_impl(&conn, loc.clone()).unwrap();
+        let fetched = super::get_location_impl(&conn).unwrap().unwrap();
+        assert_eq!(fetched.city_id, Some(jakarta_id));
+        assert_eq!(fetched.latitude, None);
+    }
+
+    #[test]
+    fn set_then_get_location_manual_roundtrip() {
+        let conn = conn("cmd-loc-manual");
+        let loc = super::Location::from_manual(-6.2088, 106.8456);
+        super::set_location_impl(&conn, loc.clone()).unwrap();
+        let fetched = super::get_location_impl(&conn).unwrap().unwrap();
+        assert_eq!(fetched.latitude, Some(-6.2088));
+        assert_eq!(fetched.longitude, Some(106.8456));
+        assert_eq!(fetched.city_id, None);
+    }
+
+    #[test]
+    fn set_location_rejects_invalid_city() {
+        let conn = conn("cmd-loc-bad-city");
+        let loc = super::Location::from_city("does-not-exist-123");
+        let err = super::set_location_impl(&conn, loc).unwrap_err();
+        assert!(
+            err.to_lowercase().contains("not found"),
+            "unexpected: {err}"
+        );
+    }
+
+    #[test]
+    fn set_location_rejects_invalid_manual_coordinates() {
+        let conn = conn("cmd-loc-bad-coord");
+        let loc = super::Location::from_manual(91.0, 0.0);
+        let err = super::set_location_impl(&conn, loc).unwrap_err();
+        assert!(err.contains("latitude"), "unexpected: {err}");
+        let loc2 = super::Location {
+            city_id: None,
+            latitude: Some(0.0),
+            longitude: None,
+        };
+        let err2 = super::set_location_impl(&conn, loc2).unwrap_err();
+        assert!(err2.contains("both"), "unexpected: {err2}");
+    }
+
+    #[test]
+    fn set_location_rejects_empty_location() {
+        let conn = conn("cmd-loc-empty");
+        let loc = super::Location {
+            city_id: None,
+            latitude: None,
+            longitude: None,
+        };
+        let err = super::set_location_impl(&conn, loc).unwrap_err();
+        assert!(err.contains("no location"), "unexpected: {err}");
+    }
+
+    #[test]
+    fn search_cities_returns_ranked_results() {
+        let results = super::search_cities_impl("Jakarta", Some(5));
+        assert!(!results.is_empty());
+        assert!(results.iter().any(|c| c.name == "Jakarta"));
+    }
+
+    #[test]
+    fn search_cities_limit_capped() {
+        let results = super::search_cities_impl("a", Some(5));
+        assert_eq!(results.len(), 5);
+        let empty = super::search_cities_impl("", Some(5));
+        assert!(empty.is_empty());
+        let not_found = super::search_cities_impl("xyznotfound123", Some(5));
+        assert!(not_found.is_empty());
+    }
+
+    #[test]
+    fn resolve_stored_location_after_set() {
+        let conn = conn("cmd-loc-resolve");
+        let jakarta = crate::city::all_cities()
+            .iter()
+            .find(|c| c.name == "Jakarta" && c.country == "Indonesia")
+            .unwrap()
+            .clone();
+        super::set_location_impl(&conn, super::Location::from_city(jakarta.id.clone())).unwrap();
+        let resolved = super::resolve_stored_location(&conn).unwrap().unwrap();
+        assert_eq!(resolved.latitude, jakarta.latitude);
+        assert_eq!(resolved.longitude, jakarta.longitude);
+        assert_eq!(resolved.city.unwrap().id, jakarta.id);
+    }
+
+    #[test]
+    fn location_serializes_as_expected_shape() {
+        let loc = super::Location::from_manual(-6.2, 106.8);
+        let json = serde_json::to_value(&loc).unwrap();
+        assert!(json.get("city_id").is_some());
+        assert!(json.get("latitude").is_some());
+        assert!(json.get("longitude").is_some());
     }
 }

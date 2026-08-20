@@ -54,8 +54,8 @@ delivered as an in-app prompt per the spec amendment._
 _Presentational components are test-exempt per project rule; thin API wrappers
 mirror the existing `lib/*.ts` pattern._
 
-- [ ] Task: Build the Log page (today-first): today's 5 prayers with one-tap log/delete + status; 7-day grid with tappable retroactive cells; streak card (current + best); current-month summary with on-time / qada / missed breakdown; empty state; no-location prompt
-- [ ] Task: Replace the `/log` placeholder route in `App.tsx` with the Log page
-- [ ] Task: i18n — all new strings under `log.*` in `en` + `id` catalogs
-- [ ] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest)
+- [x] Task: Build the Log page (today-first): today's 5 prayers with one-tap log/delete + status; 7-day grid with tappable retroactive cells; streak card (current + best); current-month summary with on-time / qada / missed breakdown; empty state; no-location prompt [bc4a2f5]
+- [x] Task: Replace the `/log` placeholder route in `App.tsx` with the Log page [bc4a2f5]
+- [x] Task: i18n — all new strings under `log.*` in `en` + `id` catalogs [bc4a2f5]
+- [x] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest) [bc4a2f5]
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

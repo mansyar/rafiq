@@ -3,14 +3,14 @@
 **Track:** `audio-recitation_20260820`
 **Spec:** Approved 2026-08-20
 
-## Phase 1: License Verification & Content Gate *(FR-1.2, FR-1.3, AC-7)*
+## Phase 1: License Verification & Content Gate *(FR-1.2, FR-1.3, AC-7)* [checkpoint: d2f1620]
 - [x] Task: Verify recitation audio source license (d2f1620)
   - [x] Verify Islamic Network CDN terms + Mishary Alafasy recitation rights; record source and date
   - [x] If verifiable: document license in `src-tauri/assets/ATTRIBUTION.md`
   - [-] Fallback: not triggered — license verified 2026-08-20 (contingency edition documented)
 - [x] Task: Document audio design in tech stack *(workflow: stack changes before implementation)* (d2f1620)
   - [x] Add dated note to `conductor/tech-stack.md`: recitation source (CDN pattern, edition, bitrate) and local cache directory design
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — d2f1620
 
 ## Phase 2: Audio Index & Ayah Mapping (Rust) *(FR-2.4, FR-2.1)*
 - [ ] Task: Write failing tests for recitation audio index & mapping *(Red)*

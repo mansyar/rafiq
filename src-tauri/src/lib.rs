@@ -2,6 +2,7 @@
 pub mod city;
 pub mod commands;
 pub mod prayer;
+pub mod scheduler;
 pub mod storage;
 
 use tauri::Manager;

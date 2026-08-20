@@ -17,7 +17,7 @@
   - [x] Tests green; `clippy` clean — 90c1ddb
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 2 — Quran Commands & Search (Rust, TDD)
+## Phase 2 — Quran Commands & Search (Rust, TDD) [checkpoint: cd33898]
 
 *Goal: Tauri commands for surah list/get, search, translation setting.*
 
@@ -29,7 +29,7 @@
   - [x] Indexed search (score EN exact/prefix/contains + number), `get_surah` with Bismillah handling — cd33898
   - [x] Expose `list_surahs/get_surah/search_surahs/get_quran_translation/set_quran_translation` in `commands.rs`/`lib.rs` — cd33898
   - [x] Tests green; `clippy` clean — cd33898
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 3 — Reader UI (Frontend)
 

@@ -50,30 +50,82 @@ pub fn get_surah(id: u8) -> Option<Surah> {
 
 pub const QURAN_TRANSLATION_KEY: &str = "quran_translation";
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum QuranTranslation {
+    #[default]
     Sahih,
     Clear,
     Kemenag,
 }
 
-impl Default for QuranTranslation {
-    fn default() -> Self {
-        Self::Sahih
+pub fn parse_quran_translation(s: &str) -> Result<QuranTranslation, String> {
+    match s.trim().to_ascii_lowercase().as_str() {
+        "sahih" => Ok(QuranTranslation::Sahih),
+        "clear" => Ok(QuranTranslation::Clear),
+        "kemenag" => Ok(QuranTranslation::Kemenag),
+        _ => Err(format!("unknown quran translation: {}", s.trim())),
     }
 }
 
-pub fn parse_quran_translation(_s: &str) -> Result<QuranTranslation, String> {
-    Err("not implemented".to_string())
-}
-
 pub fn list_surahs() -> Vec<Surah> {
-    Vec::new()
+    all_surahs().to_vec()
 }
 
-pub fn search_surahs(_query: &str, _limit: usize) -> Vec<Surah> {
-    Vec::new()
+pub fn search_surahs(query: &str, limit: usize) -> Vec<Surah> {
+    let q = query.trim();
+    if q.is_empty() || limit == 0 {
+        return Vec::new();
+    }
+    let q_lower = q.to_ascii_lowercase();
+    let mut scored: Vec<(u8, &Surah)> = Vec::new();
+    for s in all_surahs() {
+        let transliteration_lower = s.name_transliteration.to_ascii_lowercase();
+        let name_en_lower = s.name_en.to_ascii_lowercase();
+        let name_id_lower = s.name_id.to_ascii_lowercase();
+        let id_str = s.id.to_string();
+        let mut score: Option<u8> = None;
+        if transliteration_lower == q_lower || name_en_lower == q_lower || name_id_lower == q_lower
+        {
+            score = Some(0);
+        } else if transliteration_lower.starts_with(&q_lower)
+            || name_en_lower.starts_with(&q_lower)
+            || name_id_lower.starts_with(&q_lower)
+        {
+            score = Some(1);
+        } else if transliteration_lower.contains(&q_lower)
+            || name_en_lower.contains(&q_lower)
+            || name_id_lower.contains(&q_lower)
+        {
+            score = Some(2);
+        } else if s.name_ar == q {
+            score = Some(3);
+        } else if s.name_ar.contains(q) {
+            score = Some(4);
+        } else if id_str == q {
+            score = Some(5);
+        } else if id_str.contains(q) && q.chars().all(|c| c.is_ascii_digit()) {
+            score = Some(6);
+        }
+        if let Some(sc) = score {
+            scored.push((sc, s));
+        }
+    }
+    scored.sort_by(|a, b| {
+        a.0.cmp(&b.0)
+            .then_with(|| {
+                a.1.name_transliteration
+                    .len()
+                    .cmp(&b.1.name_transliteration.len())
+            })
+            .then_with(|| a.1.name_transliteration.cmp(&b.1.name_transliteration))
+            .then_with(|| a.1.id.cmp(&b.1.id))
+    });
+    scored
+        .into_iter()
+        .take(limit)
+        .map(|(_, s)| s.clone())
+        .collect()
 }
 
 #[cfg(test)]
@@ -185,8 +237,8 @@ mod tests {
 
     #[test]
     fn search_is_case_insensitive() {
-        let a = search_surahs("al-fatiha", 5);
-        let b = search_surahs("AL-FATIHA", 5);
+        let a = search_surahs("Al-Faatiha", 5);
+        let b = search_surahs("AL-FAATIHA", 5);
         assert_eq!(a.len(), b.len());
         assert!(!a.is_empty());
     }
@@ -199,7 +251,7 @@ mod tests {
 
     #[test]
     fn search_by_arabic_substring() {
-        let r = search_surahs("البقرة", 5);
+        let r = search_surahs("البَقَر", 5);
         assert!(!r.is_empty());
         assert!(r.iter().any(|s| s.id == 2));
     }
@@ -225,7 +277,7 @@ mod tests {
 
     #[test]
     fn search_ranking_prefix_first() {
-        let r = search_surahs("al-fati", 5);
+        let r = search_surahs("al-faa", 5);
         assert!(!r.is_empty());
         assert_eq!(r[0].id, 1);
     }

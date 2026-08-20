@@ -145,6 +145,53 @@ pub fn search_cities_impl(query: &str, limit: Option<usize>) -> Vec<City> {
     crate::city::search_cities(query, capped)
 }
 
+/// Settings key for the persisted Quran translation.
+pub const QURAN_TRANSLATION_SETTING_KEY: &str = "quran_translation";
+
+/// Returns all bundled surahs in Mushaf order.
+pub fn list_surahs_impl() -> Vec<crate::quran::Surah> {
+    crate::quran::list_surahs()
+}
+
+/// Returns the surah with `id`, or an error when not found.
+pub fn get_surah_impl(id: u8) -> Result<crate::quran::Surah, String> {
+    crate::quran::get_surah(id).ok_or_else(|| format!("surah not found: {id}"))
+}
+
+/// Searches bundled surahs (case-insensitive, ranked).
+pub fn search_surahs_impl(query: &str, limit: Option<usize>) -> Vec<crate::quran::Surah> {
+    let capped = limit.unwrap_or(10).clamp(1, 20);
+    crate::quran::search_surahs(query, capped)
+}
+
+/// Returns the persisted Quran translation, defaulting to `Sahih` when unset.
+pub fn get_quran_translation_impl(
+    conn: &Connection,
+) -> Result<crate::quran::QuranTranslation, String> {
+    let value = SettingsRepo::new(conn)
+        .get(QURAN_TRANSLATION_SETTING_KEY)
+        .map_err(|e| e.to_string())?;
+    value.map_or(Ok(crate::quran::QuranTranslation::default()), |v| {
+        crate::quran::parse_quran_translation(&v)
+            .map_err(|e| format!("invalid quran translation setting: {e}"))
+    })
+}
+
+/// Persists the Quran translation choice.
+pub fn set_quran_translation_impl(
+    conn: &Connection,
+    translation: crate::quran::QuranTranslation,
+) -> Result<(), String> {
+    let raw = match translation {
+        crate::quran::QuranTranslation::Sahih => "sahih",
+        crate::quran::QuranTranslation::Clear => "clear",
+        crate::quran::QuranTranslation::Kemenag => "kemenag",
+    };
+    SettingsRepo::new(conn)
+        .set(QURAN_TRANSLATION_SETTING_KEY, raw)
+        .map_err(|e| e.to_string())
+}
+
 /// Resolves a persisted `Location` to concrete coordinates + timezone.
 /// Used by callers that need validated lat/lon (e.g., prayer calculation).
 pub fn resolve_stored_location(
@@ -302,6 +349,47 @@ pub fn get_resolved_location(
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
     resolve_stored_location(&conn)
+}
+
+#[tauri::command]
+pub fn list_surahs() -> Result<Vec<crate::quran::Surah>, String> {
+    Ok(list_surahs_impl())
+}
+
+#[tauri::command]
+pub fn get_surah(id: u8) -> Result<crate::quran::Surah, String> {
+    get_surah_impl(id)
+}
+
+#[tauri::command]
+pub fn search_surahs(
+    query: String,
+    limit: Option<usize>,
+) -> Result<Vec<crate::quran::Surah>, String> {
+    Ok(search_surahs_impl(&query, limit))
+}
+
+#[tauri::command]
+pub fn get_quran_translation(
+    state: State<'_, AppState>,
+) -> Result<crate::quran::QuranTranslation, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_quran_translation_impl(&conn)
+}
+
+#[tauri::command]
+pub fn set_quran_translation(
+    state: State<'_, AppState>,
+    translation: crate::quran::QuranTranslation,
+) -> Result<(), String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    set_quran_translation_impl(&conn, translation)
 }
 
 #[derive(Debug, Serialize)]
@@ -688,5 +776,88 @@ mod tests {
         assert!(json.get("city_id").is_some());
         assert!(json.get("latitude").is_some());
         assert!(json.get("longitude").is_some());
+    }
+
+    #[test]
+    fn get_quran_translation_returns_default_sahih_initially() {
+        let conn = conn("cmd-quran-trans-default");
+        let tr = super::get_quran_translation_impl(&conn).unwrap();
+        assert_eq!(tr, crate::quran::QuranTranslation::Sahih);
+    }
+
+    #[test]
+    fn set_then_get_quran_translation_roundtrip() {
+        let conn = conn("cmd-quran-trans-roundtrip");
+        super::set_quran_translation_impl(&conn, crate::quran::QuranTranslation::Clear).unwrap();
+        assert_eq!(
+            super::get_quran_translation_impl(&conn).unwrap(),
+            crate::quran::QuranTranslation::Clear
+        );
+        super::set_quran_translation_impl(&conn, crate::quran::QuranTranslation::Kemenag).unwrap();
+        assert_eq!(
+            super::get_quran_translation_impl(&conn).unwrap(),
+            crate::quran::QuranTranslation::Kemenag
+        );
+        super::set_quran_translation_impl(&conn, crate::quran::QuranTranslation::Sahih).unwrap();
+        assert_eq!(
+            super::get_quran_translation_impl(&conn).unwrap(),
+            crate::quran::QuranTranslation::Sahih
+        );
+    }
+
+    #[test]
+    fn get_quran_translation_rejects_invalid_persisted_value() {
+        let conn = conn("cmd-quran-trans-invalid");
+        SettingsRepo::new(&conn)
+            .set(super::QURAN_TRANSLATION_SETTING_KEY, "not-a-translation")
+            .unwrap();
+        let err = super::get_quran_translation_impl(&conn).unwrap_err();
+        assert!(
+            err.to_lowercase().contains("quran translation")
+                || err.to_lowercase().contains("unknown"),
+            "unexpected: {err}"
+        );
+    }
+
+    #[test]
+    fn list_surahs_returns_114() {
+        let list = super::list_surahs_impl();
+        assert_eq!(list.len(), 114);
+        assert_eq!(list[0].id, 1);
+        assert_eq!(list[113].id, 114);
+    }
+
+    #[test]
+    fn get_surah_returns_valid_and_invalid() {
+        let s = super::get_surah_impl(1).unwrap();
+        assert_eq!(s.id, 1);
+        assert_eq!(s.ayahs.len(), 7);
+        assert!(s.ayahs[0].arabic.contains("بِسْمِ"));
+        let s114 = super::get_surah_impl(114).unwrap();
+        assert_eq!(s114.id, 114);
+        assert!(super::get_surah_impl(0).is_err());
+        assert!(super::get_surah_impl(115).is_err());
+    }
+
+    #[test]
+    fn search_surahs_returns_ranked_and_respects_limit() {
+        let r = super::search_surahs_impl("Al-Baqara", Some(5));
+        assert!(!r.is_empty());
+        assert!(r.iter().any(|s| s.id == 2));
+        let r2 = super::search_surahs_impl("a", Some(3));
+        assert!(r2.len() <= 3);
+        assert!(super::search_surahs_impl("", Some(5)).is_empty());
+        assert!(super::search_surahs_impl("xyznotfound999", Some(5)).is_empty());
+    }
+
+    #[test]
+    fn quran_translation_serializes_as_snake_case() {
+        let tr = crate::quran::QuranTranslation::Clear;
+        let raw = serde_json::to_value(tr).unwrap();
+        assert_eq!(raw, "clear");
+        assert_eq!(
+            crate::quran::parse_quran_translation("clear").unwrap(),
+            crate::quran::QuranTranslation::Clear
+        );
     }
 }

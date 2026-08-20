@@ -43,7 +43,7 @@
   - [x] Register route in `App.tsx` + nav item in `layout.tsx` (lucide `CalendarDays` icon)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 7f11f1e
 
-## Phase 4 — Date Converter & Final Verification
+## Phase 4 — Date Converter & Final Verification [checkpoint: d2d1326]
 - [x] Task: Implement bidirectional date converter — 4a39de3
   - [x] Gregorian→Hijri and Hijri→Gregorian inputs reusing `src/lib/hijri.ts` (single conversion path)
   - [x] ±1 day footnote; locale-correct month names in both directions — footnote moved to page level (covers grid + converter); results stored as date objects so they re-render on locale switch; converter i18n labels added to en.json + id.json
@@ -52,7 +52,7 @@
 - [x] Task: Final quality pass — d2d1326
   - [x] Arabic header rendering (bidi-safe), EN/ID locale switch, grid accuracy spot-check vs anchors — verified in-app by the user (2026-08-20); anchor accuracy covered by the Rust test suite (134/0)
   - [x] Verify zero network activity for the feature (offline requirement) — all computation is local (compiled ICU4X data); no network calls in the feature code
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — d2d1326
 
 *Notes: Per the project rule, tests are required for logic-bearing code only —
 the conversion engine (Rust) is fully TDD'd; the frontend components and thin

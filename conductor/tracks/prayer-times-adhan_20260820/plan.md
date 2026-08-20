@@ -71,8 +71,8 @@ required (project rule); logic helpers tested.*
 - [x] Task 4.1: Adhan audio asset — 10470c5
   - [x] Obtain small open-license (public-domain/CC0 or verified free) adhan audio; verify license; add `src/assets/audio/adhan.mp3` + `ATTRIBUTION`
   - [x] Playback helper component (`<audio>`), preloaded, no UI chrome
-- [ ] Task 4.2: Scheduler logic (TDD)
-  - [ ] Failing tests: `next_prayer_times(location, method, now)` — returns upcoming prayer + instant; fires only for enabled toggles; respects persisted settings
+- [~] Task 4.2: Scheduler logic (TDD)
+  - [x] Failing tests: `next_prayer_times(location, method, now)` — returns upcoming prayer + instant; fires only for enabled toggles; respects persisted settings — 7fba896
   - [ ] Implement scheduler module: background thread sleeping until next prayer, fires notification via `tauri-plugin-notification`, emits `prayer-time` event to frontend; reschedules on settings change
 - [ ] Task 4.3: WebView autoplay enablement + event wiring
   - [ ] Configure webview additional browser args (`--autoplay-policy=no-user-gesture-required`) so adhan plays without interaction (Tauri `with_additional_browser_args`)

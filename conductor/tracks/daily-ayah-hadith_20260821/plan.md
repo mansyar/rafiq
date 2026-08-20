@@ -16,12 +16,12 @@ verified licensing and data integrity.*
   - [x] Verify Nawawi 40 Hadith Arabic (public domain) + chosen EN/ID
         translation sources are under verifiable permissive terms; record
         source + date in `src-tauri/assets/ATTRIBUTION.md`
-- [ ] Task: Author content assets
-  - [ ] `src-tauri/assets/daily/hadiths.json` — 40 items: id, arabic, en, id,
-        source (narrator + "Nawawi 40 · Hadith N")
-  - [ ] `src-tauri/assets/daily/ayahs.json` — ~365 curated entries: id,
+- [x] Task: Author content assets [b556ba9]
+  - [x] `src-tauri/assets/daily/hadiths.json` — 40 items: id, arabic, en, id_translation,
+        source (narrator + "Nawawi 40 · Hadith N") — fixed duplicate "id" key: Indonesian translation stored as `id_translation`
+  - [x] `src-tauri/assets/daily/ayahs.json` — ~365 curated entries: id,
         surah_id, ayah_number (references bundled Quran data; no duplicated
-        Quran text)
+        Quran text) — replaced broken anchor-based CURATED list with deterministic uniform sampling (365/6236) validated against quran.json
 - [ ] Task: Write failing tests for asset loading & validation *(Red)*
   - [ ] hadiths.json: exactly 40 items, unique ids, non-empty arabic/en/id
         fields

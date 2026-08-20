@@ -20,7 +20,7 @@ Checkpointing Protocol.
 ## Phase 2: Classification + analytics (pure logic)
 
 - [x] Task: Write failing tests for prayer-window classification (fixtures: Fajr before/after sunrise, Dhuhr→Asr, Asr→Maghrib, Maghrib→Isha, Isha→next-day Fajr midnight crossing, exact window boundary, missing-location error) [42b3885]
-- [ ] Task: Implement classification pure function (log_date, prayer, logged_at, that day's times + next-day Fajr for Isha → `on_time` | `qada`)
+- [x] Task: Implement classification pure function (log_date, prayer, logged_at, that day's times + next-day Fajr for Isha → `on_time` | `qada`) [d6269f5]
 - [ ] Task: Write failing tests for streak computation (complete day, gap day breaks streak, today-complete vs today-incomplete, best streak across multiple gaps, empty history)
 - [ ] Task: Implement streak computation (current + best over log entries)
 - [ ] Task: Write failing tests for monthly summary (mid-month completion %, on-time / qada / missed breakdown, empty month, month boundary)

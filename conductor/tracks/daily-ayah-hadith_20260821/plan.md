@@ -62,8 +62,8 @@ command.*
 
 *Goal: i18n, typed API wrapper, card UI on the Today page.*
 
-- [ ] Task: Add `daily.*` i18n keys to `src/i18n/locales/en.json` + `id.json`
-  - [ ] Card header, date label, ayah reference, hadith source line, "more"
+- [x] Task: Add `daily.*` i18n keys to `src/i18n/locales/en.json` + `id.json` [be7e94a]
+  - [x] Card header, date label, ayah reference, hadith source line, "more"
         expansion, ARIA labels
 - [ ] Task: Create `src/lib/daily.ts` — typed invoke wrapper + TanStack Query
       hook (invalidated on `quran_translation` change, mirroring the reader's

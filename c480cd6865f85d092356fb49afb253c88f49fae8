@@ -1,0 +1,7 @@
+Task 2.1 Red — Quran search & translation failing tests (8 FAIL)
+
+- Added stubs in src-tauri/src/quran/mod.rs: list_surahs()->[], search_surahs()->[], parse_quran_translation()->Err("not implemented")
+- Added 12 Red tests: list_surahs 114, get_surah valid/invalid, search baqara/case/number/arabic/empty/not-found/limit/ranking, parse valid/invalid
+- Verified Red: cargo test --lib quran 10 passed; 8 failed (search/list/parse) as expected; fmt clean.
+
+Commit: test(quran) c480cd6

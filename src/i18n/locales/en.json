@@ -108,6 +108,7 @@
       "stop": "Stop",
       "retry": "Retry",
       "idle": "Ready",
+      "needsDownload": "Audio downloads when you press play",
       "position": "{{surah}} : {{ayah}}",
       "playingNow": "playing",
       "playFrom": "Play from ayah {{ayah}}",

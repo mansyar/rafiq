@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useRecitationPlayer, useRecitationState } from '@/lib/player-store';
+import { availabilityForStart } from '@/lib/recitation';
 import { cn } from '@/lib/utils';
 
 /**
@@ -119,7 +120,8 @@ export function RecitationFooter({ surahId }: { surahId: number }) {
   const error = useRecitationPlayer((s) => s.error);
   const retry = useRecitationPlayer((s) => s.retry);
   const { data: recitation } = useRecitationState(surahId);
-  const { active, playing, ready, toggle, stop } = useSurahTransport(surahId);
+  const { active, playing, ready, startAyah, toggle, stop } = useSurahTransport(surahId);
+  const availability = availabilityForStart(recitation, startAyah);
 
   const progress = error
     ? 'error'
@@ -162,7 +164,9 @@ export function RecitationFooter({ surahId }: { surahId: number }) {
       <span aria-live="polite" className="min-w-20 text-sm tabular-nums text-foreground">
         {active && current
           ? t('quran.audio.position', { surah: current.surahId, ayah: current.ayah })
-          : t('quran.audio.idle')}
+          : availability === 'needs-download'
+            ? t('quran.audio.needsDownload')
+            : t('quran.audio.idle')}
       </span>
 
       <span

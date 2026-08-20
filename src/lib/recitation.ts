@@ -237,8 +237,12 @@ export type Availability = 'loading' | 'ready' | 'needs-download';
  * `loading` while the surah's recitation state is still unknown.
  */
 export function availabilityForStart(
-  _recitation: RecitationState | undefined,
-  _startAyah: number,
+  recitation: RecitationState | undefined,
+  startAyah: number,
 ): Availability {
-  throw new Error('not implemented');
+  if (!recitation) {
+    return 'loading';
+  }
+  const global = recitation.first_global_ayah + startAyah - 1;
+  return recitation.cached.some((c) => c.global_ayah === global) ? 'ready' : 'needs-download';
 }

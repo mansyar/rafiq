@@ -108,6 +108,7 @@
       "stop": "Hentikan",
       "retry": "Coba lagi",
       "idle": "Siap",
+      "needsDownload": "Audio diunduh saat diputar",
       "position": "{{surah}} : {{ayah}}",
       "playingNow": "sedang diputar",
       "playFrom": "Putar dari ayat {{ayah}}",

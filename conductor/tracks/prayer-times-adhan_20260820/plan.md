@@ -52,16 +52,16 @@ required (project rule); logic helpers tested.*
   - [x] Add `@tanstack/react-query` (per `tech-stack.md`); `src/lib/prayer.ts` client wrapping `invoke` (getPrayerTimes, getLocation, setLocation)
   - [x] i18n keys en/id: prayer names, location, method, toggles, next-prayer labels
   - [x] Unit tests for any date/format helpers (`src/lib/` logic) if logic-bearing
-- [ ] Task 3.2: Build Today page
-  - [ ] Render today's 5 prayer times + sunrise from `get_prayer_times`
-  - [ ] Highlight next upcoming prayer; show location + method in use
-  - [ ] Style per design tokens (gold/emerald, reverent typography, ARIA labels)
-- [ ] Task 3.3: Settings UI additions
-  - [ ] Calculation method selector (7 methods) → persists via `set_setting`
-  - [ ] Location: city search + select, or manual lat/long entry; validation errors localized
-  - [ ] Notification + adhan toggles (defaults enabled) → persist via settings
-- [ ] Task 3.4: Verify shell in dev
-  - [ ] `pnpm tauri dev` renders pages; Biome + `tsc --noEmit` pass
+- [x] Task 3.2: Build Today page — f705a09
+  - [x] Render today's 5 prayer times + sunrise from `get_prayer_times`
+  - [x] Highlight next upcoming prayer; show location + method in use
+  - [x] Style per design tokens (gold/emerald, reverent typography, ARIA labels)
+- [x] Task 3.3: Settings UI additions — f705a09
+  - [x] Calculation method selector (7 methods) → persists via `set_setting`
+  - [x] Location: city search + select, or manual lat/long entry; validation errors localized
+  - [x] Notification + adhan toggles (defaults enabled) → persist via settings
+- [x] Task 3.4: Verify shell in dev — f705a09
+  - [x] `pnpm tauri dev` renders pages; Biome + `tsc --noEmit` pass
 - [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 4 — Notifications & Adhan Audio

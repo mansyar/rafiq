@@ -1,4 +1,4 @@
-import { BookOpenText, NotebookPen, Settings, Sun } from 'lucide-react';
+import { BookOpenText, CalendarDays, NotebookPen, Settings, Sun } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet } from 'react-router-dom';
@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/', icon: Sun, key: 'today', end: true },
   { to: '/quran', icon: BookOpenText, key: 'quran', end: false },
   { to: '/log', icon: NotebookPen, key: 'log', end: false },
+  { to: '/calendar', icon: CalendarDays, key: 'calendar', end: false },
   { to: '/settings', icon: Settings, key: 'settings', end: false },
 ] as const;
 

@@ -6,6 +6,7 @@
     "today": "Today",
     "quran": "Quran",
     "log": "Log",
+    "calendar": "Calendar",
     "settings": "Settings"
   },
   "page": {
@@ -148,5 +149,59 @@
       "openSettings": "Open settings",
       "dismiss": "Dismiss"
     }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "Umm al-Qura Hijri calendar",
+    "todayButton": "Today",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "todayDate": "Today: {{day}} {{monthName}} {{year}}",
+    "footnote": "Computed Umm al-Qura dates can differ by one day from local moon-sighting announcements.",
+    "loading": "Loading calendar…",
+    "error": "Could not load calendar: {{message}}",
+    "months": {
+      "1": "Muharram",
+      "2": "Safar",
+      "3": "Rabi al-Awwal",
+      "4": "Rabi al-Thani",
+      "5": "Jumada al-Awwal",
+      "6": "Jumada al-Thani",
+      "7": "Rajab",
+      "8": "Sha'ban",
+      "9": "Ramadan",
+      "10": "Shawwal",
+      "11": "Dhu al-Qa'dah",
+      "12": "Dhu al-Hijjah"
+    },
+    "monthsArabic": {
+      "1": "محرم",
+      "2": "صفر",
+      "3": "ربيع الأول",
+      "4": "ربيع الآخر",
+      "5": "جمادى الأولى",
+      "6": "جمادى الآخرة",
+      "7": "رجب",
+      "8": "شعبان",
+      "9": "رمضان",
+      "10": "شوال",
+      "11": "ذو القعدة",
+      "12": "ذو الحجة"
+    },
+    "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "gregMonths": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ]
   }
 }

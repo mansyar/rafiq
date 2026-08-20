@@ -6,6 +6,7 @@
     "today": "Hari Ini",
     "quran": "Al-Qur\u2019an",
     "log": "Catatan",
+    "calendar": "Kalender",
     "settings": "Pengaturan"
   },
   "page": {
@@ -148,5 +149,59 @@
       "openSettings": "Buka pengaturan",
       "dismiss": "Tutup"
     }
+  },
+  "calendar": {
+    "title": "Kalender",
+    "subtitle": "Kalender Hijriah Umm al-Qura",
+    "todayButton": "Hari ini",
+    "prevMonth": "Bulan sebelumnya",
+    "nextMonth": "Bulan berikutnya",
+    "todayDate": "Hari ini: {{day}} {{monthName}} {{year}}",
+    "footnote": "Tanggal Umm al-Qura yang dihitung dapat berbeda satu hari dari pengumuman rukyat lokal.",
+    "loading": "Memuat kalender…",
+    "error": "Gagal memuat kalender: {{message}}",
+    "months": {
+      "1": "Muharram",
+      "2": "Safar",
+      "3": "Rabiul Awal",
+      "4": "Rabiul Akhir",
+      "5": "Jumadil Awal",
+      "6": "Jumadil Akhir",
+      "7": "Rajab",
+      "8": "Sya'ban",
+      "9": "Ramadhan",
+      "10": "Syawal",
+      "11": "Dzulqa'dah",
+      "12": "Dzulhijjah"
+    },
+    "monthsArabic": {
+      "1": "محرم",
+      "2": "صفر",
+      "3": "ربيع الأول",
+      "4": "ربيع الآخر",
+      "5": "جمادى الأولى",
+      "6": "جمادى الآخرة",
+      "7": "رجب",
+      "8": "شعبان",
+      "9": "رمضان",
+      "10": "شوال",
+      "11": "ذو القعدة",
+      "12": "ذو الحجة"
+    },
+    "weekdays": ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+    "gregMonths": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agu",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des"
+    ]
   }
 }

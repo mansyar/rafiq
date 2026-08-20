@@ -68,15 +68,15 @@ command.*
 - [x] Task: Create `src/lib/daily.ts` — typed invoke wrapper + TanStack Query
       hook (invalidated on `quran_translation` change, mirroring the reader's
       pattern) [90cc525]
-- [ ] Task: Build the Daily Reflection card + mount below today's prayer times
-      on the Today page
-  - [ ] Ayah block: surah name + reference, Arabic (RTL, Amiri, high-contrast),
+- [x] Task: Build the Daily Reflection card + mount below today's prayer times
+      on the Today page [f062e12]
+  - [x] Ayah block: surah name + reference, Arabic (RTL, Amiri, high-contrast),
         translation per active `quran_translation`; block links to
         `/quran/:surahId` *(spec FR-3.3)*
-  - [ ] Hadith block: Arabic + active-locale translation + source line;
+  - [x] Hadith block: Arabic + active-locale translation + source line;
         line-clamp with "more" for long hadiths
-  - [ ] Re-resolves on local date rollover (existing Today-page mechanism)
-  - [ ] Gold/emerald tokens, ARIA labels, keyboard-operable link
+  - [x] Re-resolves on local date rollover (existing Today-page mechanism)
+  - [x] Gold/emerald tokens, ARIA labels, keyboard-operable link
 - [ ] Task: Verify shell in dev
   - [ ] `pnpm tauri dev` renders the card; Biome + `tsc --noEmit` pass
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

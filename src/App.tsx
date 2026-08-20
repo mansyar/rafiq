@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AdhanPlayer } from '@/components/adhan-player';
 import { Layout } from '@/components/layout';
 import { PagePlaceholder } from '@/pages/placeholder';
+import { QuranList } from '@/pages/quran-list';
+import { QuranReader } from '@/pages/quran-reader';
 import { Settings } from '@/pages/settings';
 import { Today } from '@/pages/today';
 
@@ -23,7 +25,8 @@ export function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Today />} />
-            <Route path="quran" element={<PagePlaceholder page="quran" />} />
+            <Route path="quran" element={<QuranList />} />
+            <Route path="quran/:id" element={<QuranReader />} />
             <Route path="log" element={<PagePlaceholder page="log" />} />
             <Route path="settings" element={<Settings />} />
           </Route>

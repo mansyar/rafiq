@@ -7,3 +7,28 @@ Task 2.2 Green — Quran commands & search (18/18 quran, 80/80 lib)
 - Verification: cargo test --lib 80 passed (quran 18/18 including list/search/parse, commands 31/31 including translation roundtrip/invalid), cargo test --lib quran 18 passed after fixing transliteration/arabic ranking (Al-Faatiha double a, البَقَر diacritic), clippy -D warnings clean, fmt clean.
 
 Commit: feat(quran) cd33898
+
+**Phase 2 Verification Report — Quran Reader: Commands & Search**
+
+Automated checks:
+- cargo test --lib: 80 passed (quran 18/18, city 21/21, commands 31/31 incl. new quran, prayer 5/5, scheduler 7/7)
+- cargo clippy -- -D warnings: clean (dev 0.96s)
+- cargo fmt --check: clean
+- pnpm test: 17 passed (locale 4 + prayer 13)
+- pnpm exec tsc --noEmit: pass
+- pnpm exec biome check ./src: 21 files, No fixes
+- quran search: Baqara, case-insensitive Al-Faatiha, number 2, Arabic البَقَر, empty/not-found/limit/ranking prefix Al-Faa -> 1
+
+Test coverage (logic-bearing only):
+- quran: 18/18 (dataset 6 + list/search/parse 12)
+- commands: 31/31 (original 24 + 7 quran: translation default/roundtrip/invalid, list 114, get valid/invalid, search ranked)
+
+Manual verification:
+- list_surahs 114 ordered, get_surah 1 & 114 valid, 0/115 error
+- search_surahs ranking verified via cargo test
+- quran_translation default sahih, set clear/kemenag/sahih roundtrip, invalid setting error
+- Tauri commands registered in lib.rs invoke_handler (5 new)
+
+User confirmation: Yes, proceed (2026-08-20)
+
+Checkpoint: cd33898

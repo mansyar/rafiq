@@ -35,7 +35,7 @@ verified licensing and data integrity.*
   - [x] No duplication; coverage 9 tests for daily module (>80%); fmt applied
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [45927ab]
 
-## Phase 2 — Deterministic Rotation Engine & Command (Rust, TDD)
+## Phase 2 — Deterministic Rotation Engine & Command (Rust, TDD) [checkpoint: 5676c7b]
 
 *Goal: date → item selection as a pure function, exposed via a Tauri
 command.*
@@ -56,7 +56,7 @@ command.*
   - [x] `cargo test` → green; `clippy` clean
 - [x] Task: Refactor & verify coverage ≥80% [5676c7b]
   - [x] Coverage 21 daily tests + 4 command tests (184 total), unwrap_or_default fix, fmt
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [5676c7b]
 
 ## Phase 3 — Daily Reflection Card (Frontend)
 

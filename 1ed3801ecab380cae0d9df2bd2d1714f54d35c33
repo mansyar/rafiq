@@ -1,0 +1,27 @@
+Phase 4 Tasks 3-4 - global prayer-time prompt + i18n strings.
+
+src/components/prayer-prompt.tsx (new): listens to the always-on
+"prayer-fired" scheduler event; on a valid prayer (isLoggablePrayer):
+- skips if that prayer is already logged today (getPrayerLog);
+- shows a fixed bottom-right Card (role=status, aria-live=polite) with
+  the localized prayer name + formatted fire time;
+- one-tap "Prayed" button -> logPrayer(prayer, today) — the tap moment is
+  the logged_at, classified on the Rust side; success shows a warm
+  confirmation ("Noted — may it be accepted" / "Tercatat — semoga
+  diterima") for 4s; failures show a gentle localized error;
+- when no location is set, shows a hint + link to /settings instead of
+  the button (FR-1.6);
+- auto-dismisses after 10 min unanswered; Escape or Dismiss closes; a
+  dismissed prayer is not re-prompted this session (no nagging —
+  product guidelines: encourage without pressure).
+
+Mount: App.tsx — <PrayerPrompt /> inside BrowserRouter (needs Link),
+sibling of Routes, next to AdhanPlayer.
+
+i18n: log.prompt.* keys added to en.json + id.json (title, prayed,
+logged, error, locationHint, openSettings, dismiss); prayer names reuse
+existing prayer.* keys.
+
+Presentational component — test-exempt per project rule (the logic-bearing
+bits, isLoggablePrayer + logPrayer wrapper, are covered in log.test.ts).
+Gate: biome clean, tsc clean, vitest 24 passed.

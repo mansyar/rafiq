@@ -40,16 +40,16 @@
   - [x] `src/i18n/locales/en|id.json` keys `quran.*` (surah, ayah, bismillah, translation names) — 3e63f8c
   - [x] Unit tests for any helpers (format, search ranking) — 3e63f8c
   - [x] Bundle Amiri font, `index.css` sacred-text high-contrast tokens — 3e63f8c
-- [ ] Task 3.2: Surah list page
-  - [ ] Render 114 surahs Mushaf order, number + name EN/ID/AR, ayah count, search input debounced
-  - [ ] Link to reader `/quran/:id`
-- [ ] Task 3.3: Surah reader page
-  - [ ] Fetch `get_surah`, render continuous ayahs: side-by-side columns (Arabic RTL + translation) desktop / stacked mobile
-  - [ ] Bismillah header (except Al-Fatihah/Al-Tawbah handling per Tanzil), ayah numbers, translation switcher (persisted, invalidates query)
-  - [ ] Gold/emerald reverent styling, ARIA labels
-- [ ] Task 3.4: Verify shell
-  - [ ] `pnpm tauri dev` renders list → reader; `biome` + `tsc --noEmit` pass
-- [ ] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task 3.2: Surah list page — 08c1672
+  - [x] Render 114 surahs Mushaf order, number + name EN/ID/AR, ayah count, search input debounced — 08c1672
+  - [x] Link to reader `/quran/:id` — 08c1672
+- [x] Task 3.3: Surah reader page — 08c1672
+  - [x] Fetch `get_surah`, render continuous ayahs: side-by-side columns (Arabic RTL + translation) desktop / stacked mobile — 08c1672
+  - [x] Bismillah header (except Al-Fatihah/Al-Tawbah handling per Tanzil), ayah numbers, translation switcher (persisted, invalidates query) — 08c1672
+  - [x] Gold/emerald reverent styling, ARIA labels — 08c1672
+- [x] Task 3.4: Verify shell — 08c1672
+  - [x] `pnpm tauri dev` renders list → reader; `biome` + `tsc --noEmit` pass — 08c1672
+- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
 ## Phase 4 — Integration Gate & Acceptance
 

@@ -58,7 +58,7 @@ command.*
   - [x] Coverage 21 daily tests + 4 command tests (184 total), unwrap_or_default fix, fmt
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [5676c7b]
 
-## Phase 3 — Daily Reflection Card (Frontend)
+## Phase 3 — Daily Reflection Card (Frontend) [checkpoint: 4f0837c]
 
 *Goal: i18n, typed API wrapper, card UI on the Today page.*
 
@@ -79,7 +79,7 @@ command.*
   - [x] Gold/emerald tokens, ARIA labels, keyboard-operable link
 - [x] Task: Verify shell in dev [f062e12]
   - [x] `pnpm tauri dev` renders the card; Biome + `tsc --noEmit` pass
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [4f0837c]
 
 ## Phase 4 — Integration Gate & Acceptance
 

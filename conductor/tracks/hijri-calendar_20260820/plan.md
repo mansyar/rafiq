@@ -44,9 +44,9 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 7f11f1e
 
 ## Phase 4 — Date Converter & Final Verification
-- [ ] Task: Implement bidirectional date converter
-  - [ ] Gregorian→Hijri and Hijri→Gregorian inputs reusing `src/lib/hijri.ts` (single conversion path)
-  - [ ] ±1 day footnote; locale-correct month names in both directions
+- [x] Task: Implement bidirectional date converter — 4a39de3
+  - [x] Gregorian→Hijri and Hijri→Gregorian inputs reusing `src/lib/hijri.ts` (single conversion path)
+  - [x] ±1 day footnote; locale-correct month names in both directions — footnote moved to page level (covers grid + converter); results stored as date objects so they re-render on locale switch; converter i18n labels added to en.json + id.json
 - [ ] Task: Final quality pass
   - [ ] Arabic header rendering (bidi-safe), EN/ID locale switch, grid accuracy spot-check vs anchors
   - [ ] Verify zero network activity for the feature (offline requirement)

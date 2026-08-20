@@ -7,3 +7,27 @@ Task 1.2 Green — bundled Quran dataset + loader passes
 - Verification: cargo test --lib quran 6 passed, full lib 61 passed; cargo clippy -D warnings clean; cargo fmt --check clean; biome check 2 files processed.
 
 Commit: feat(quran) 90c1ddb
+
+**Phase 1 Verification Report — Quran Reader: Content Pipeline & Data Foundation**
+
+Automated checks:
+- cargo test --lib: 61 passed (quran 6/6, city 21/21, commands 24/24, prayer 5/5, scheduler 7/7)
+- cargo clippy -- -D warnings: clean (dev profile 0.72s)
+- cargo fmt --check: clean
+- pnpm test: 17 passed (locale 4 + prayer 13)
+- pnpm exec tsc --noEmit: pass
+- pnpm exec biome check ./src: 21 files, No fixes
+- quran.json: 114 surahs, 6236 ayahs, 4985054 bytes, generation stripped BOM verified
+
+Test coverage (logic-bearing only):
+- quran: 6/6 (114, 6236, Al-Fatiha 7, translations non-empty, ids unique ordered, names/type)
+- Existing modules unaffected
+
+Manual verification:
+- Verified quran.json via node: 114 surahs, 6236 ayahs, Al-Fatiha 7, Arabic Uthmani non-empty, sample سُورَةُ البَقَرَةِ
+- ATTRIBUTION.md contains Tanzil + 3 translations with fetch date
+- Alquran.cloud sources: quran-uthmani, en.sahih, en.itani, id.indonesian
+
+User confirmation: Yes, proceed (2026-08-20)
+
+Checkpoint: 90c1ddb

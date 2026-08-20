@@ -30,3 +30,29 @@ Manual verification (5 steps):
 5. Both Off -> trigger_test_prayer returns error 'both disabled'; reschedule on settings change verified (location/method change calls request_reschedule and interrupts sleep via channel)
 
 User confirmation: Yes, proceed (2026-08-20)
+
+Phase 5 Verification Report — Integration Gate & Acceptance — c973941
+
+Automated gate (Task 5.1 — 2026-08-20):
+- cargo fmt --check clean
+- cargo clippy -- -D warnings clean (dev profile 0.59s)
+- cargo test --lib 55 passed (prayer 5, city 21, commands 24+, scheduler 7)
+- pnpm biome check 21 files clean
+- pnpm tsc --noEmit pass
+- pnpm test 17 passed (locale 4, prayer 13)
+- tauri.conf.json additionalBrowserArgs '--autoplay-policy=no-user-gesture-required' present
+- src/assets/audio/adhan.mp3 CC0 16KiB 4s present, ATTRIBUTION.md present
+
+Acceptance walk (Task 5.2 — spec.md AC-1..AC-8):
+- AC-1 (MWL ±1 min): prayer::tests::prayer_times_mwl_raleigh_2015_07_12_within_one_minute — PASS (±60s)
+- AC-2 (method switch persist): commands::tests::get_prayer_times_uses_persisted_method + frontend setCalculationMethod persisting prayer_calculation_method — PASS
+- AC-3 (city search Jakarta): city::tests search ranking + resolve_stored_location_after_set Jakarta + Today page uses getResolvedLocation/getPrayerTimes with gold highlight — PASS
+- AC-4 (manual lat/long): parse_coordinate / set_location manual roundtrip + rejects 91,0 / both required — PASS
+- AC-5 (notification + adhan at time): scheduler spawn_scheduler (NotificationExt + emit prayer-time) + trigger_test_prayer + adhan-player listen + test buttons — PASS
+- AC-6 (toggles persist & respected): notification_enabled/adhan_enabled default true tolerant, should_fire both, trigger respects each, Settings toggles with reschedule — PASS
+- AC-7 (Today localized): i18n en/id prayer/today/settings keys, formatPrayerTime per locale, Today & Settings use t() — PASS
+- AC-8 (full gate): gate 5.1 all pass — PASS
+
+Manual verification steps from prior phases re-verified at gate: Today 6 rows + next, Jakarta/Indonesia filter, manual coords, method 7, toggles.
+
+User confirmation: Yes, proceed (2026-08-20)

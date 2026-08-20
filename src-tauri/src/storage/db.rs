@@ -74,3 +74,72 @@ pub fn schema_version(conn: &Connection) -> Result<i64> {
         })?,
     )
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Opens an in-memory database and applies all pending migrations.
+    fn migrated_conn() -> Connection {
+        let mut conn = Connection::open_in_memory().unwrap();
+        run_migrations(&mut conn).unwrap();
+        conn
+    }
+
+    #[test]
+    fn migrations_bring_a_fresh_database_to_the_latest_schema() {
+        let mut conn = Connection::open_in_memory().unwrap();
+
+        run_migrations(&mut conn).unwrap();
+
+        assert_eq!(SCHEMA_VERSION, 2);
+        assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
+    }
+
+    #[test]
+    fn migration_2_creates_prayer_log_with_unique_date_prayer() {
+        let conn = migrated_conn();
+
+        let exists: i64 = conn
+            .query_row(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'prayer_log'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(exists, 1);
+
+        conn.execute(
+            "INSERT INTO prayer_log (log_date, prayer, logged_at, status)
+             VALUES ('2026-08-20', 'fajr', '2026-08-20T04:30:00Z', 'on_time')",
+            [],
+        )
+        .unwrap();
+
+        let duplicate = conn.execute(
+            "INSERT INTO prayer_log (log_date, prayer, logged_at, status)
+             VALUES ('2026-08-20', 'fajr', '2026-08-20T04:31:00Z', 'on_time')",
+            [],
+        );
+        assert!(
+            duplicate.is_err(),
+            "duplicate (log_date, prayer) must be rejected"
+        );
+
+        conn.execute(
+            "INSERT INTO prayer_log (log_date, prayer, logged_at, status)
+             VALUES ('2026-08-20', 'dhuhr', '2026-08-20T11:30:00Z', 'on_time')",
+            [],
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn migrations_are_idempotent_on_an_existing_database() {
+        let mut conn = migrated_conn();
+
+        run_migrations(&mut conn).unwrap();
+
+        assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
+    }
+}

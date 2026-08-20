@@ -1,0 +1,20 @@
+**Phase 3 Verification Report - Prayer Log + Analytics: Tauri commands**
+
+Scope (git diff 07048e7..HEAD): src-tauri/src/commands.rs (+ inline #[cfg(test)] tests), src-tauri/src/log/mod.rs (Serialize derives, DayWindows::from_rfc3339, LogAnalytics; + inline tests), src-tauri/src/lib.rs (generate_handler! registration), plan.md.
+
+Automated checks (all green):
+- cargo test: 119 unit + 6 integration tests passed
+- cargo clippy --all-targets -- -D warnings: clean (one fix: manual_range_contains in log_prayer lookback check, commit 961ab2f)
+- cargo fmt --check: clean
+- pnpm test (vitest): 22 passed / 3 files
+- tsc --noEmit: clean
+- biome check: clean
+
+Coverage (cargo llvm-cov): log/mod.rs lines 98.10%, functions 100%, branches 99.27% (gate >=80%). commands.rs 77.61% lines - new *_impl functions fully covered by 8 new tests; uncovered lines are thin #[tauri::command] wrappers (untestable outside Tauri runtime), same profile as pre-existing wrappers.
+
+Manual verification:
+1. pnpm tauri dev -> Rafiq boots, Today page renders prayer times (schema v2 DB opens cleanly) - confirmed.
+2. Devtools console: get_log_analytics returns {streaks, month}; log_prayer persists + classifies at the logged instant; get_prayer_log returns the ordered range; delete_log_entry returns 1 then 0; no-location error path returns the "no location set" message - confirmed.
+
+User confirmation: Yes, proceed (2026-08-20).
+Checkpoint: 961ab2f

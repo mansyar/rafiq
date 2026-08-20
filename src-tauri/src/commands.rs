@@ -645,10 +645,15 @@ pub fn trigger_test_prayer(
             .show();
     }
 
+    use tauri::Emitter;
+
     if adhan_enabled {
-        use tauri::Emitter;
-        let _ = app.emit("prayer-time", payload);
+        let _ = app.emit("prayer-time", payload.clone());
     }
+
+    // Mirror the scheduler: the in-app prayer-time prompt is available
+    // whenever a prayer fires, independent of the toggles.
+    let _ = app.emit("prayer-fired", payload);
 
     if !notification_enabled && !adhan_enabled {
         return Err(

@@ -35,6 +35,48 @@
     "languages": {
       "en": "English",
       "id": "Bahasa Indonesia"
-    }
+    },
+    "method": "Calculation method",
+    "methods": {
+      "muslim_world_league": "Muslim World League",
+      "isna": "ISNA",
+      "egyptian": "Egyptian",
+      "umm_al_qura": "Umm al-Qura",
+      "karachi": "Karachi",
+      "tehran": "Tehran",
+      "jafari": "Jafari"
+    },
+    "location": "Location",
+    "locationHint": "Search a city or enter coordinates",
+    "citySearchPlaceholder": "Search city (e.g. Jakarta)",
+    "manualLat": "Latitude",
+    "manualLon": "Longitude",
+    "saveLocation": "Save location",
+    "locationSaved": "Location saved",
+    "locationError": "Could not save location: {{message}}",
+    "notifications": "Prayer notifications",
+    "notificationsHint": "Show a notification at each prayer time",
+    "adhan": "Adhan sound",
+    "adhanHint": "Play adhan when a prayer notification fires"
+  },
+  "prayer": {
+    "fajr": "Fajr",
+    "sunrise": "Sunrise",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha"
+  },
+  "today": {
+    "prayerTimes": "Prayer times",
+    "nextPrayer": "Next: {{name}} at {{time}}",
+    "allCompleted": "All prayers completed for today",
+    "location": "Location",
+    "method": "Method",
+    "notSet": "No location set — choose a city or enter coordinates in Settings.",
+    "loading": "Loading prayer times…",
+    "error": "Could not load prayer times: {{message}}",
+    "cityNotFound": "Saved city not found — please reselect.",
+    "manualFallback": "Manual coordinates ({{lat}}, {{lon}})"
   }
 }

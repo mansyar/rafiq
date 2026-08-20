@@ -35,6 +35,48 @@
     "languages": {
       "en": "English",
       "id": "Bahasa Indonesia"
-    }
+    },
+    "method": "Metode perhitungan",
+    "methods": {
+      "muslim_world_league": "Liga Dunia Muslim",
+      "isna": "ISNA",
+      "egyptian": "Mesir",
+      "umm_al_qura": "Umm al-Qura",
+      "karachi": "Karachi",
+      "tehran": "Tehran",
+      "jafari": "Jafari"
+    },
+    "location": "Lokasi",
+    "locationHint": "Cari kota atau masukkan koordinat",
+    "citySearchPlaceholder": "Cari kota (mis. Jakarta)",
+    "manualLat": "Lintang",
+    "manualLon": "Bujur",
+    "saveLocation": "Simpan lokasi",
+    "locationSaved": "Lokasi disimpan",
+    "locationError": "Gagal menyimpan lokasi: {{message}}",
+    "notifications": "Notifikasi salat",
+    "notificationsHint": "Tampilkan notifikasi setiap waktu salat",
+    "adhan": "Suara azan",
+    "adhanHint": "Putar azan saat notifikasi salat muncul"
+  },
+  "prayer": {
+    "fajr": "Subuh",
+    "sunrise": "Terbit",
+    "dhuhr": "Zuhur",
+    "asr": "Asar",
+    "maghrib": "Magrib",
+    "isha": "Isya"
+  },
+  "today": {
+    "prayerTimes": "Waktu salat",
+    "nextPrayer": "Selanjutnya: {{name}} pukul {{time}}",
+    "allCompleted": "Semua salat hari ini selesai",
+    "location": "Lokasi",
+    "method": "Metode",
+    "notSet": "Belum ada lokasi — pilih kota atau masukkan koordinat di Pengaturan.",
+    "loading": "Memuat waktu salat…",
+    "error": "Gagal memuat waktu salat: {{message}}",
+    "cityNotFound": "Kota tersimpan tidak ditemukan — silakan pilih ulang.",
+    "manualFallback": "Koordinat manual ({{lat}}, {{lon}})"
   }
 }

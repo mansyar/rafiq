@@ -63,3 +63,7 @@
   - [x] `cargo test` + `cargo clippy`, `biome`, `tsc --noEmit`, `vitest` all pass; coverage >80% for all new logic modules
   - [x] Update `conductor/tech-stack.md` + `ATTRIBUTION.md` if design or license findings changed during implementation (no changes required)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 2f7d62d
+
+## Phase: Review Fixes
+- [~] Task: Apply review suggestions
+  - [ ] Medium: prev/next surah navigation left the previous surah's audio playing; `RecitationAudio` now takes the active `surahId` and stops playback when the store's current surah no longer matches (FR-4.2 intent)

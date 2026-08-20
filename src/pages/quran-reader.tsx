@@ -74,7 +74,7 @@ export function QuranReader() {
 
   return (
     <section aria-labelledby="quran-reader-title" className="mx-auto max-w-4xl space-y-4">
-      <RecitationAudio />
+      {surah && <RecitationAudio surahId={surah.id} />}
 
       <div className="flex items-center justify-between">
         <Link

@@ -10,13 +10,15 @@ import { cn } from '@/lib/utils';
  * Hidden `<audio>` element driving the recitation player store.
  * Mount once per reader view; pauses itself on unmount (FR-4.2).
  */
-export function RecitationAudio() {
+export function RecitationAudio({ surahId }: { surahId: number }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const status = useRecitationPlayer((s) => s.status);
   const audioUrl = useRecitationPlayer((s) => s.audioUrl);
+  const current = useRecitationPlayer((s) => s.current);
   const audioStarted = useRecitationPlayer((s) => s.audioStarted);
   const advance = useRecitationPlayer((s) => s.advance);
   const pause = useRecitationPlayer((s) => s.pause);
+  const stop = useRecitationPlayer((s) => s.stop);
 
   // Play when the store says playing and a file is ready; pause on demand.
   useEffect(() => {
@@ -33,6 +35,14 @@ export function RecitationAudio() {
 
   // Leaving the reader pauses playback and keeps the position (FR-4.2).
   useEffect(() => () => pause(), [pause]);
+
+  // Switching surahs (prev/next) stops the previous surah's playback; its
+  // position is already persisted, so it resumes from there when revisited.
+  useEffect(() => {
+    if (current && current.surahId !== surahId) {
+      stop();
+    }
+  }, [surahId, current, stop]);
 
   return (
     <audio

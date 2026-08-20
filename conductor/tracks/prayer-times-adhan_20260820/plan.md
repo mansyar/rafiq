@@ -101,3 +101,6 @@ required (project rule); logic helpers tested.*
     - AC-8 (full gate): 5.1 gate passed — see gate results below.
     - Gate 5.1 results (2026-08-20): `cargo fmt --check` clean, `cargo clippy -D warnings` clean, `cargo test --lib 55 passed`, `pnpm biome check` 21 files clean, `pnpm tsc --noEmit` pass, `pnpm test 17 passed` (locale 4 + prayer 13), `tauri.conf additionalBrowserArgs` present, `adhan.mp3` CC0.
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions 37f9f01

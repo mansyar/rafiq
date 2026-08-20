@@ -1,1 +1,31 @@
 Task: Implement repository in src-tauri/src/log/mod.rs. Added Prayer (5 obligatory prayers, ALL const, as_str/parse), LogStatus (OnTime/Qada, as_str/parse), LogEntry, and PrayerLogRepo with insert (rejects duplicate date+prayer), delete (rows removed, 0-or-1), range (inclusive date window, ordered by date then canonical prayer order). Also fixed a lifetime bug in the red test (Vec<&str> borrowing a dropped temp Vec<LogEntry> -> collect owned String). GREEN confirmed: CARGO_EXIT=0, 89 unit + 6 integration tests pass, all 6 log::tests green.
+
+**Phase 1 Verification Report - Prayer Log + Analytics: Storage (prayer_log table + repository)**
+
+Automated checks:
+- cargo test --manifest-path src-tauri/Cargo.toml: 89 unit + 6 integration, 0 failed
+- cargo clippy --all-targets -- -D warnings: clean
+- cargo fmt --check: clean
+- pnpm test: 22/22 (3 files)
+- pnpm exec tsc --noEmit: pass
+- pnpm exec biome check ./src: 25 files, no issues
+
+Test coverage (cargo llvm-cov --summary-only):
+- log/mod.rs: lines 97.30% (180/185), functions 100.00% - above 80% gate
+- storage/db.rs: lines 98.77% (80/81)
+
+Phase scope (492bc1f..HEAD) - changed code files and test coverage:
+- src-tauri/src/storage/db.rs - inline tests (migration 2 applies, schema_version=2, prayer_log UNIQUE(log_date,prayer), idempotent)
+- src-tauri/src/storage/mod.rs - test_memory_db test helper, exercised by db + log tests
+- src-tauri/src/log/mod.rs - 6 inline repository tests (insert, duplicate reject, delete, range ordering, range window, empty)
+- src-tauri/src/lib.rs - module declaration only (no logic)
+
+Manual verification (4 steps, executed by user):
+- pnpm tauri dev boots cleanly; migration 2 runs at startup against the real user DB
+- devtools: invoke('db_status') -> version 2
+- Today page still renders prayer times (regression)
+- Settings page still persists choices (regression, settings table untouched)
+
+User confirmation: Yes, proceed (2026-08-20)
+
+Checkpoint: 1aa4f25

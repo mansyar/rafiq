@@ -13,14 +13,14 @@
   - [x] Month-length test: every month returns 29 or 30 days per Umm al-Qura
   - [x] Month-grid builder tests: day count, per-day Gregorian date + weekday, `is_today` flag (pure function of a reference date)
   - [x] Run `cargo test` and confirm the new tests **fail** (Red)
-- [ ] Task: Implement conversion engine to pass tests (Green Phase)
-  - [ ] `src-tauri/src/hijri/mod.rs`: `HijriDate` / `GregorianDate` / `MonthGrid` types (serde)
-  - [ ] `gregorian_to_hijri` / `hijri_to_gregorian` via `icu_calendar` Umm al-Qura
-  - [ ] Month-grid builder; `today` resolved via `chrono::Local` in a thin wrapper over the pure function
-  - [ ] Run `cargo test` and confirm **pass** (Green)
-- [ ] Task: Refactor and verify coverage
-  - [ ] Refactor for clarity (behavior unchanged), rerun tests
-  - [ ] Verify >80% coverage on the new `hijri` module
+- [x] Task: Implement conversion engine to pass tests (Green Phase) — f66d10c
+  - [x] `src-tauri/src/hijri/mod.rs`: `HijriDate` / `GregorianDate` / `MonthGrid` types (serde)
+  - [x] `gregorian_to_hijri` / `hijri_to_gregorian` via `icu_calendar` Umm al-Qura
+  - [x] Month-grid builder; `today` resolved via `chrono::Local` in a thin wrapper over the pure function
+  - [x] Run `cargo test` and confirm **pass** (Green) — 134 passed / 0 failed
+- [x] Task: Refactor and verify coverage — f66d10c
+  - [x] Refactor for clarity (behavior unchanged), rerun tests — no changes needed; code already minimal and clippy-clean
+  - [x] Verify >80% coverage on the new `hijri` module — cargo llvm-cov: 97.56% regions / 98.41% lines
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2 — Tauri Command Layer

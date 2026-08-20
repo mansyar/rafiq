@@ -5,6 +5,7 @@ pub mod hijri;
 pub mod log;
 pub mod prayer;
 pub mod quran;
+pub mod recitation;
 pub mod scheduler;
 pub mod storage;
 

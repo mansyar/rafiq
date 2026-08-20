@@ -23,7 +23,7 @@
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — f64b590
 
 ## Phase 3: On-Demand Download & Cache (Rust) *(FR-2.1–FR-2.3)*
-- [ ] Task: Write failing tests for fetch/cache logic *(Red)*
+- [~] Task: Write failing tests for fetch/cache logic *(Red)*
   - [ ] Tests: per-ayah CDN URL construction (128 kbps, edition, global number)
   - [ ] Tests: cache state machine — missing → downloading → cached; valid cache never re-fetched; partial/corrupt files re-fetch; atomic writes (temp + rename)
 - [ ] Task: Implement on-demand fetch *(Green)*

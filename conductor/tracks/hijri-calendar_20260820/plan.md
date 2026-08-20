@@ -23,12 +23,12 @@
   - [x] Verify >80% coverage on the new `hijri` module — cargo llvm-cov: 97.56% regions / 98.41% lines
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — f66d10c
 
-## Phase 2 — Tauri Command Layer
+## Phase 2 — Tauri Command Layer [checkpoint: 1f079dd]
 - [x] Task: Expose commands and register them — 1f079dd
   - [x] Add `hijri_from_gregorian`, `hijri_to_gregorian`, `hijri_month_grid`, `today_hijri` to `src-tauri/src/commands.rs` following the existing `*_impl` + wrapper pattern
   - [x] Register in `lib.rs` `invoke_handler`
   - [x] `cargo fmt`, `cargo clippy`, `cargo test` all pass — 134 passed / 0 failed, clippy clean
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 1f079dd
 
 ## Phase 3 — Frontend: i18n, API Wrapper, Month View
 - [ ] Task: Add `hijri` i18n keys to `src/i18n/locales/en.json` and `id.json`

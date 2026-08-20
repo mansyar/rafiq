@@ -59,3 +59,7 @@ mirror the existing `lib/*.ts` pattern._
 - [x] Task: i18n — all new strings under `log.*` in `en` + `id` catalogs [bc4a2f5]
 - [x] Task: Run full gate (`cargo test` + clippy, Biome, `tsc --noEmit`, Vitest) [bc4a2f5]
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions [269bcd2]

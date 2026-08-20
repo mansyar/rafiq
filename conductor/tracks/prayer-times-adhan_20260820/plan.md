@@ -27,10 +27,10 @@ commands — presentational components exempt).
 
 *Goal: bundled ~3,000-city dataset with search and manual lat/long fallback.*
 
-- [ ] Task 2.1: Acquire & curate city dataset
-  - [ ] Source public dataset (~3,000 cities: name, country, lat, lon, timezone; license-compatible — e.g., CC BY 4.0)
-  - [ ] Embed as `src-tauri/assets/cities.json` + `ATTRIBUTION` license note
-  - [ ] Dataset validation test: loads, count ≥ 3,000, required fields present, coordinates in range, unique city ids
+- [x] Task 2.1: Acquire & curate city dataset — 79ba3dc
+  - [x] Source public dataset (~3,000 cities: name, country, lat, lon, timezone; license-compatible — e.g., CC BY 4.0)
+  - [x] Embed as `src-tauri/assets/cities.json` + `ATTRIBUTION` license note
+  - [x] Dataset validation test: loads, count ≥ 3,000, required fields present, coordinates in range, unique city ids
 - [ ] Task 2.2: Write failing tests for city store + resolution (Red)
   - [ ] Search by name/country substring, case-insensitive, ranked top-N results
   - [ ] Manual lat/long validation (range, parse errors → friendly error)

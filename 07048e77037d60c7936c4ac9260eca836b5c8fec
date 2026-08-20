@@ -1,0 +1,11 @@
+Task: Phase 2 Task 6 - Implement monthly summary computation
+Changes: src-tauri/src/log/mod.rs
+- pub struct MonthlySummary { days_elapsed, complete_days, completion_pct, on_time, qada, missed, on_time_pct, qada_pct, missed_pct }
+- pub fn monthly_summary(entries: &[LogEntry], today: NaiveDate) -> MonthlySummary
+  Window = 1st of today's month..=today (inclusive); out-of-month/future/unparseable entries ignored.
+  complete_days = days with all 5 prayers (status-agnostic); missed = total_slots - logged;
+  pct = count * 100.0 / total (multiply-first keeps whole percentages exact in f64).
+- chrono 0.4.45 API note: NaiveDate::new no longer exists - month start via
+  NaiveDate::from_ymd_opt(year, month, 1); year()/month() require Datelike in scope.
+Why: spec FR-3 monthly summary (completion % + on-time/qada/missed breakdown).
+Verified: cargo test - all 110 unit + 6 integration tests pass (5 new monthly_tests).

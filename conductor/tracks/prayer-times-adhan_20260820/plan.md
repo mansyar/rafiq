@@ -81,7 +81,7 @@ required (project rule); logic helpers tested.*
   - [x] Trigger at a temporarily adjusted time/test trigger → notification fires + adhan plays; toggles disable behavior
 - [x] Task: Phase Verification & Checkpoint (per `workflow.md`)
 
-## Phase 5 — Integration Gate & Acceptance
+## Phase 5 — Integration Gate & Acceptance [checkpoint: c973941]
 
 *Goal: full quality gate + spec acceptance walk.*
 
@@ -100,4 +100,4 @@ required (project rule); logic helpers tested.*
     - AC-7 (Today localized): `i18n` en/id keys for `prayer.*`, `today.*`, `settings.*` + `Today` uses `t('prayer.${name}')`, `t('today.nextPrayer')`, `formatPrayerTime` with locale; `Settings` uses `t('settings.methods.*')`.
     - AC-8 (full gate): 5.1 gate passed — see gate results below.
     - Gate 5.1 results (2026-08-20): `cargo fmt --check` clean, `cargo clippy -D warnings` clean, `cargo test --lib 55 passed`, `pnpm biome check` 21 files clean, `pnpm tsc --noEmit` pass, `pnpm test 17 passed` (locale 4 + prayer 13), `tauri.conf additionalBrowserArgs` present, `adhan.mp3` CC0.
-- [~] Task: Phase Verification & Checkpoint (per `workflow.md`)
+- [x] Task: Phase Verification & Checkpoint (per `workflow.md`)

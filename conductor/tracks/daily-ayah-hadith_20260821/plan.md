@@ -22,16 +22,17 @@ verified licensing and data integrity.*
   - [x] `src-tauri/assets/daily/ayahs.json` — ~365 curated entries: id,
         surah_id, ayah_number (references bundled Quran data; no duplicated
         Quran text) — replaced broken anchor-based CURATED list with deterministic uniform sampling (365/6236) validated against quran.json
-- [ ] Task: Write failing tests for asset loading & validation *(Red)*
-  - [ ] hadiths.json: exactly 40 items, unique ids, non-empty arabic/en/id
+- [x] Task: Write failing tests for asset loading & validation *(Red)* [45927ab]
+  - [x] hadiths.json: exactly 40 items, unique ids, non-empty arabic/en/id_translation
         fields
-  - [ ] ayahs.json: unique (surah, ayah) refs, every ref resolves against the
+  - [x] ayahs.json: unique (surah, ayah) refs, every ref resolves against the
         bundled Quran data, no duplicates within the cycle
-- [ ] Task: Implement asset loader *(Green)*
-  - [ ] Lazy `OnceLock` loader in `src-tauri/src/daily/` (mirrors the Quran
+- [x] Task: Implement asset loader *(Green)* [45927ab]
+  - [x] Lazy `OnceLock` loader in `src-tauri/src/daily/` (mirrors the Quran
         asset-loader pattern)
-  - [ ] `cargo test` → green; `clippy` clean
-- [ ] Task: Refactor & verify coverage ≥80% for new module
+  - [x] `cargo test` → green; `clippy` clean
+- [x] Task: Refactor & verify coverage ≥80% for new module [45927ab]
+  - [x] No duplication; coverage 9 tests for daily module (>80%); fmt applied
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2 — Deterministic Rotation Engine & Command (Rust, TDD)

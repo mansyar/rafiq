@@ -198,6 +198,23 @@ pub fn set_quran_translation_impl(
         .map_err(|e| e.to_string())
 }
 
+/// Returns today's daily ayah + hadith using the OS local date and the
+/// persisted `quran_translation` setting (invalid → fallback to default).
+pub fn get_daily_content_impl(conn: &Connection) -> Result<crate::daily::DailyContent, String> {
+    let translation = get_quran_translation_impl(conn).unwrap_or_default();
+    let date = chrono::Local::now().date_naive();
+    Ok(crate::daily::daily_content_for_date(date, translation))
+}
+
+/// Pure test helper: daily content for an explicit date (bypasses Local::now).
+pub fn get_daily_content_for_date_impl(
+    conn: &Connection,
+    date: NaiveDate,
+) -> Result<crate::daily::DailyContent, String> {
+    let translation = get_quran_translation_impl(conn).unwrap_or_default();
+    Ok(crate::daily::daily_content_for_date(date, translation))
+}
+
 /// Resolves a persisted `Location` to concrete coordinates + timezone.
 /// Used by callers that need validated lat/lon (e.g., prayer calculation).
 pub fn resolve_stored_location(
@@ -696,6 +713,15 @@ pub fn set_quran_translation(
         .lock()
         .map_err(|_| "app state lock poisoned".to_string())?;
     set_quran_translation_impl(&conn, translation)
+}
+
+#[tauri::command]
+pub fn get_daily_content(state: State<'_, AppState>) -> Result<crate::daily::DailyContent, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_daily_content_impl(&conn)
 }
 
 #[tauri::command]
@@ -1248,6 +1274,85 @@ mod tests {
             crate::quran::parse_quran_translation("clear").unwrap(),
             crate::quran::QuranTranslation::Clear
         );
+    }
+
+    // ── Daily content command ───────────────────────────────────────────────
+
+    #[test]
+    fn get_daily_content_response_shape_and_resolves_arabic() {
+        let conn = conn("daily-shape");
+        let today = chrono::Local::now().date_naive();
+        let content = super::get_daily_content_for_date_impl(&conn, today).unwrap();
+        assert_eq!(content.date, today.format("%Y-%m-%d").to_string());
+        assert!(
+            !content.ayah.arabic.trim().is_empty(),
+            "ayah arabic must be resolved"
+        );
+        assert!(
+            !content.ayah.translation.trim().is_empty(),
+            "ayah translation must be resolved"
+        );
+        assert!(!content.ayah.surah_name_en.trim().is_empty());
+        assert!(!content.ayah.surah_name_ar.trim().is_empty());
+        assert!(content.ayah.surah_id >= 1 && content.ayah.surah_id <= 114);
+        assert!(content.hadith.id.starts_with("nawawi40-"));
+        assert!(!content.hadith.arabic.trim().is_empty());
+        assert!(!content.hadith.en.trim().is_empty());
+        assert!(!content.hadith.id_translation.trim().is_empty());
+        assert!(content.hadith.source.contains("Nawawi"));
+    }
+
+    #[test]
+    fn get_daily_content_uses_local_date_and_is_deterministic() {
+        let conn = conn("daily-local-date");
+        let today = chrono::Local::now().date_naive();
+        let c1 = super::get_daily_content_impl(&conn).unwrap();
+        let c2 = super::get_daily_content_for_date_impl(&conn, today).unwrap();
+        assert_eq!(
+            c1, c2,
+            "get_daily_content should use Local::now().date_naive()"
+        );
+        assert_eq!(c1.date, today.format("%Y-%m-%d").to_string());
+    }
+
+    #[test]
+    fn get_daily_content_translation_follows_setting_and_fallback() {
+        let conn = conn("daily-translation");
+        let date = chrono::NaiveDate::from_ymd_opt(2026, 6, 15).unwrap();
+        // default → Sahih
+        let sahih = super::get_daily_content_for_date_impl(&conn, date).unwrap();
+        assert!(!sahih.ayah.translation.is_empty());
+        // override to Clear
+        super::set_quran_translation_impl(&conn, crate::quran::QuranTranslation::Clear).unwrap();
+        let clear = super::get_daily_content_for_date_impl(&conn, date).unwrap();
+        // override to Kemenag
+        super::set_quran_translation_impl(&conn, crate::quran::QuranTranslation::Kemenag).unwrap();
+        let kemenag = super::get_daily_content_for_date_impl(&conn, date).unwrap();
+        // At least one translation differs across variants (most ayahs differ)
+        let all_same = sahih.ayah.translation == clear.ayah.translation
+            && clear.ayah.translation == kemenag.ayah.translation;
+        assert!(!all_same, "translations should vary across settings");
+        // Same hadith id across translations (hadith not affected by quran_translation)
+        assert_eq!(sahih.hadith.id, clear.hadith.id);
+        assert_eq!(clear.hadith.id, kemenag.hadith.id);
+        // Invalid setting → fallback to Sahih
+        SettingsRepo::new(&conn)
+            .set(super::QURAN_TRANSLATION_SETTING_KEY, "not-a-translation")
+            .unwrap();
+        let fallback = super::get_daily_content_for_date_impl(&conn, date).unwrap();
+        assert_eq!(
+            fallback.ayah.translation, sahih.ayah.translation,
+            "invalid translation should fallback to Sahih"
+        );
+    }
+
+    #[test]
+    fn get_daily_content_deterministic_same_date_same_content() {
+        let conn = conn("daily-deterministic");
+        let date = chrono::NaiveDate::from_ymd_opt(2026, 3, 15).unwrap();
+        let a = super::get_daily_content_for_date_impl(&conn, date).unwrap();
+        let b = super::get_daily_content_for_date_impl(&conn, date).unwrap();
+        assert_eq!(a, b);
     }
 
     // ── Prayer log commands ─────────────────────────────────────────────────

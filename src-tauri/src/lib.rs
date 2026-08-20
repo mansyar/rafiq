@@ -57,6 +57,7 @@ pub fn run() {
             commands::search_surahs,
             commands::get_quran_translation,
             commands::set_quran_translation,
+            commands::get_daily_content,
             commands::log_prayer,
             commands::delete_log_entry,
             commands::get_prayer_log,

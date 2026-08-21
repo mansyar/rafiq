@@ -93,3 +93,7 @@
   - [x] Follow-ups: `TODO(matrix)` in `e2e.yml` for ubuntu/macos, `E2E_REAL_CDN` opt-in remains TODO, native `tauri-driver` path probed not installed in CI (Vite mock covers)
 
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — gate → 658ce02
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions fa3c216

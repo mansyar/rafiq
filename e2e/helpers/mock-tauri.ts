@@ -84,6 +84,8 @@ export async function installMockTauri(page: Page): Promise<void> {
         number,
         { global_ayah: number; file_path: string; size_bytes: number }
       > = new Map();
+      /** Last position reported by the player (in-memory, per session). */
+      let lastPlayed: { surahId: number; ayah: number } | null = null;
 
       function persist() {
         savePersisted({
@@ -529,26 +531,60 @@ export async function installMockTauri(page: Page): Promise<void> {
             };
           }
           case 'fetch_ayah_audio': {
-            const ayah = Number(args.global_ayah);
-            if (ayah === 1) {
-              const key = 1;
-              recitationIndex.set(key, {
-                global_ayah: key,
-                file_path: '/tmp/mock/recitation/1.mp3',
-                size_bytes: 8192,
-              });
-              return {
-                global_ayah: key,
-                file_path: '/tmp/mock/recitation/1.mp3',
+            // Frontend sends camelCase args ({globalAyah}); Tauri's snake_case
+            // conversion only happens at the real Rust boundary.
+            const ayah = Number(args.globalAyah);
+            // Cache hit: serve from the index without any network semantics.
+            const cachedEntry = recitationIndex.get(ayah);
+            if (cachedEntry) {
+              return { ...cachedEntry };
+            }
+            // Al-Fatiha occupies globals 1..7; serve every one of them from
+            // local fixture paths so lookahead prefetches succeed and no
+            // spurious download-error state races the specs. Bytes come from
+            // the page.route fulfiller in recitation.spec.ts (no real CDN).
+            if (ayah >= 1 && ayah <= 7) {
+              const entry = {
+                global_ayah: ayah,
+                file_path: `/tmp/mock/recitation/${ayah}.mp3`,
                 size_bytes: 8192,
               };
+              recitationIndex.set(ayah, entry);
+              return { ...entry };
             }
-            throw new Error('network disabled in mock — only ayah 1 mocked');
+            throw new Error('network disabled in mock — only Al-Fatiha (1..7) mocked');
           }
-          case 'get_recitation_state':
-            // Frontend expects null when no active playback; returning an object with missing reciter would crash RecitationFooter (reciter.name)
-            return null;
+          case 'get_recitation_state': {
+            // Complete RecitationState so RecitationPlayButton/Footer enable;
+            // `reciter.name` must be present (missing it crashed the footer).
+            const sid = Number(args.surahId);
+            const surah = getSurah(sid) as { id: number; ayahs?: unknown[] } | undefined;
+            if (!surah) {
+              throw new Error(`surah not found: ${sid}`);
+            }
+            const count = Array.isArray(surah.ayahs) ? surah.ayahs.length : 0;
+            let firstGlobal = 1;
+            for (const s of listSurahs() as Array<{ id: number; ayahs?: unknown[] }>) {
+              if (s.id === sid) {
+                break;
+              }
+              firstGlobal += Array.isArray(s.ayahs) ? s.ayahs.length : 0;
+            }
+            const lastGlobal = firstGlobal + count - 1;
+            const cached = [...recitationIndex.values()]
+              .filter((c) => c.global_ayah >= firstGlobal && c.global_ayah <= lastGlobal)
+              .map(({ global_ayah, file_path }) => ({ global_ayah, file_path }));
+            return {
+              surah_id: sid,
+              ayah_count: count,
+              first_global_ayah: firstGlobal,
+              cached,
+              last_played_ayah: lastPlayed?.surahId === sid ? lastPlayed.ayah : null,
+              reciter: { name: 'E2E Reciter', edition: 'ara.alafasy' },
+            };
+          }
           case 'report_played_position':
+            lastPlayed = { surahId: Number(args.surahId), ayah: Number(args.ayah) };
             return null;
           default:
             throw new Error(`mock missing for Tauri command: ${cmd}`);
@@ -558,6 +594,12 @@ export async function installMockTauri(page: Page): Promise<void> {
       const callbacks: Record<string, (arg: unknown) => void> = {};
       const internals = {
         invoke: mockInvoke,
+        // The mock installs __TAURI_INTERNALS__, so `isTauri()` is true and
+        // `localAudioUrl()` routes through convertFileSrc. Tauri v2 delegates
+        // that to this internals method; return the path as-is (mirroring the
+        // library's plain-browser branch) so <audio> URLs stay relative and
+        // interceptable by Playwright routes (/tmp/mock/recitation/N.mp3).
+        convertFileSrc: (path: string) => path,
         transformCallback: (cb: (arg: unknown) => void) => {
           const id = String(Math.floor(Math.random() * 1_000_000));
           callbacks[id] = cb;

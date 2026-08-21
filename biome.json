@@ -6,7 +6,16 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["src/**", "vite.config.ts", "index.html", "*.json", "**/*.json", "*.css"],
+    "includes": [
+      "src/**",
+      "e2e/**",
+      "playwright.config.ts",
+      "vite.config.ts",
+      "index.html",
+      "*.json",
+      "**/*.json",
+      "*.css"
+    ],
     "ignoreUnknown": false,
     "maxSize": 10485760
   },

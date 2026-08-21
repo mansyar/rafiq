@@ -11,11 +11,11 @@
   - [x] Add `pnpm e2e`, `pnpm e2e:ui`, `pnpm e2e:report` scripts (CI-aware, `CI=true` one-shot, forwards `TAURI_E2E`/`TAURI_E2E_APP_DATA_DIR`)
   - [x] Gitignore `test-results/`, `playwright-report/`, `e2e/.tmp/`
 
-- [ ] Task: Create Playwright + tauri-driver wiring
-  - [ ] TDD: `e2e/helpers/tauri-driver.test.ts` — tiny helper that resolves `tauri-driver` binary path, free port selection, `wait-on` URL polling (logic-bearing → >80%)
-  - [ ] Implement `e2e/helpers/tauri-driver.ts` to satisfy tests
-  - [ ] Write `playwright.config.ts`: `webServer` boots Tauri (`cargo run --` or `tauri dev` with `TAURI_E2E=1`), `use: { trace: 'on-first-retry', screenshot: 'only-on-failure' }`, `timeout: 30_000`, `retries: 1` on CI
-  - [ ] Verify: `pnpm e2e --list` connects and reports `0 tests` (no spec files yet) without hanging
+- [x] Task: Create Playwright + tauri-driver wiring — 4c18f40 → TBD
+  - [x] TDD: `e2e/helpers/tauri-driver.test.ts` — tiny helper that resolves `tauri-driver` binary path, free port selection, `wait-on` URL polling (logic-bearing → >80%)
+  - [x] Implement `e2e/helpers/tauri-driver.ts` to satisfy tests
+  - [x] Write `playwright.config.ts`: `webServer` boots Tauri (`cargo run --` or `tauri dev` with `TAURI_E2E=1`), `use: { trace: 'on-first-retry', screenshot: 'only-on-failure' }`, `timeout: 30_000`, `retries: 1` on CI
+  - [x] Verify: `pnpm e2e --list` connects and reports `0 tests` (no spec files yet) without hanging
 
 - [ ] Task: Teach Rust core to respect ephemeral app_data_dir (TDD)
   - [ ] Red: `src-tauri/src/storage/db.rs` test — when `TAURI_E2E_APP_DATA_DIR` is set, `init_db` uses that dir (not `app_data_dir`), still migrates to `SCHEMA_VERSION=3`

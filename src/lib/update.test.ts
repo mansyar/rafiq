@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   CHECK_INTERVAL_MS,
   checkForUpdates,
@@ -6,8 +6,25 @@ import {
   LAST_CHECK_KEY,
   parseLastCheck,
   runStartupUpdateCheck,
+  tauriUpdatePorts,
   type UpdatePorts,
 } from './update';
+
+const checkMock = vi.fn();
+const relaunchMock = vi.fn();
+const getSettingMock = vi.fn();
+const setSettingMock = vi.fn();
+
+vi.mock('@tauri-apps/plugin-updater', () => ({
+  check: (...args: unknown[]) => checkMock(...args),
+}));
+vi.mock('@tauri-apps/plugin-process', () => ({
+  relaunch: (...args: unknown[]) => relaunchMock(...args),
+}));
+vi.mock('./tauri', () => ({
+  getSetting: (...args: unknown[]) => getSettingMock(...args),
+  setSetting: (...args: unknown[]) => setSettingMock(...args),
+}));
 
 const HOUR_MS = 60 * 60 * 1000;
 /** Fixed "now" so interval math is deterministic. */
@@ -148,5 +165,59 @@ describe('checkForUpdates (manual settings check)', () => {
 describe('settings key contract', () => {
   it('uses a stable snake_case key matching Rust settings rows', () => {
     expect(LAST_CHECK_KEY).toBe('updater_last_check_at');
+  });
+});
+
+describe('tauriUpdatePorts (production glue)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('reads the persisted timestamp via the settings store', async () => {
+    getSettingMock.mockResolvedValue('123');
+    await expect(tauriUpdatePorts.readLastCheck()).resolves.toBe('123');
+    expect(getSettingMock).toHaveBeenCalledWith(LAST_CHECK_KEY);
+  });
+
+  it('persists the timestamp as a decimal string under the settings key', async () => {
+    setSettingMock.mockResolvedValue(undefined);
+    await tauriUpdatePorts.writeLastCheck(456);
+    expect(setSettingMock).toHaveBeenCalledWith(LAST_CHECK_KEY, '456');
+  });
+
+  it('fetchRemote maps a plugin update to the port shape', async () => {
+    checkMock.mockResolvedValue({ version: '2.0.0', body: 'Hi' });
+    await expect(tauriUpdatePorts.fetchRemote()).resolves.toEqual({
+      version: '2.0.0',
+      body: 'Hi',
+    });
+  });
+
+  it('fetchRemote normalizes missing release notes to null', async () => {
+    checkMock.mockResolvedValue({ version: '2.0.0' });
+    await expect(tauriUpdatePorts.fetchRemote()).resolves.toEqual({
+      version: '2.0.0',
+      body: null,
+    });
+  });
+
+  it('fetchRemote resolves null when already up-to-date', async () => {
+    checkMock.mockResolvedValue(null);
+    await expect(tauriUpdatePorts.fetchRemote()).resolves.toBeNull();
+  });
+
+  it('installRemote rejects when no check has produced an update', async () => {
+    await expect(tauriUpdatePorts.installRemote()).rejects.toThrow(/no pending update/);
+    expect(relaunchMock).not.toHaveBeenCalled();
+  });
+
+  it('installRemote downloads, installs, then relaunches', async () => {
+    const downloadAndInstall = vi.fn().mockResolvedValue(undefined);
+    checkMock.mockResolvedValue({ version: '2.0.0', body: null, downloadAndInstall });
+    await tauriUpdatePorts.fetchRemote();
+    relaunchMock.mockResolvedValue(undefined);
+    await tauriUpdatePorts.installRemote();
+    expect(downloadAndInstall).toHaveBeenCalledTimes(1);
+    expect(relaunchMock).toHaveBeenCalledTimes(1);
   });
 });

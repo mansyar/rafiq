@@ -229,7 +229,7 @@ mod tests {
                 (cursor.year(), cursor.month() as u8, cursor.day() as u8),
                 "round trip failed for {cursor}"
             );
-            cursor = cursor + chrono::TimeDelta::days(3);
+            cursor += chrono::TimeDelta::days(3);
         }
     }
 

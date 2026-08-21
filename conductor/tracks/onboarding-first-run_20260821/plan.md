@@ -49,9 +49,9 @@
 - [x] Task: Commit — `feat(settings): add run-setup-again onboarding entry` (b0437f0)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 5 — Final Verification & Quality Gate
+## Phase 5 — Final Verification & Quality Gate [checkpoint: 90c3c76]
 
-- [ ] Task: Run full gate — Biome, `tsc --noEmit`, `CI=true pnpm vitest run --coverage`
-- [ ] Task: Manual verification pass against AC-1…AC-8 (fresh-state launch, locale preselect, complete flow, skip flow, mid-wizard quit, re-run)
-- [ ] Task: Remove nothing unrelated; confirm no regressions in existing suites
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Run full gate — Biome, `tsc --noEmit`, `CI=true pnpm vitest run --coverage` (90c3c76)
+- [x] Task: Manual verification pass against AC-1…AC-8 (fresh-state launch, locale preselect, complete flow, skip flow, mid-wizard quit, re-run) (90c3c76)
+- [x] Task: Remove nothing unrelated; confirm no regressions in existing suites (90c3c76)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)

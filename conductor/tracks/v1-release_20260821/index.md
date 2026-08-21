@@ -6,6 +6,7 @@
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
+- [Release-CSP Smoke Checklist](./release-smoke-checklist.md)
 - [Metadata](./metadata.json)
 
 ## Overview

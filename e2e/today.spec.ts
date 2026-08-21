@@ -5,9 +5,6 @@ test.describe('Today + Daily Reflection', () => {
   test.beforeEach(async ({ page }) => {
     await installMockTauri(page);
     // Complete onboarding so guard lets us reach Today
-    await page.addInitScript(() => {
-      // Seed onboarding_complete before app mounts — second install would overwrite mock, so patch via evaluate after load is cleaner.
-    });
     await page.goto('/onboarding');
     await page.getByRole('button', { name: /skip/i }).click();
     await expect(page).toHaveURL('/');

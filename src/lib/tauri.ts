@@ -29,6 +29,10 @@ export async function setWindowTitle(title: string): Promise<void> {
   if (!isTauri()) {
     return;
   }
-  const { getCurrentWindow } = await import('@tauri-apps/api/window');
-  await getCurrentWindow().setTitle(title);
+  try {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    await getCurrentWindow().setTitle(title);
+  } catch {
+    // No-op in mocked E2E (Vite) where __TAURI_INTERNALS__ is stubbed or plugin unavailable.
+  }
 }

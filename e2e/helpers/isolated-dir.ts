@@ -3,7 +3,12 @@ import { mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-/** Create a fresh `TAURI_E2E_APP_DATA_DIR` under the OS temp directory. */
+/**
+ * Create a fresh `TAURI_E2E_APP_DATA_DIR` under the OS temp directory.
+ * Native E2E (`TAURI_E2E_NATIVE=1`) uses this per-test; Vite mock E2E
+ * relies on fresh Playwright `Page` + `localStorage rafiq:e2e:mock` per test
+ * for isolation, with this helper retained for native runner.
+ */
 export async function createIsolatedDir(): Promise<string> {
   const dir = join(tmpdir(), `rafiq-e2e-${randomUUID()}`);
   await mkdir(dir, { recursive: true });

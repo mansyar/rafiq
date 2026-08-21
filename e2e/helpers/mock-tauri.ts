@@ -388,12 +388,11 @@ export async function installMockTauri(page: Page): Promise<void> {
       }
 
       const mockInvoke = async (cmd: string, args: Record<string, unknown> = {}) => {
-        // Generic plugin handlers — prevent "mock missing" for event/notification plugins
+        // Generic plugin handlers — prevent "mock missing" for event/notification/window plugins.
+        // NOTE: Hijri mock below is TEST-ONLY 30/29 alternation — not canonical ICU4X; anchors verified only.
         if (cmd.startsWith('plugin:')) {
-          if (cmd.includes('event')) {
-            // plugin:event|listen / unlisten / emit — just ack
-            return cmd.includes('listen') ? 1 : null;
-          }
+          if (cmd.includes('event')) return cmd.includes('listen') ? 1 : null;
+          if (cmd.startsWith('plugin:window')) return { label: 'main' };
           return null;
         }
         switch (cmd) {

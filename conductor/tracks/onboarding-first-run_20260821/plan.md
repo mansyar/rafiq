@@ -43,10 +43,10 @@
 
 ## Phase 4 — Settings Re-run Entry
 
-- [ ] Task: Add prominent "Run setup again" action at top of Settings page
-    - [ ] Navigates to `/onboarding`; abandoning mid-rerun changes nothing but explicit edits
-    - [ ] Catalog keys under `settings.*`
-- [ ] Task: Commit — `feat(settings): add run-setup-again onboarding entry`
+- [x] Task: Add prominent "Run setup again" action at top of Settings page (b0437f0)
+    - [x] Navigates to `/onboarding`; abandoning mid-rerun changes nothing but explicit edits
+    - [x] Catalog keys under `settings.*`
+- [x] Task: Commit — `feat(settings): add run-setup-again onboarding entry` (b0437f0)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5 — Final Verification & Quality Gate

@@ -13,7 +13,7 @@
     - [ ] Refactor if needed; rerun tests
 - [x] Task: Verify coverage of new module ≥80% and commit (2442460)
     - [ ] `pnpm vitest run --coverage`; commit `feat(onboarding): add onboarding flag, locale-detection and step-machine helpers`
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2 — Route, Guard & Wizard Shell [checkpoint: ca8cc6c]
 
@@ -23,22 +23,22 @@
     - [x] Header with persistent Skip control + step progress indicator; step container with Back/Next
     - [x] Add `onboarding.*` namespace keys to `en.json` / `id.json` (shell strings)
 - [x] Task: Commit shell + routing — `feat(onboarding): add full-screen wizard route, guard and shell` (ca8cc6c)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Wizard Steps UI
 
-- [ ] Task: Welcome carousel (3 slides: Prayer Times+Adhan · Quran+Recitation · Prayer Log+Analytics)
-    - [ ] Dot indicators, keyboard navigation, gold/emerald tokens + geometric motifs
-- [ ] Task: Language step
-    - [ ] EN/ID cards; preselect via `detectSystemLocale`; apply live (`i18n.changeLanguage`) + persist `set_setting('locale')` immediately
-- [ ] Task: Location step
-    - [ ] Extract shared debounced city-search + manual lat/lon entry from `settings.tsx` into a reusable component; reuse in both Settings and wizard (no duplication)
-    - [ ] Inline validation errors; prefill from `get_resolved_location` when re-running
-- [ ] Task: Calculation method step
-    - [ ] 7 methods from `CALCULATION_METHODS`, MWL preselected; persist `set_setting('prayer_calculation_method')`
-- [ ] Task: Finish & Skip handlers
-    - [ ] Both write `onboarding_complete` via `set_setting` then navigate to `Today`
-- [ ] Task: Complete `onboarding.*` catalogs (EN + ID key-identical); commit — `feat(onboarding): implement welcome, language, location and method steps`
+- [x] Task: Welcome carousel (3 slides: Prayer Times+Adhan · Quran+Recitation · Prayer Log+Analytics) (41631b0)
+    - [x] Dot indicators, keyboard navigation, gold/emerald tokens + geometric motifs
+- [x] Task: Language step (41631b0)
+    - [x] EN/ID cards; preselect via `detectSystemLocale`; apply live (`i18n.changeLanguage`) + persist `set_setting('locale')` immediately
+- [x] Task: Location step (41631b0)
+    - [x] Extract shared debounced city-search + manual lat/lon entry from `settings.tsx` into a reusable component; reuse in both Settings and wizard (no duplication)
+    - [x] Inline validation errors; prefill from `get_resolved_location` when re-running
+- [x] Task: Calculation method step (41631b0)
+    - [x] 7 methods from `CALCULATION_METHODS`, MWL preselected; persist `set_setting('prayer_calculation_method')`
+- [x] Task: Finish & Skip handlers (ca8cc6c)
+    - [x] Both write `onboarding_complete` via `set_setting` then navigate to `Today`
+- [x] Task: Complete `onboarding.*` catalogs (EN + ID key-identical); commit — `feat(onboarding): implement welcome, language, location and method steps` (41631b0)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4 — Settings Re-run Entry

@@ -6,23 +6,23 @@ Sequencing rationale: hygiene first (low risk), then the two hardening
 pillars (CSP, updater), then E2E — so the Phase 5 release cut ships against a
 fully green, 3-OS blocking CI and a wired updater.
 
-## Phase 1: Repo hygiene & licensing
+## Phase 1: Repo hygiene & licensing `[checkpoint: 96e9b87]`
 
 - [x] Task: Add dual MIT/Apache-2.0 license (`127508a`)
   - [x] Create `LICENSE` (full MIT + Apache-2.0 text, "Copyright (c) 2026 Rafiq contributors")
   - [x] Set `license = "MIT OR Apache-2.0"` in `src-tauri/Cargo.toml`
   - Verify: `cargo metadata` shows license field; file exists at repo root
-- [ ] Task: Remove dead placeholder page
-  - [ ] Delete `src/pages/placeholder.tsx` (unreferenced by any route)
+- [x] Task: Remove dead placeholder page (`a355c78`)
+  - [x] Delete `src/pages/placeholder.tsx` (unreferenced by any route)
   - Verify: `pnpm check` + `tsc --noEmit` + `pnpm test` all pass
-- [ ] Task: Remove test prayer trigger from Settings UI
-  - [ ] Remove section + orphaned imports/state (Rust `trigger_test_prayer` + e2e helpers that call it stay)
-  - [ ] Adjust vitest expectations if any reference the section
+- [x] Task: Remove test prayer trigger from Settings UI (`96d83a8`)
+  - [x] Remove section + orphaned imports/state (Rust `trigger_test_prayer` + e2e helpers that call it stay)
+  - [x] Adjust vitest expectations if any reference the section (none did)
   - Verify: Settings renders without the section; `pnpm test` green
-- [ ] Task: i18n On/Off toggle labels
-  - [ ] Add EN + ID catalog keys for the toggle labels
-  - [ ] Use in Settings toggles
-  - Verify: recursive EN/ID key parity passes; labels render in both locales
+- [x] Task: i18n On/Off toggle labels (`96e9b87`)
+  - [x] Add EN + ID catalog keys for the toggle labels
+  - [x] Use in Settings toggles
+  - Verify: recursive EN/ID key parity passes (227 = 227, zero missing); labels render in both locales
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2: Strict CSP for release builds

@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LocationPicker } from '@/components/location-picker';
@@ -16,7 +15,6 @@ import {
   setAdhanEnabled,
   setCalculationMethod,
   setNotificationEnabled,
-  triggerTestPrayer,
 } from '@/lib/prayer';
 import { setSetting } from '@/lib/tauri';
 
@@ -50,10 +48,6 @@ export function Settings() {
       await queryClient.invalidateQueries({ queryKey: ['prayer-times'] });
     },
   });
-
-  // ── Test trigger state ────────────────────────────────────────────────
-  const [testMessage, setTestMessage] = useState<string | null>(null);
-  const [testError, setTestError] = useState<string | null>(null);
 
   // ── Toggles ───────────────────────────────────────────────────────────
   const notifQuery = useQuery({
@@ -183,47 +177,6 @@ export function Settings() {
                 {adhanQuery.data ? 'On' : 'Off'}
               </Button>
             </div>
-          </div>
-
-          <Separator />
-
-          {/* Test trigger — manual verification for Phase 4 */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium">Test prayer trigger</h3>
-            <p className="text-xs text-muted-foreground">
-              Fires a test notification and adhan sound via the scheduler (respects toggles above).
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {(['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const).map((p) => (
-                <Button
-                  key={p}
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    try {
-                      setTestMessage(null);
-                      setTestError(null);
-                      await triggerTestPrayer(p);
-                      setTestMessage(`Test trigger sent for ${p}`);
-                    } catch (e) {
-                      setTestError(String(e));
-                    }
-                  }}
-                >
-                  Test {p}
-                </Button>
-              ))}
-            </div>
-            {testMessage && (
-              <p className="text-xs text-emerald-600 dark:text-emerald-400" aria-live="polite">
-                {testMessage}
-              </p>
-            )}
-            {testError && (
-              <p className="text-xs text-destructive" role="alert">
-                {testError}
-              </p>
-            )}
           </div>
         </CardContent>
       </Card>

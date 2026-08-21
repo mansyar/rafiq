@@ -28,7 +28,7 @@
 
 > **Goal:** Every E2E test starts with a fresh DB and deterministic mocked CDN fixture.
 
-- [x] Task: Isolated-dir helper (TDD) — 5841fbc → TBD
+- [x] Task: Isolated-dir helper (TDD) — 5841fbc → de4d812
   - [x] Red: `e2e/helpers/isolated-dir.test.ts` — creates `os.tmpdir()/rafiq-e2e-<uuid>`, sets `TAURI_E2E_APP_DATA_DIR`, cleans up, handles concurrent tests (unique dirs)
   - [x] Green: implement `e2e/helpers/isolated-dir.ts` with `createIsolatedDir`, `cleanup`, `withIsolatedDir(fn)` pattern
   - [x] Verify: two sequential calls produce distinct dirs, files in first don't leak to second

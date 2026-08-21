@@ -3,7 +3,7 @@
 **Track:** `onboarding-first-run_20260821`
 **Plan:** Created 2026-08-21
 
-## Phase 1 — Onboarding Logic Foundation (TDD)
+## Phase 1 — Onboarding Logic Foundation (TDD) [checkpoint: 2442460]
 
 - [x] Task: Write failing tests for onboarding helpers (Red) (2442460)
     - [ ] Create `src/lib/onboarding.test.ts`: `isOnboardingComplete()` flag parsing, `detectSystemLocale()` mapping (`id*` → `id`, else `en`), wizard step machine (`next`/`back`/step ordering)

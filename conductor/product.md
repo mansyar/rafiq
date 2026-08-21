@@ -47,6 +47,9 @@ never monetized or surveilled.
    Hijri date.
 6. **Daily Ayah / Hadith** — fresh curated content each day to keep the user
    connected.
+7. **First-Run Onboarding** — guided setup wizard (welcome tour, language,
+   location, calculation method); skippable with sensible defaults,
+   re-runnable from Settings.
 
 ## Non-Goals (V1)
 - Mobile application

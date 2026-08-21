@@ -1,0 +1,11 @@
+fix: Review fixes F-1..F-6
+
+F-1 Medium src-tauri/src/daily/mod.rs: replace panic expect with Result<String> bubbling to commands::get_daily_content (fallback error string shows in DailyReflectionCard error alert, no webview crash)
+F-2 Low src/lib/daily.ts: add // justified: as const for QueryKey
+F-3 Low daily-reflection-card.tsx: document T12:00:00 noon-local TZ shift avoidance
+F-4 Low daily-reflection-card.tsx: extract HADITH_CLAMP_EN/AR named constants + biome wrap fix
+F-5 Low plan.md: clarify Phase 4 checkpoint doc-only (last code 4f0837c)
+F-6 Info ATTRIBUTION.md: clarify asset:// streaming MIT code-only
+Gates: cargo test 184+6 pass, fmt clean, clippy clean, biome 60 clean, tsc pass, vitest 59, build 2017 modules
+Tests updated to unwrap Result for daily_ayah/content
+Commit: 5764ccf

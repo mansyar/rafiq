@@ -8,9 +8,9 @@ fully green, 3-OS blocking CI and a wired updater.
 
 ## Phase 1: Repo hygiene & licensing
 
-- [ ] Task: Add dual MIT/Apache-2.0 license
-  - [ ] Create `LICENSE` (full MIT + Apache-2.0 text, "Copyright (c) 2026 Rafiq contributors")
-  - [ ] Set `license = "MIT OR Apache-2.0"` in `src-tauri/Cargo.toml`
+- [x] Task: Add dual MIT/Apache-2.0 license (`127508a`)
+  - [x] Create `LICENSE` (full MIT + Apache-2.0 text, "Copyright (c) 2026 Rafiq contributors")
+  - [x] Set `license = "MIT OR Apache-2.0"` in `src-tauri/Cargo.toml`
   - Verify: `cargo metadata` shows license field; file exists at repo root
 - [ ] Task: Remove dead placeholder page
   - [ ] Delete `src/pages/placeholder.tsx` (unreferenced by any route)

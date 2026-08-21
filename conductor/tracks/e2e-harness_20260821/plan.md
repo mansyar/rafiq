@@ -38,7 +38,7 @@
   - [x] Implement fixture seeding helper `e2e/helpers/fixtures.ts`: when `TAURI_E2E=1`, pre-seed `recitation/` or intercept download so `fetch_ayah_audio(1)` resolves without network
   - [x] One opt-in real-network test (`if (!process.env.E2E_REAL_CDN) test.skip()`) that hits real CDN with 60s timeout — skipped by default
 
-- [x] Task: Shared Tauri helpers (TDD) — ccc288b → TBD
+- [x] Task: Shared Tauri helpers (TDD) — ccc288b → ca0b137
   - [x] `e2e/helpers/tauri.ts`: `setJakartaLocation(page)`, `setTranslation(page, tr)`, `getSettingViaInvoke(page, key)` — Playwright eval of `window.__TAURI__.invoke`
   - [x] `e2e/helpers/prayer.ts`: `triggerTestPrayer(page, prayer)` wrapping `trigger_test_prayer` + wait for `prayer-fired` event
   - [x] Unit-tested where logic-bearing (arg validation, URL mapping)

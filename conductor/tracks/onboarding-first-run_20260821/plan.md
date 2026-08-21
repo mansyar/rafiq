@@ -5,13 +5,13 @@
 
 ## Phase 1 — Onboarding Logic Foundation (TDD)
 
-- [ ] Task: Write failing tests for onboarding helpers (Red)
+- [x] Task: Write failing tests for onboarding helpers (Red) (2442460)
     - [ ] Create `src/lib/onboarding.test.ts`: `isOnboardingComplete()` flag parsing, `detectSystemLocale()` mapping (`id*` → `id`, else `en`), wizard step machine (`next`/`back`/step ordering)
     - [ ] Run `CI=true pnpm vitest run` — confirm failures
-- [ ] Task: Implement `src/lib/onboarding.ts` to pass (Green)
+- [x] Task: Implement `src/lib/onboarding.ts` to pass (Green) (2442460)
     - [ ] Flag helpers + system-locale detection + step state machine
     - [ ] Refactor if needed; rerun tests
-- [ ] Task: Verify coverage of new module ≥80% and commit
+- [x] Task: Verify coverage of new module ≥80% and commit (2442460)
     - [ ] `pnpm vitest run --coverage`; commit `feat(onboarding): add onboarding flag, locale-detection and step-machine helpers`
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 

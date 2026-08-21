@@ -1,3 +1,3 @@
 # Tracks Registry
 
-_Empty — all tracks archived._
+- [ ] **Track: Onboarding First-Run Flow** *Link: [./tracks/onboarding-first-run_20260821/index.md](./tracks/onboarding-first-run_20260821/index.md)*

@@ -54,13 +54,13 @@ fully green, 3-OS blocking CI and a wired updater.
 
 ## Phase 4: E2E hardening — 3-OS blocking matrix
 
-- [ ] Task: 3-OS matrix + blocking e2e CI
-  - [ ] `e2e.yml`: `os: [windows-latest, macos-latest, ubuntu-latest]`; remove `continue-on-error: true` and `TODO(matrix)`
+- [x] Task: 3-OS matrix + blocking e2e CI (431407e, ad225d0)
+  - [x] `e2e.yml`: `os: [windows-latest, macos-latest, ubuntu-latest]`; remove `continue-on-error: true` and `TODO(matrix)`
   - Verify: CI job runs green on all 3 OSes
-- [ ] Task: `e2e/settings.spec.ts`
-  - [ ] Language switch EN→ID re-renders UI; method switch updates prayer times; notification + adhan toggles persist across reload; city search → select → resolved location updates
-- [ ] Task: `e2e/recitation.spec.ts`
-  - [ ] Play Al-Fatiha 1:1 (fixture, `TAURI_E2E=1`) → completes → cached in audio index → replay with network blocked works
+- [x] Task: `e2e/settings.spec.ts` (ed58015)
+  - [x] Language switch EN→ID re-renders UI; method switch updates prayer times; notification + adhan toggles persist across reload; city search → select → resolved location updates
+- [x] Task: `e2e/recitation.spec.ts` (b521f69)
+  - [x] Play Al-Fatiha 1:1 (fixture, `TAURI_E2E=1`) → completes → cached in audio index → replay with network blocked works
 - [ ] Task: `e2e/adhan.spec.ts`
   - [ ] `trigger_test_prayer` → adhan player activates; notification fires when enabled
 - [ ] Task: `E2E_REAL_CDN` opt-in + docs

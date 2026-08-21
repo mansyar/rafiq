@@ -108,4 +108,6 @@ jobs:
           releaseName: Rafiq ${{ github.ref_name }}
           releaseDraft: false
           prerelease: false
-          createUpdaterArtifacts: true
+          # Windows: NSIS only — the WiX MSI bundler rejects semver
+          # pre-release identifiers like "1.0.0-rc.1" (numeric-only rule).
+          args: ${{ runner.os == 'Windows' && '--bundles nsis' || '' }}

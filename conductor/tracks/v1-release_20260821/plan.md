@@ -63,7 +63,7 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] Play Al-Fatiha 1:1 (fixture, `TAURI_E2E=1`) → completes → cached in audio index → replay with network blocked works
 - [x] Task: `e2e/adhan.spec.ts` (bc7caae)
   - [ ] `trigger_test_prayer` → adhan player activates; notification fires when enabled
-- [ ] Task: `E2E_REAL_CDN` opt-in + docs
+- [x] Task: `E2E_REAL_CDN` opt-in + docs (538addd)
   - [ ] Env gate: real CDN download + playback instead of fixture
   - [ ] Document in `e2e/README.md`; one real CDN run as manual gate
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

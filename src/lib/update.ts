@@ -3,6 +3,7 @@
 //! All effects go through injectable {@link UpdatePorts} so tests use plain
 //! fakes and production wires to the Rust settings store + updater plugin.
 
+import { relaunch } from '@tauri-apps/plugin-process';
 import { check } from '@tauri-apps/plugin-updater';
 import { getSetting, setSetting } from './tauri';
 
@@ -32,6 +33,11 @@ export interface UpdatePorts {
   writeLastCheck(ms: number): Promise<void>;
   /** Resolves `null` when already up-to-date; rejects on network errors. */
   fetchRemote(): Promise<RemoteUpdate | null>;
+  /**
+   * Downloads + installs the pending remote update and relaunches the app.
+   * On success the process exits, so this normally never resolves.
+   */
+  installRemote(): Promise<void>;
 }
 
 /**
@@ -101,6 +107,9 @@ export async function checkForUpdates(ports: UpdatePorts, nowMs: number): Promis
   return performCheck(ports, nowMs);
 }
 
+/** The update handle captured by the most recent {@link tauriUpdatePorts.fetchRemote}. */
+let pendingPluginUpdate: Awaited<ReturnType<typeof check>> = null;
+
 /** Production ports wired to the Rust settings store + updater plugin. */
 export const tauriUpdatePorts: UpdatePorts = {
   readLastCheck: () => getSetting(LAST_CHECK_KEY),
@@ -108,6 +117,15 @@ export const tauriUpdatePorts: UpdatePorts = {
   fetchRemote: async () => {
     // Resolves `null` when the release channel has nothing newer.
     const update = await check();
+    pendingPluginUpdate = update;
     return update ? { version: update.version, body: update.body ?? null } : null;
+  },
+  installRemote: async () => {
+    if (!pendingPluginUpdate) {
+      throw new Error('no pending update — run a check first');
+    }
+    await pendingPluginUpdate.downloadAndInstall();
+    // Exits the process on success; the promise typically never resolves.
+    await relaunch();
   },
 };

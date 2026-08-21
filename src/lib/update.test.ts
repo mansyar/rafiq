@@ -35,6 +35,7 @@ function fakePorts(
       ports.remoteCalls += 1;
       return remote();
     },
+    installRemote: async () => {},
   };
   return ports;
 }

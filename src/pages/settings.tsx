@@ -17,6 +17,7 @@ import {
   setNotificationEnabled,
 } from '@/lib/prayer';
 import { setSetting } from '@/lib/tauri';
+import { useUpdateStore } from '@/lib/update-store';
 
 export function Settings() {
   const { t, i18n } = useTranslation();
@@ -67,6 +68,21 @@ export function Settings() {
     mutationFn: (v: boolean) => setAdhanEnabled(v),
     onSuccess: async () => queryClient.invalidateQueries({ queryKey: ['adhan-enabled'] }),
   });
+
+  // ── Updates ───────────────────────────────────────────────────────────
+  const updateStatus = useUpdateStore((s) => s.status);
+  const manualUpdateCheck = useUpdateStore((s) => s.manualCheck);
+
+  const updateStatusText =
+    updateStatus.kind === 'available'
+      ? t('settings.updateAvailable', { version: updateStatus.version })
+      : updateStatus.kind === 'latest'
+        ? t('settings.upToDate')
+        : updateStatus.kind === 'checking'
+          ? t('settings.checking')
+          : updateStatus.kind === 'error'
+            ? t('settings.updateError')
+            : t('settings.updatesHint');
 
   return (
     <section aria-labelledby="page-settings" className="mx-auto max-w-2xl space-y-6">
@@ -177,6 +193,28 @@ export function Settings() {
                 {adhanQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
               </Button>
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Updates */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium">{t('settings.updates')}</p>
+              <p className="text-xs text-muted-foreground" aria-live="polite">
+                {updateStatusText}
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={updateStatus.kind === 'checking'}
+              onClick={() => void manualUpdateCheck()}
+            >
+              {updateStatus.kind === 'checking'
+                ? t('settings.checking')
+                : t('settings.checkForUpdates')}
+            </Button>
           </div>
         </CardContent>
       </Card>

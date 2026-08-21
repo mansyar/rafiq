@@ -29,6 +29,7 @@ pub fn run() {
             None,
         ))
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .setup(|app| {
             let base_dir = app.path().app_data_dir()?;
             let data_dir = storage::resolve_data_dir(&base_dir);

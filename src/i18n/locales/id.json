@@ -64,7 +64,20 @@
     "noResults": "Tidak ada hasil",
     "or": "atau",
     "runSetupAgain": "Jalankan penyiapan lagi",
-    "runSetupAgainHint": "Ulangi langkah penyiapan — bahasa, lokasi, dan metode perhitungan."
+    "runSetupAgainHint": "Ulangi langkah penyiapan — bahasa, lokasi, dan metode perhitungan.",
+    "updates": "Pembaruan",
+    "updatesHint": "Diperiksa otomatis sekitar sekali sehari",
+    "checkForUpdates": "Periksa pembaruan",
+    "checking": "Memeriksa…",
+    "upToDate": "Sudah versi terbaru",
+    "updateAvailable": "Versi {{version}} siap dipasang",
+    "updateError": "Tidak dapat memeriksa saat ini"
+  },
+  "update": {
+    "title": "Pembaruan tersedia",
+    "notesFallback": "Versi {{version}} siap dipasang.",
+    "restartToUpdate": "Mulai ulang untuk memperbarui",
+    "installing": "Memperbarui…"
   },
   "prayer": {
     "fajr": "Subuh",

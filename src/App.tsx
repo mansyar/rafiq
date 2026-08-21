@@ -4,6 +4,7 @@ import { AdhanPlayer } from '@/components/adhan-player';
 import { Layout } from '@/components/layout';
 import { OnboardingGuard } from '@/components/onboarding-guard';
 import { PrayerPrompt } from '@/components/prayer-prompt';
+import { UpdateBanner } from '@/components/update-banner';
 import { CalendarPage } from '@/pages/calendar';
 import { LogPage } from '@/pages/log';
 import { Onboarding } from '@/pages/onboarding';
@@ -25,6 +26,7 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AdhanPlayer />
+      <UpdateBanner />
       <BrowserRouter>
         <PrayerPrompt />
         <Routes>

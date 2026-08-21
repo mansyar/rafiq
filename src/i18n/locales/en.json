@@ -64,7 +64,20 @@
     "noResults": "No results",
     "or": "or",
     "runSetupAgain": "Run setup again",
-    "runSetupAgainHint": "Revisit the welcome steps — language, location and calculation method."
+    "runSetupAgainHint": "Revisit the welcome steps — language, location and calculation method.",
+    "updates": "Updates",
+    "updatesHint": "Checks automatically about once a day",
+    "checkForUpdates": "Check for updates",
+    "checking": "Checking…",
+    "upToDate": "You're up to date",
+    "updateAvailable": "Version {{version}} is ready to install",
+    "updateError": "Couldn't check right now"
+  },
+  "update": {
+    "title": "Update available",
+    "notesFallback": "Version {{version}} is ready to install.",
+    "restartToUpdate": "Restart to update",
+    "installing": "Updating…"
   },
   "prayer": {
     "fajr": "Fajr",

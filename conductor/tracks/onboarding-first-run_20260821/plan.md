@@ -17,12 +17,12 @@
 
 ## Phase 2 — Route, Guard & Wizard Shell
 
-- [ ] Task: Wire `/onboarding` route outside `Layout` in `App.tsx`
-    - [ ] Initial-load guard: read `get_setting('onboarding_complete')`; absent/false → redirect from `Today` to `/onboarding`
-- [ ] Task: Build wizard shell component
-    - [ ] Header with persistent Skip control + step progress indicator; step container with Back/Next
-    - [ ] Add `onboarding.*` namespace keys to `en.json` / `id.json` (shell strings)
-- [ ] Task: Commit shell + routing — `feat(onboarding): add full-screen wizard route, guard and shell`
+- [x] Task: Wire `/onboarding` route outside `Layout` in `App.tsx` (ca8cc6c)
+    - [x] Initial-load guard: read `get_setting('onboarding_complete')`; absent/false → redirect from `Today` to `/onboarding`
+- [x] Task: Build wizard shell component (ca8cc6c)
+    - [x] Header with persistent Skip control + step progress indicator; step container with Back/Next
+    - [x] Add `onboarding.*` namespace keys to `en.json` / `id.json` (shell strings)
+- [x] Task: Commit shell + routing — `feat(onboarding): add full-screen wizard route, guard and shell` (ca8cc6c)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Wizard Steps UI

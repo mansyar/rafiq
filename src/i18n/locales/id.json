@@ -245,5 +245,18 @@
       "hijriDay": "Hari Hijriah",
       "invalid": "Tanggal tidak valid: {{message}}"
     }
+  },
+  "onboarding": {
+    "skip": "Lewati",
+    "back": "Kembali",
+    "next": "Lanjut",
+    "finish": "Selesai",
+    "stepOf": "Langkah {{current}} dari {{total}}",
+    "steps": {
+      "welcome": "Selamat Datang",
+      "language": "Bahasa",
+      "location": "Lokasi",
+      "method": "Metode Perhitungan"
+    }
   }
 }

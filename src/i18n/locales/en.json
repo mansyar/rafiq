@@ -245,5 +245,18 @@
       "hijriDay": "Hijri day",
       "invalid": "Invalid date: {{message}}"
     }
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "stepOf": "Step {{current}} of {{total}}",
+    "steps": {
+      "welcome": "Welcome",
+      "language": "Language",
+      "location": "Location",
+      "method": "Calculation Method"
+    }
   }
 }

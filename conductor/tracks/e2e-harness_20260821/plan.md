@@ -6,7 +6,7 @@
 
 > **Goal:** `pnpm e2e` boots the real Tauri app via `tauri-driver` + Playwright with zero manual steps. No tests yet.
 
-- [x] Task: Add E2E dependencies and scripts — 855acee → TBD
+- [x] Task: Add E2E dependencies and scripts — 855acee → 0a1faee
   - [x] Add `@playwright/test`, `wait-on` to `devDependencies`; document `tauri-driver` version pin in `package.json` + `tech-stack.md` note
   - [x] Add `pnpm e2e`, `pnpm e2e:ui`, `pnpm e2e:report` scripts (CI-aware, `CI=true` one-shot, forwards `TAURI_E2E`/`TAURI_E2E_APP_DATA_DIR`)
   - [x] Gitignore `test-results/`, `playwright-report/`, `e2e/.tmp/`

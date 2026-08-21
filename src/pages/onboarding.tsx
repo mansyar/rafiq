@@ -29,7 +29,11 @@ export function Onboarding() {
 
   /** Persists the completion flag, syncs the guard query cache, and exits. */
   async function complete() {
-    await setSetting('onboarding_complete', 'true');
+    try {
+      await setSetting('onboarding_complete', 'true');
+    } catch {
+      // Persistence unavailable (e.g. browser dev); still exit the wizard.
+    }
     queryClient.setQueryData(['setting', 'onboarding_complete'], 'true');
     navigate('/', { replace: true });
   }

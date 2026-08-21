@@ -77,7 +77,11 @@ export function LocationPicker({ idPrefix }: { idPrefix: string }) {
       manualLat.trim() === '' ||
       manualLon.trim() === '' ||
       Number.isNaN(lat) ||
-      Number.isNaN(lon)
+      Number.isNaN(lon) ||
+      lat < -90 ||
+      lat > 90 ||
+      lon < -180 ||
+      lon > 180
     ) {
       setError(t('settings.locationError', { message: 'Enter valid numbers' }));
       return;

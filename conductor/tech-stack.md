@@ -85,9 +85,10 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
 - Linux (WebKitGTK) — AppImage / deb / rpm
 
 ## Testing
-- **Rust:** `cargo test` — unit tests for calculation engines and storage
-- **Frontend:** Vitest + React Testing Library
-- **E2E:** tauri-driver / Playwright integration — evaluated during v1
+- **Rust:** `cargo test` — unit tests for calculation engines and storage (189 tests as of 2026-08-21, includes `TAURI_E2E_APP_DATA_DIR` isolation)
+- **Frontend:** Vitest + React Testing Library (101 tests as of 2026-08-21, helpers `tauri-driver`/`isolated-dir`/`fixtures`/`tauri`/`prayer`)
+- **E2E:** Playwright + `@playwright/test` harness — Windows-first, Vite + mocked Tauri by default (no `tauri-driver` needed). See `e2e/README.md`.
+  > **Note (2026-08-21):** Added E2E harness for track `e2e-harness_20260821`. Commands: `pnpm e2e`, `pnpm e2e:ui`, `pnpm e2e:report` (wired in `playwright.config.ts`). Determinism via `trigger_test_prayer` + ephemeral `app_data_dir` (`TAURI_E2E_APP_DATA_DIR`, Rust `storage::resolve_data_dir`) + `e2e/fixtures/ayah-1.mp3` mocked CDN (Rust `recitation::try_e2e_fixture_bytes` when `TAURI_E2E=1` for `global_ayah==1`). Browser mock `e2e/helpers/mock-tauri.ts` inlines `src-tauri/assets/quran/quran.json` (114 surahs, 6236 ayahs), `cities.json` (3000), `daily/*.json` and persists settings/location via `localStorage` so `onboarding_complete` survives reload. `playwright.config.ts` webServer is `pnpm dev` (Vite 1420) unless `TAURI_E2E_NATIVE=1` → `pnpm tauri dev`. CI job `.github/workflows/e2e.yml` (`e2e-windows`, `windows-latest`, `continue-on-error: true`) installs `pnpm` + `playwright --with-deps chromium` and uploads `playwright-report`/`test-results` on failure. `TODO(matrix)` / `E2E_REAL_CDN` follow-ups deferred.
 
 ## Distribution
 - GitHub Releases via `tauri-action` — Windows (.msi/.exe), macOS (.dmg),

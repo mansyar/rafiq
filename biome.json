@@ -24,6 +24,19 @@
       "includes": ["src-tauri/assets/**"],
       "formatter": { "enabled": false },
       "linter": { "enabled": false }
+    },
+    {
+      "includes": ["e2e/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          },
+          "suspicious": {
+            "noTsIgnore": "off"
+          }
+        }
+      }
     }
   ],
   "formatter": {

@@ -10,7 +10,7 @@ Built with **Tauri 2** (Rust core) + **React 19 / TypeScript** (Vite) + Tailwind
 
 Grab the latest installer for your platform from the
 [Releases page](https://github.com/mansyar/rafiq/releases/latest):
-Windows (MSI), macOS (DMG), and Linux (deb / AppImage / rpm).
+Windows (NSIS installer), macOS (DMG), and Linux (deb / AppImage / rpm).
 
 The app checks for updates in the background at most once a day and offers a
 one-click "restart to update". Update manifests are signed with minisign and

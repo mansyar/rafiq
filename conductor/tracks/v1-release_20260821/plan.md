@@ -71,7 +71,7 @@ fully green, 3-OS blocking CI and a wired updater.
 ## Phase 5: Release pipeline & docs
 
 - [x] Task: `CHANGELOG.md` (Keep a Changelog) with rc.1 + v1.0.0 entries (ba52460)
-- [ ] Task: README **Download** + **License** sections (honest unsigned caveats)
+- [~] Task: README **Download** + **License** sections (honest unsigned caveats)
 - [ ] Task: `.github/workflows/release.yml`
   - [ ] On `v*` tag: `tauri-apps/tauri-action` on windows/macos/ubuntu, unsigned, `createUpdaterArtifacts` with signing secret, release notes from CHANGELOG section
 - [ ] Task: Cut **v1.0.0-rc.1** (bump `1.0.0-rc.1` in `tauri.conf.json` + `package.json`, tag, push)

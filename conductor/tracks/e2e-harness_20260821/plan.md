@@ -74,7 +74,7 @@
   - [x] `e2e/fixtures/ayah-1.mp3` 8192B ID3, `TAURI_E2E` bypass in `src-tauri/src/recitation/mod.rs` try_e2e_fixture_bytes, JS `fixtures.ts` seeding, recitation mock `fetch_ayah_audio` ayah1 only + get_recitation_state null to avoid footer crash
   - [x] Offline pass verified: ayahLink click + card render succeed without network; real CDN opt-in via `E2E_REAL_CDN`
 
-- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — TBD → TBD
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 04cdb3e → 658ce02
 
 ## Phase 4 — CI & Documentation
 
@@ -92,4 +92,4 @@
   - [x] `pnpm e2e` 18/18 green (21s, Vite 1420), `cargo test` 189 + 6 ok, `pnpm test` 101, `tsc --noEmit` clean, `pnpm check` clean (88 files), `cargo clippy -D warnings` clean
   - [x] Follow-ups: `TODO(matrix)` in `e2e.yml` for ubuntu/macos, `E2E_REAL_CDN` opt-in remains TODO, native `tauri-driver` path probed not installed in CI (Vite mock covers)
 
-- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — gate → TBD
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — gate → 658ce02

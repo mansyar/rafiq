@@ -46,10 +46,10 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] **Red:** vitest for new `src/lib/update.ts` — 24h min interval persistence (settings), status transitions (checking / update-available / latest / error), silent offline handling
   - [x] **Green:** implement to pass
   - Verify: new tests green; module coverage >80%
-- [ ] Task: Update UI (banner + settings row, i18n)
-  - [ ] `UpdateBanner` component — calm card, "restart to update" one-click (download + restart)
-  - [ ] Settings "Check for updates" row with localized status text
-  - [ ] EN + ID keys; parity check passes
+- [x] Task: Update UI (banner + settings row, i18n) (`6c55999`)
+  - [x] `UpdateBanner` component — calm card, "restart to update" one-click (download + restart)
+  - [x] Settings "Check for updates" row with localized status text
+  - [x] EN + ID keys; parity check passes
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4: E2E hardening — 3-OS blocking matrix

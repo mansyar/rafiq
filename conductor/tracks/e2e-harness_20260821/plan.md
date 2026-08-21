@@ -33,7 +33,7 @@
   - [x] Green: implement `e2e/helpers/isolated-dir.ts` with `createIsolatedDir`, `cleanup`, `withIsolatedDir(fn)` pattern
   - [x] Verify: two sequential calls produce distinct dirs, files in first don't leak to second
 
-- [x] Task: Mocked recitation fixture — d22246a → TBD
+- [x] Task: Mocked recitation fixture — d22246a → 20b5005
   - [x] Add `e2e/fixtures/ayah-1.mp3` (tiny valid silence MP3, <10KB)
   - [x] Implement fixture seeding helper `e2e/helpers/fixtures.ts`: when `TAURI_E2E=1`, pre-seed `recitation/` or intercept download so `fetch_ayah_audio(1)` resolves without network
   - [x] One opt-in real-network test (`if (!process.env.E2E_REAL_CDN) test.skip()`) that hits real CDN with 60s timeout — skipped by default

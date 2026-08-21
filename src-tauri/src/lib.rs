@@ -29,7 +29,8 @@ pub fn run() {
             None,
         ))
         .setup(|app| {
-            let data_dir = app.path().app_data_dir()?;
+            let base_dir = app.path().app_data_dir()?;
+            let data_dir = storage::resolve_data_dir(&base_dir);
             let conn = storage::init_db(&data_dir)?;
             app.manage(commands::AppState {
                 conn: std::sync::Mutex::new(conn),

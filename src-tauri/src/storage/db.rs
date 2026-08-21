@@ -2,7 +2,7 @@
 
 use rusqlite::{Connection, OptionalExtension};
 use std::error::Error;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Latest schema version understood by this build.
 pub const SCHEMA_VERSION: i64 = 3;
@@ -48,6 +48,34 @@ CREATE TABLE recitation (
 "#;
 
 const MIGRATIONS: &[&str] = &[MIGRATION_001, MIGRATION_002, MIGRATION_003];
+
+/// Resolve the on-disk app-data directory for this run.
+///
+/// Honors `TAURI_E2E_APP_DATA_DIR` when set to a non-empty value (used by the
+/// E2E harness to give every test an ephemeral `tmpdir/rafiq-e2e-*` DB). Empty
+/// or whitespace-only values fall back to the supplied `base`.
+pub fn resolve_data_dir(base: &Path) -> PathBuf {
+    if let Ok(val) = std::env::var("TAURI_E2E_APP_DATA_DIR") {
+        let trimmed = val.trim();
+        if !trimmed.is_empty() {
+            return PathBuf::from(trimmed);
+        }
+    }
+    base.to_path_buf()
+}
+
+#[cfg(test)]
+fn env_guard() -> Option<String> {
+    std::env::var("TAURI_E2E_APP_DATA_DIR").ok()
+}
+
+#[cfg(test)]
+fn restore_env(original: Option<String>) {
+    match original {
+        Some(v) => unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", v) },
+        None => unsafe { std::env::remove_var("TAURI_E2E_APP_DATA_DIR") },
+    }
+}
 
 /// Opens (or creates) the SQLite database at `app_data_dir/rafiq.db` and
 /// applies any pending migrations. Idempotent on an existing database.
@@ -201,5 +229,63 @@ mod tests {
         run_migrations(&mut conn).unwrap();
 
         assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
+    }
+
+    #[test]
+    fn resolve_data_dir_falls_back_when_env_absent() {
+        let original = env_guard();
+        unsafe { std::env::remove_var("TAURI_E2E_APP_DATA_DIR") };
+        let base = Path::new("/tmp/base");
+        assert_eq!(resolve_data_dir(base), base.to_path_buf());
+        restore_env(original);
+    }
+
+    #[test]
+    fn resolve_data_dir_honors_env_when_set() {
+        let original = env_guard();
+        unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", "/tmp/e2e-override") };
+        let base = Path::new("/tmp/base");
+        assert_eq!(resolve_data_dir(base), PathBuf::from("/tmp/e2e-override"));
+        restore_env(original);
+    }
+
+    #[test]
+    fn resolve_data_dir_trims_whitespace_and_ignores_empty() {
+        let original = env_guard();
+        unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", "  /tmp/trimmed  ") };
+        let base = Path::new("/tmp/base");
+        assert_eq!(resolve_data_dir(base), PathBuf::from("/tmp/trimmed"));
+        unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", "   ") };
+        assert_eq!(resolve_data_dir(base), base.to_path_buf());
+        unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", "") };
+        assert_eq!(resolve_data_dir(base), base.to_path_buf());
+        restore_env(original);
+    }
+
+    #[test]
+    fn init_db_uses_resolved_ephemeral_dir() {
+        // This replicates the spec's "when TAURI_E2E_APP_DATA_DIR is set, init_db uses that dir"
+        // via the resolve helper + init_db, proving the harness contract.
+        let original = env_guard();
+        let ephemeral = std::env::temp_dir().join(format!(
+            "rafiq-e2e-test-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", &ephemeral) };
+        let base = Path::new("/tmp/ignored-base");
+        let resolved = resolve_data_dir(base);
+        assert_eq!(resolved, ephemeral);
+        let conn = init_db(&resolved).unwrap();
+        assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
+        // Verify DB file was created in ephemeral, not in base
+        assert!(ephemeral.join("rafiq.db").exists());
+        assert!(!base.join("rafiq.db").exists());
+        // Cleanup
+        let _ = std::fs::remove_file(ephemeral.join("rafiq.db"));
+        let _ = std::fs::remove_dir(&ephemeral);
+        restore_env(original);
     }
 }

@@ -4,7 +4,7 @@ mod db;
 mod recitation;
 mod settings;
 
-pub use db::{init_db, schema_version, SCHEMA_VERSION};
+pub use db::{init_db, resolve_data_dir, schema_version, SCHEMA_VERSION};
 pub use recitation::{CachedAudio, RecitationRepo};
 pub use settings::SettingsRepo;
 

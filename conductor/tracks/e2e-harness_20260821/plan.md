@@ -17,10 +17,10 @@
   - [x] Write `playwright.config.ts`: `webServer` boots Tauri (`cargo run --` or `tauri dev` with `TAURI_E2E=1`), `use: { trace: 'on-first-retry', screenshot: 'only-on-failure' }`, `timeout: 30_000`, `retries: 1` on CI
   - [x] Verify: `pnpm e2e --list` connects and reports `0 tests` (no spec files yet) without hanging
 
-- [ ] Task: Teach Rust core to respect ephemeral app_data_dir (TDD)
-  - [ ] Red: `src-tauri/src/storage/db.rs` test — when `TAURI_E2E_APP_DATA_DIR` is set, `init_db` uses that dir (not `app_data_dir`), still migrates to `SCHEMA_VERSION=3`
-  - [ ] Green: implement env-var branch in `lib.rs: setup` + `storage::init_db` helper, fallback when unset
-  - [ ] Ensure existing `cargo test` (184) still green, no production behavior change when var absent
+- [x] Task: Teach Rust core to respect ephemeral app_data_dir (TDD) — 1bd2fd0 → TBD
+  - [x] Red: `src-tauri/src/storage/db.rs` test — when `TAURI_E2E_APP_DATA_DIR` is set, `init_db` uses that dir (not `app_data_dir`), still migrates to `SCHEMA_VERSION=3`
+  - [x] Green: implement env-var branch in `lib.rs: setup` + `storage::init_db` helper, fallback when unset
+  - [x] Ensure existing `cargo test` (184) still green, no production behavior change when var absent
 
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 

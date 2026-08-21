@@ -110,4 +110,7 @@ jobs:
           prerelease: false
           # Windows: NSIS only — the WiX MSI bundler rejects semver
           # pre-release identifiers like "1.0.0-rc.1" (numeric-only rule).
-          args: ${{ runner.os == 'Windows' && '--bundles nsis' || '' }}
+          # All OSes: merge the strict release CSP (tauri.release.json).
+          args: >-
+            ${{ runner.os == 'Windows' && '--bundles nsis' || '' }}
+            --config src-tauri/tauri.release.json

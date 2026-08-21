@@ -39,8 +39,8 @@ fully green, 3-OS blocking CI and a wired updater.
 - [x] Task: Generate minisign keypair + updater config (`9220197`)
   - [x] Generate keypair (Tauri signer); public key into `tauri.conf.json` `plugins.updater` with GitHub Releases endpoint
   - [x] **User action:** add private key to GitHub Actions secret `TAURI_SIGNING_PRIVATE_KEY`
-- [~] Task: Wire `tauri-plugin-updater` in Rust core
-  - [ ] Cargo dependency + plugin registration in `lib.rs`
+- [x] Task: Wire `tauri-plugin-updater` in Rust core (`376a786`)
+  - [x] Cargo dependency + plugin registration in `lib.rs`
   - Verify: `cargo test` / `clippy` / `fmt` green
 - [ ] Task: Update-check logic (frontend, TDD)
   - [ ] **Red:** vitest for new `src/lib/update.ts` — 24h min interval persistence (settings), status transitions (checking / update-available / latest / error), silent offline handling

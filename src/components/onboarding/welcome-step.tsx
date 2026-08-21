@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const SLIDES = ['prayer', 'quran', 'log'] as const;
@@ -29,11 +29,25 @@ function StarMotif() {
 export function WelcomeStep() {
   const { t } = useTranslation();
   const [slide, setSlide] = useState<(typeof SLIDES)[number]>('prayer');
+  const [auto, setAuto] = useState(
+    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+
+  // Gentle auto-advance every 5 s; stops on any manual interaction and is
+  // disabled entirely when the user prefers reduced motion.
+  useEffect(() => {
+    if (!auto) return;
+    const id = setInterval(() => {
+      setSlide((s) => SLIDES[(SLIDES.indexOf(s) + 1) % SLIDES.length]);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [auto]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     const index = SLIDES.indexOf(slide);
     if (e.key === 'ArrowRight') setSlide(SLIDES[Math.min(index + 1, SLIDES.length - 1)]);
     if (e.key === 'ArrowLeft') setSlide(SLIDES[Math.max(index - 1, 0)]);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') setAuto(false);
   }
 
   return (
@@ -66,7 +80,10 @@ export function WelcomeStep() {
                 slide: SLIDES.indexOf(s) + 1,
               })}
               aria-current={slide === s}
-              onClick={() => setSlide(s)}
+              onClick={() => {
+                setSlide(s);
+                setAuto(false);
+              }}
               className={`h-2 rounded-full transition-all ${
                 slide === s
                   ? 'w-6 bg-emerald-600 dark:bg-emerald-400'

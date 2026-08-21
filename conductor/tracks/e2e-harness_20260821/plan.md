@@ -22,7 +22,7 @@
   - [x] Green: implement env-var branch in `lib.rs: setup` + `storage::init_db` helper, fallback when unset
   - [x] Ensure existing `cargo test` (184) still green, no production behavior change when var absent
 
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 55f80e3 → TBD
 
 ## Phase 2 — Isolation & Fixtures
 

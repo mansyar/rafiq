@@ -74,8 +74,8 @@ fully green, 3-OS blocking CI and a wired updater.
 - [x] Task: README **Download** + **License** sections (honest unsigned caveats) (965bdc5)
 - [x] Task: `.github/workflows/release.yml` (c3363de)
   - [x] On `v*` tag: `tauri-apps/tauri-action` on windows/macos/ubuntu, unsigned, `createUpdaterArtifacts` with signing secret, release notes from CHANGELOG section
-- [~] Task: Cut **v1.0.0-rc.1** (bump `1.0.0-rc.1` in `tauri.conf.json` + `package.json`, tag, push)
-  - Verify: GitHub Release with Win/macOS/Linux artifacts + updater JSON
+- [x] Task: Cut **v1.0.0-rc.1** (bump `1.0.0-rc.1` in `tauri.conf.json` + `package.json`, tag, push) (050edb1)
+  - [x] Verify: GitHub Release with Win/macOS/Linux artifacts + updater JSON (run 32535889073 green; latest.json live with signed per-platform entries)
 - [ ] Task: rc.1 real-machine verification
   - [ ] Boot on real machine, note SmartScreen/Gatekeeper behavior, cached playback, release-CSP smoke pass (Phase 2 checklist), updater status check
   - [ ] Fix any issues found

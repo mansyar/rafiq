@@ -58,7 +58,9 @@
     "notifications": "Prayer notifications",
     "notificationsHint": "Show a notification at each prayer time",
     "adhan": "Adhan sound",
-    "adhanHint": "Play adhan when a prayer notification fires"
+    "adhanHint": "Play adhan when a prayer notification fires",
+    "noResults": "No results",
+    "or": "or"
   },
   "prayer": {
     "fajr": "Fajr",
@@ -257,6 +259,37 @@
       "language": "Language",
       "location": "Location",
       "method": "Calculation Method"
+    },
+    "welcome": {
+      "title": "Welcome to Rafiq",
+      "subtitle": "Your private companion for daily practice",
+      "goToSlide": "Go to slide {{slide}}",
+      "slides": {
+        "prayer": {
+          "title": "Prayer times & adhan",
+          "description": "Accurate prayer times for your location, with a gentle adhan reminder."
+        },
+        "quran": {
+          "title": "Quran & recitation",
+          "description": "Read the noble Quran and listen to beautiful recitations."
+        },
+        "log": {
+          "title": "Prayer log & analytics",
+          "description": "Track your prayers, build streaks, and see your progress over time."
+        }
+      }
+    },
+    "language": {
+      "title": "Choose your language",
+      "subtitle": "You can change this anytime in Settings."
+    },
+    "location": {
+      "title": "Set your location",
+      "subtitle": "For accurate prayer times — search a city or enter coordinates. You can also leave this for later."
+    },
+    "method": {
+      "title": "Calculation method",
+      "subtitle": "Choose how prayer times are calculated. The default works well for most regions."
     }
   }
 }

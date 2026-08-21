@@ -2,6 +2,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { LanguageStep } from '@/components/onboarding/language-step';
+import { LocationStep } from '@/components/onboarding/location-step';
+import { MethodStep } from '@/components/onboarding/method-step';
+import { WelcomeStep } from '@/components/onboarding/welcome-step';
 import { Button } from '@/components/ui/button';
 import { nextStep, ONBOARDING_STEPS, type OnboardingStep, previousStep } from '@/lib/onboarding';
 import { setSetting } from '@/lib/tauri';
@@ -45,7 +49,10 @@ export function Onboarding() {
       </header>
 
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 pb-6">
-        {/* Step content lands in Phase 3 */}
+        {step === 'welcome' && <WelcomeStep />}
+        {step === 'language' && <LanguageStep />}
+        {step === 'location' && <LocationStep />}
+        {step === 'method' && <MethodStep />}
       </main>
 
       <footer className="flex items-center justify-between px-6 py-4">

@@ -58,7 +58,9 @@
     "notifications": "Notifikasi salat",
     "notificationsHint": "Tampilkan notifikasi setiap waktu salat",
     "adhan": "Suara azan",
-    "adhanHint": "Putar azan saat notifikasi salat muncul"
+    "adhanHint": "Putar azan saat notifikasi salat muncul",
+    "noResults": "Tidak ada hasil",
+    "or": "atau"
   },
   "prayer": {
     "fajr": "Subuh",
@@ -257,6 +259,37 @@
       "language": "Bahasa",
       "location": "Lokasi",
       "method": "Metode Perhitungan"
+    },
+    "welcome": {
+      "title": "Selamat datang di Rafiq",
+      "subtitle": "Pendamping pribadi untuk ibadah harian Anda",
+      "goToSlide": "Ke slide {{slide}}",
+      "slides": {
+        "prayer": {
+          "title": "Waktu salat & azan",
+          "description": "Waktu salat akurat sesuai lokasi Anda, dengan pengingat azan yang lembut."
+        },
+        "quran": {
+          "title": "Al-Quran & tilawah",
+          "description": "Baca Al-Quran dan dengarkan tilawah yang indah."
+        },
+        "log": {
+          "title": "Catatan salat & analitik",
+          "description": "Catat salat Anda, bangun rentetan, dan lihat perkembangan dari waktu ke waktu."
+        }
+      }
+    },
+    "language": {
+      "title": "Pilih bahasa Anda",
+      "subtitle": "Anda dapat mengubahnya kapan saja di Pengaturan."
+    },
+    "location": {
+      "title": "Atur lokasi Anda",
+      "subtitle": "Untuk waktu salat yang akurat — cari kota atau masukkan koordinat. Bisa juga diisi nanti."
+    },
+    "method": {
+      "title": "Metode perhitungan",
+      "subtitle": "Pilih cara perhitungan waktu salat. Bawaan sudah cocok untuk sebagian besar wilayah."
     }
   }
 }

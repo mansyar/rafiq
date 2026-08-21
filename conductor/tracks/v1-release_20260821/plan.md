@@ -52,21 +52,21 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] EN + ID keys; parity check passes
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 4: E2E hardening — 3-OS blocking matrix
+## Phase 4: E2E hardening — 3-OS blocking matrix [checkpoint: 538addd]
 
 - [x] Task: 3-OS matrix + blocking e2e CI (431407e, ad225d0)
   - [x] `e2e.yml`: `os: [windows-latest, macos-latest, ubuntu-latest]`; remove `continue-on-error: true` and `TODO(matrix)`
-  - Verify: CI job runs green on all 3 OSes
+  - [x] Verify: CI job runs green on all 3 OSes (run 32518558828 SUCCESS; Linux env-test race fixed in 0490ab3)
 - [x] Task: `e2e/settings.spec.ts` (ed58015)
   - [x] Language switch EN→ID re-renders UI; method switch updates prayer times; notification + adhan toggles persist across reload; city search → select → resolved location updates
 - [x] Task: `e2e/recitation.spec.ts` (b521f69)
   - [x] Play Al-Fatiha 1:1 (fixture, `TAURI_E2E=1`) → completes → cached in audio index → replay with network blocked works
 - [x] Task: `e2e/adhan.spec.ts` (bc7caae)
-  - [ ] `trigger_test_prayer` → adhan player activates; notification fires when enabled
+  - [x] `trigger_test_prayer` → adhan player activates; notification fires when enabled
 - [x] Task: `E2E_REAL_CDN` opt-in + docs (538addd)
-  - [ ] Env gate: real CDN download + playback instead of fixture
-  - [ ] Document in `e2e/README.md`; one real CDN run as manual gate
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+  - [x] Env gate: real CDN download + playback instead of fixture
+  - [x] Document in `e2e/README.md`; one real CDN run as manual gate (2/2 green, 14.9s)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — note on 538addd
 
 ## Phase 5: Release pipeline & docs
 

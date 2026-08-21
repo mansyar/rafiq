@@ -86,6 +86,9 @@ export async function installMockTauri(page: Page): Promise<void> {
       > = new Map();
       /** Last position reported by the player (in-memory, per session). */
       let lastPlayed: { surahId: number; ayah: number } | null = null;
+      /** Registered Tauri event listeners: listenerId → {event, handlerKey}. */
+      const eventListeners = new Map<number, { event: string; handlerKey: string }>();
+      let nextListenerId = 1;
 
       function persist() {
         savePersisted({
@@ -148,7 +151,7 @@ export async function installMockTauri(page: Page): Promise<void> {
             };
           }
         }
-        if (location?.latitude !== null && location?.longitude !== null) {
+        if (location && location.latitude !== null && location.longitude !== null) {
           return {
             city: null,
             latitude: location.latitude,
@@ -393,7 +396,28 @@ export async function installMockTauri(page: Page): Promise<void> {
         // Generic plugin handlers — prevent "mock missing" for event/notification/window plugins.
         // NOTE: Hijri mock below is TEST-ONLY 30/29 alternation — not canonical ICU4X; anchors verified only.
         if (cmd.startsWith('plugin:')) {
-          if (cmd.includes('event')) return cmd.includes('listen') ? 1 : null;
+          if (cmd.includes('event')) {
+            // Real listen/unlisten wiring so emitted events reach JS handlers
+            // (AdhanPlayer / PrayerPrompt register via @tauri-apps/api/event).
+            if (cmd.endsWith('|listen')) {
+              const id = nextListenerId++;
+              eventListeners.set(id, {
+                event: String(args.event ?? ''),
+                handlerKey: String(args.handler),
+              });
+              // Observable registration count for E2E race-free waits.
+              (window as unknown as Record<string, unknown>).__TAURI_EVENT_LISTENERS__ =
+                eventListeners.size;
+              return id;
+            }
+            if (cmd.endsWith('|unlisten')) {
+              eventListeners.delete(Number(args.eventId));
+              (window as unknown as Record<string, unknown>).__TAURI_EVENT_LISTENERS__ =
+                eventListeners.size;
+              return null;
+            }
+            return null;
+          }
           if (cmd.startsWith('plugin:window')) return { label: 'main' };
           return null;
         }
@@ -445,9 +469,13 @@ export async function installMockTauri(page: Page): Promise<void> {
             return null;
           case 'trigger_test_prayer': {
             const p = String(args.prayer ?? 'fajr').toLowerCase();
+            const time = new Date().toISOString();
             try {
               window.dispatchEvent(new CustomEvent('prayer-time', { detail: { prayer: p } }));
             } catch {}
+            // Real Tauri-event delivery so AdhanPlayer/PrayerPrompt react.
+            emitTauriEvent('prayer-fired', { prayer: p, time });
+            emitTauriEvent('prayer-time', { prayer: p, time });
             try {
               let el = document.getElementById('mock-prayer-prompt');
               if (!el) {
@@ -592,6 +620,30 @@ export async function installMockTauri(page: Page): Promise<void> {
       };
 
       const callbacks: Record<string, (arg: unknown) => void> = {};
+
+      /** Deliver a Tauri event to registered JS `listen()` handlers. */
+      function emitTauriEvent(event: string, payload: unknown) {
+        const w = window as unknown as {
+          __TAURI_EVENT_HITS__?: Record<string, number>;
+          __TAURI_EVENT_ERRORS__?: string[];
+        };
+        w.__TAURI_EVENT_HITS__ ??= {};
+        w.__TAURI_EVENT_ERRORS__ ??= [];
+        for (const listener of [...eventListeners.values()]) {
+          if (listener.event !== event) continue;
+          const cb = callbacks[listener.handlerKey];
+          if (!cb) continue;
+          try {
+            cb({ event, id: Number(listener.handlerKey), payload });
+            w.__TAURI_EVENT_HITS__[event] = (w.__TAURI_EVENT_HITS__[event] ?? 0) + 1;
+          } catch (err) {
+            w.__TAURI_EVENT_ERRORS__.push(
+              `${event}: ${(err instanceof Error ? err.message : String(err)).slice(0, 200)}`,
+            );
+          }
+        }
+      }
+
       const internals = {
         invoke: mockInvoke,
         // The mock installs __TAURI_INTERNALS__, so `isTauri()` is true and

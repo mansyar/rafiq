@@ -28,6 +28,7 @@ pub fn run() {
             MacosLauncher::LaunchAgent,
             None,
         ))
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             let base_dir = app.path().app_data_dir()?;
             let data_dir = storage::resolve_data_dir(&base_dir);

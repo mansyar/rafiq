@@ -41,7 +41,7 @@
 - [x] Task: Complete `onboarding.*` catalogs (EN + ID key-identical); commit — `feat(onboarding): implement welcome, language, location and method steps` (41631b0)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 4 — Settings Re-run Entry
+## Phase 4 — Settings Re-run Entry [checkpoint: 90c3c76]
 
 - [x] Task: Add prominent "Run setup again" action at top of Settings page (b0437f0)
     - [x] Navigates to `/onboarding`; abandoning mid-rerun changes nothing but explicit edits

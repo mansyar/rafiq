@@ -30,14 +30,14 @@ fully green, 3-OS blocking CI and a wired updater.
 - [x] Task: Add release build config with strict CSP (`842b1c8`)
   - [x] Create `src-tauri/tauri.release.json` with the strict policy (`default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost data:; media-src 'self' asset: http://asset.localhost; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'`); base config keeps `csp: null` for dev
   - [x] Validate config merge is valid (`tauri build --config` schema check) — full local release build with the merge config compiled and produced msi + nsis bundles
-- [x] Task: Document release-CSP smoke checklist
+- [x] Task: Document release-CSP smoke checklist (`1982a8c`)
   - [x] Write smoke pass (boot, prayer times, Quran reader, cached recitation playback via asset protocol, settings) to run during Phase 5 release-build verification → `release-smoke-checklist.md` in this track folder
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: Auto-updater (minisign)
 
-- [ ] Task: Generate minisign keypair + updater config
-  - [ ] Generate keypair (Tauri signer); public key into `tauri.conf.json` `plugins.updater` with GitHub Releases endpoint
+- [~] Task: Generate minisign keypair + updater config
+  - [x] Generate keypair (Tauri signer); public key into `tauri.conf.json` `plugins.updater` with GitHub Releases endpoint
   - [ ] **User action:** add private key to GitHub Actions secret `TAURI_SIGNING_PRIVATE_KEY`
 - [ ] Task: Wire `tauri-plugin-updater` in Rust core
   - [ ] Cargo dependency + plugin registration in `lib.rs`

@@ -37,6 +37,7 @@ export async function getDailyContent(): Promise<DailyContent> {
 
 // ── TanStack Query helpers ────────────────────────────────────────────────
 
+// justified: as const narrows QueryKey to readonly tuple for TanStack type safety per TS guide
 export const DAILY_CONTENT_QUERY_KEY = ['daily-content'] as const;
 
 /**
@@ -59,6 +60,7 @@ export function useDailyContent() {
   });
 
   const dailyQuery = useQuery({
+    // justified: as const preserves tuple branding required by useQuery queryKey
     queryKey: [...DAILY_CONTENT_QUERY_KEY, date, translationQuery.data] as const,
     queryFn: getDailyContent,
     staleTime: 1000 * 60 * 60,

@@ -38,7 +38,7 @@ then cached permanently in the user's local app-data directory (`recitation/`).
 - Recitation copyright is retained by the reciter (Mishary Rashid Alafasy).
 - Terms verified 2026-08-20 against the alquran.cloud *Terms and Conditions* (last updated 14 June 2026, https://alquran.cloud/terms-and-conditions), Section IV "Translations and recitations":
   > "Recitations are licensed to us by the reciters or their estates for free, non-commercial redistribution at the bitrates we publish. You may stream, embed and download them for personal and educational use. You may bundle them into a commercial product, but please note that copyrights lie with the reciters and they may ask you to remove the conent."
-- **Compliance:** Rafiq fetches only on explicit user action (streaming/download for personal use), attributes the reciter in the in-app player, and does not redistribute the files. In any commercial distribution the reciter may request removal; the recitation edition is a single configurable constant so an alternative edition can be substituted if ever required (see `conductor/tech-stack.md`).
+- **Compliance:** Rafiq streams at runtime via the `asset://` protocol (requires `tauri-plugin-asset` feature) from `cdn.islamic.network` and caches locally — files are not bundled, so MIT/Apache covers the code only. Rafiq fetches only on explicit user action (streaming/download for personal use), attributes the reciter in the in-app player, and does not redistribute the files. In any commercial distribution the reciter may request removal; the recitation edition is a single configurable constant so an alternative edition can be substituted if ever required (see `conductor/tech-stack.md`).
 
 ## Daily Content (Nawawi 40 Hadith + Curated Ayahs)
 

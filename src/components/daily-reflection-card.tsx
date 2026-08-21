@@ -18,7 +18,9 @@ export function DailyReflectionCard() {
   let formattedDate: string | null = null;
   if (daily.data?.date) {
     try {
-      // daily.date is YYYY-MM-DD local date; parse as local
+      // daily.date YYYY-MM-DD is local; construct at noon local to avoid UTC-midnight shift.
+      // T12:00:00 ensures the date doesn't shift across timezones/DST; alternative explicit parse
+      // `new Date(y, m-1, d, 12,0,0)` yields the same local noon.
       const d = new Date(`${daily.data.date}T12:00:00`);
       formattedDate = new Intl.DateTimeFormat(locale, {
         weekday: 'long',
@@ -70,7 +72,10 @@ export function DailyReflectionCard() {
   const ayahRef = formatAyahReference(ayah);
   const surahLabel = ayah.surah_name_en;
   const hadithTranslation = getHadithTranslation(hadith, locale);
-  const needsClamp = hadithTranslation.length > 220 || hadith.arabic.length > 280;
+  const HADITH_CLAMP_EN = 220; // ~4 lines at max-w-2xl, 0.95rem — English
+  const HADITH_CLAMP_AR = 280; // Arabic ~1.45rem denser
+  const needsClamp =
+    hadithTranslation.length > HADITH_CLAMP_EN || hadith.arabic.length > HADITH_CLAMP_AR;
   const ayahAriaLabel = t('daily.ayahAriaLabel', {
     surah: surahLabel,
     reference: `${ayah.surah_id}:${ayah.ayah_number}`,

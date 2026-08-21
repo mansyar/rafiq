@@ -115,25 +115,32 @@ pub fn hadith_index_for_date(date: NaiveDate) -> usize {
     rotation_index(days_since_epoch(date), all_hadiths().len())
 }
 
-fn resolve_ayah(ref_: &AyahRef, translation: crate::quran::QuranTranslation) -> DailyAyah {
-    let surah = crate::quran::get_surah(ref_.surah_id)
-        .unwrap_or_else(|| panic!("surah {} must exist for ayah {}", ref_.surah_id, ref_.id));
+fn resolve_ayah(
+    ref_: &AyahRef,
+    translation: crate::quran::QuranTranslation,
+) -> Result<DailyAyah, String> {
+    let surah = crate::quran::get_surah(ref_.surah_id).ok_or_else(|| {
+        format!(
+            "invalid curated ayah: surah {} not found for {}",
+            ref_.surah_id, ref_.id
+        )
+    })?;
     let ayah = surah
         .ayahs
         .iter()
         .find(|a| a.number == ref_.ayah_number)
-        .unwrap_or_else(|| {
-            panic!(
-                "ayah {}:{} must exist in surah {}",
+        .ok_or_else(|| {
+            format!(
+                "invalid curated ayah: {}:{} not found in surah {}",
                 ref_.surah_id, ref_.ayah_number, ref_.id
             )
-        });
+        })?;
     let translation_text = match translation {
         crate::quran::QuranTranslation::Sahih => &ayah.sahih,
         crate::quran::QuranTranslation::Clear => &ayah.clear,
         crate::quran::QuranTranslation::Kemenag => &ayah.kemenag,
     };
-    DailyAyah {
+    Ok(DailyAyah {
         id: ref_.id.clone(),
         surah_id: ref_.surah_id,
         ayah_number: ref_.ayah_number,
@@ -141,26 +148,29 @@ fn resolve_ayah(ref_: &AyahRef, translation: crate::quran::QuranTranslation) -> 
         translation: translation_text.clone(),
         surah_name_en: surah.name_en.clone(),
         surah_name_ar: surah.name_ar.clone(),
-    }
+    })
 }
 
 pub fn daily_ayah_for_date_with_translation(
     date: NaiveDate,
     translation: crate::quran::QuranTranslation,
-) -> DailyAyah {
+) -> Result<DailyAyah, String> {
     let idx = ayah_index_for_date(date);
-    let r = &all_ayahs()[idx];
+    let r = all_ayahs()
+        .get(idx)
+        .ok_or_else(|| format!("no curated ayah at index {idx}"))?;
     resolve_ayah(r, translation)
 }
 
-pub fn daily_ayah_for_date(date: NaiveDate) -> DailyAyah {
+pub fn daily_ayah_for_date(date: NaiveDate) -> Result<DailyAyah, String> {
     // Default translation fallback for pure helper without DB setting
     daily_ayah_for_date_with_translation(date, crate::quran::QuranTranslation::default())
 }
 
 pub fn daily_hadith_for_date(date: NaiveDate) -> DailyHadith {
     let idx = hadith_index_for_date(date);
-    let h = &all_hadiths()[idx];
+    // Hadiths are guaranteed 40 items; fall back to first entry if empty (defensive)
+    let h = all_hadiths().get(idx).unwrap_or_else(|| &all_hadiths()[0]);
     DailyHadith {
         id: h.id.clone(),
         arabic: h.arabic.clone(),
@@ -173,12 +183,12 @@ pub fn daily_hadith_for_date(date: NaiveDate) -> DailyHadith {
 pub fn daily_content_for_date(
     date: NaiveDate,
     translation: crate::quran::QuranTranslation,
-) -> DailyContent {
-    DailyContent {
+) -> Result<DailyContent, String> {
+    Ok(DailyContent {
         date: date.format("%Y-%m-%d").to_string(),
-        ayah: daily_ayah_for_date_with_translation(date, translation),
+        ayah: daily_ayah_for_date_with_translation(date, translation)?,
         hadith: daily_hadith_for_date(date),
-    }
+    })
 }
 
 #[cfg(test)]
@@ -291,8 +301,8 @@ mod tests {
     #[test]
     fn same_date_same_content() {
         let date = ymd(2026, 3, 15);
-        let ayah1 = daily_ayah_for_date(date);
-        let ayah2 = daily_ayah_for_date(date);
+        let ayah1 = daily_ayah_for_date(date).expect("curated ayah should resolve");
+        let ayah2 = daily_ayah_for_date(date).expect("curated ayah should resolve");
         let hadith1 = daily_hadith_for_date(date);
         let hadith2 = daily_hadith_for_date(date);
         assert_eq!(ayah1, ayah2, "same date must yield same ayah");
@@ -323,7 +333,7 @@ mod tests {
         let mut seen = HashSet::new();
         for offset in 0..365 {
             let date = start + chrono::TimeDelta::try_days(offset).unwrap();
-            let ayah = daily_ayah_for_date(date);
+            let ayah = daily_ayah_for_date(date).expect("curated ayah should resolve");
             let key = (ayah.surah_id, ayah.ayah_number);
             assert!(
                 seen.insert(key),
@@ -338,8 +348,8 @@ mod tests {
         );
         // Next day should wrap to start
         let wrap = start + chrono::TimeDelta::try_days(365).unwrap();
-        let first = daily_ayah_for_date(start);
-        let wrapped = daily_ayah_for_date(wrap);
+        let first = daily_ayah_for_date(start).expect("curated ayah should resolve");
+        let wrapped = daily_ayah_for_date(wrap).expect("curated ayah should resolve");
         assert_eq!(first, wrapped, "day 365 should wrap to start (mod 365)");
     }
 
@@ -415,7 +425,8 @@ mod tests {
     #[test]
     fn daily_content_response_shape_resolves_arabic_and_translation() {
         let date = ymd(2026, 1, 1);
-        let content = daily_content_for_date(date, crate::quran::QuranTranslation::Sahih);
+        let content = daily_content_for_date(date, crate::quran::QuranTranslation::Sahih)
+            .expect("should resolve");
         assert_eq!(content.date, "2026-01-01");
         // ayah Arabic resolved, not empty (stub currently empty -> will fail)
         assert!(
@@ -440,9 +451,12 @@ mod tests {
     #[test]
     fn translation_follows_setting_variants() {
         let date = ymd(2026, 6, 15);
-        let sahih = daily_content_for_date(date, crate::quran::QuranTranslation::Sahih);
-        let clear = daily_content_for_date(date, crate::quran::QuranTranslation::Clear);
-        let kemenag = daily_content_for_date(date, crate::quran::QuranTranslation::Kemenag);
+        let sahih = daily_content_for_date(date, crate::quran::QuranTranslation::Sahih)
+            .expect("should resolve");
+        let clear = daily_content_for_date(date, crate::quran::QuranTranslation::Clear)
+            .expect("should resolve");
+        let kemenag = daily_content_for_date(date, crate::quran::QuranTranslation::Kemenag)
+            .expect("should resolve");
         // Same ayah, different translations should differ (at least one differs)
         // Stub will fail because all translations empty and equal
         assert_ne!(sahih.ayah.surah_id, 0, "surah_id must be valid");

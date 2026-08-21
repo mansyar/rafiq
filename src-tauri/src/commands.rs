@@ -203,7 +203,7 @@ pub fn set_quran_translation_impl(
 pub fn get_daily_content_impl(conn: &Connection) -> Result<crate::daily::DailyContent, String> {
     let translation = get_quran_translation_impl(conn).unwrap_or_default();
     let date = chrono::Local::now().date_naive();
-    Ok(crate::daily::daily_content_for_date(date, translation))
+    crate::daily::daily_content_for_date(date, translation)
 }
 
 /// Pure test helper: daily content for an explicit date (bypasses Local::now).
@@ -212,7 +212,7 @@ pub fn get_daily_content_for_date_impl(
     date: NaiveDate,
 ) -> Result<crate::daily::DailyContent, String> {
     let translation = get_quran_translation_impl(conn).unwrap_or_default();
-    Ok(crate::daily::daily_content_for_date(date, translation))
+    crate::daily::daily_content_for_date(date, translation)
 }
 
 /// Resolves a persisted `Location` to concrete coordinates + timezone.

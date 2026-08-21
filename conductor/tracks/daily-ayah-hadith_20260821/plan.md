@@ -81,7 +81,7 @@ command.*
   - [x] `pnpm tauri dev` renders the card; Biome + `tsc --noEmit` pass
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [4f0837c]
 
-## Phase 4 — Integration Gate & Acceptance [checkpoint: 51ecf52]
+## Phase 4 — Integration Gate & Acceptance [checkpoint: 51ecf52] <!-- zero code delta; last code SHA 4f0837c -->
 
 *Goal: full quality gate + spec acceptance walk.*
 
@@ -92,6 +92,20 @@ command.*
 - [x] Task: Acceptance criteria verification [2b2bbf4]
   - [x] Walk spec AC-1..AC-6; record results in plan notes (see Verification section below)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [51ecf52]
+
+## Phase 5 — Review Fixes [checkpoint: 5764ccf]
+
+*Goal: address review findings F-1..F-6 (no Critical/High; Medium+Low hardening).*
+
+- [x] Task: Apply review fixes & verify gates [5764ccf]
+  - [x] F-1 Medium: `src-tauri/src/daily/mod.rs` — replace panic `unwrap_or_else(panic!)` with `Result<String>` bubbling via `?` to `commands::get_daily_content`
+  - [x] F-2 Low: `src/lib/daily.ts` — add `// justified: as const` comments per TS guide
+  - [x] F-3 Low: `daily-reflection-card.tsx` — document `T12:00:00` noon-local construction
+  - [x] F-4 Low: `daily-reflection-card.tsx` — extract `HADITH_CLAMP_EN/AR` named constants
+  - [x] F-5 Low: `plan.md` — clarify Phase 4 checkpoint is doc-only (last code `4f0837c`)
+  - [x] F-6 Info: `ATTRIBUTION.md` — clarify `asset://` streaming, MIT covers code only
+  - [x] Re-run `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test`, `biome check`, `tsc --noEmit`, `vitest run`, `pnpm run build` — all green
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [5764ccf]
 
 ## Verification — Acceptance Criteria (AC-1..AC-6) — 2026-08-21
 

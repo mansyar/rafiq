@@ -61,7 +61,7 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] Language switch EN→ID re-renders UI; method switch updates prayer times; notification + adhan toggles persist across reload; city search → select → resolved location updates
 - [x] Task: `e2e/recitation.spec.ts` (b521f69)
   - [x] Play Al-Fatiha 1:1 (fixture, `TAURI_E2E=1`) → completes → cached in audio index → replay with network blocked works
-- [ ] Task: `e2e/adhan.spec.ts`
+- [x] Task: `e2e/adhan.spec.ts` (bc7caae)
   - [ ] `trigger_test_prayer` → adhan player activates; notification fires when enabled
 - [ ] Task: `E2E_REAL_CDN` opt-in + docs
   - [ ] Env gate: real CDN download + playback instead of fixture

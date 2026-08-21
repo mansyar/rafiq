@@ -15,7 +15,7 @@
     - [ ] `pnpm vitest run --coverage`; commit `feat(onboarding): add onboarding flag, locale-detection and step-machine helpers`
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 2 — Route, Guard & Wizard Shell
+## Phase 2 — Route, Guard & Wizard Shell [checkpoint: ca8cc6c]
 
 - [x] Task: Wire `/onboarding` route outside `Layout` in `App.tsx` (ca8cc6c)
     - [x] Initial-load guard: read `get_setting('onboarding_complete')`; absent/false → redirect from `Today` to `/onboarding`

@@ -106,9 +106,53 @@ pub fn complete_fetch(
     })
 }
 
+pub(crate) fn try_e2e_fixture_bytes(global_ayah: u32) -> Option<Vec<u8>> {
+    if std::env::var("TAURI_E2E").as_deref() != Ok("1") || global_ayah != 1 {
+        return None;
+    }
+    // 1) Explicit override via env var
+    if let Ok(p) = std::env::var("TAURI_E2E_FIXTURE_PATH") {
+        let trimmed = p.trim();
+        if !trimmed.is_empty() {
+            if let Ok(b) = std::fs::read(trimmed) {
+                if !b.is_empty() {
+                    return Some(b);
+                }
+            }
+        }
+    }
+    // 2) Crate manifest dir is `src-tauri`; `../e2e/fixtures/ayah-1.mp3` is the canonical location.
+    let manifest_fixture =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../e2e/fixtures/ayah-1.mp3");
+    if let Ok(b) = std::fs::read(&manifest_fixture) {
+        if !b.is_empty() {
+            return Some(b);
+        }
+    }
+    // 3) Fallback: probe a few CWD-relative candidates (covers `cargo test` CWD variations).
+    for candidate in [
+        "e2e/fixtures/ayah-1.mp3",
+        "../e2e/fixtures/ayah-1.mp3",
+        "../../e2e/fixtures/ayah-1.mp3",
+        "../../../e2e/fixtures/ayah-1.mp3",
+    ] {
+        if let Ok(b) = std::fs::read(candidate) {
+            if !b.is_empty() {
+                return Some(b);
+            }
+        }
+    }
+    None
+}
+
 /// Downloads the MP3 for `global_ayah` from the CDN (no cache logic —
-/// callers check [`cache_state`] first).
+/// callers check [`cache_state`] first). When `TAURI_E2E=1` and
+/// `global_ayah==1`, returns the bundled `e2e/fixtures/ayah-1.mp3` fixture
+/// instead of hitting the network, so E2E tests pass offline.
 pub async fn download(client: &reqwest::Client, global_ayah: u32) -> Result<Vec<u8>, String> {
+    if let Some(bytes) = try_e2e_fixture_bytes(global_ayah) {
+        return Ok(bytes);
+    }
     let url = ayah_url(global_ayah);
     let response = client
         .get(&url)
@@ -316,5 +360,51 @@ mod tests {
             "no index row"
         );
         let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn e2e_fixture_is_used_when_tauri_e2e_set() {
+        let orig_e2e = std::env::var("TAURI_E2E").ok();
+        let orig_path = std::env::var("TAURI_E2E_FIXTURE_PATH").ok();
+
+        // Without env → no fixture
+        unsafe { std::env::remove_var("TAURI_E2E") };
+        unsafe { std::env::remove_var("TAURI_E2E_FIXTURE_PATH") };
+        assert!(
+            crate::recitation::try_e2e_fixture_bytes(1).is_none(),
+            "fixture must not fire without TAURI_E2E=1"
+        );
+        assert!(
+            crate::recitation::try_e2e_fixture_bytes(2).is_none(),
+            "only ayah 1 is mocked"
+        );
+
+        // With env → ayah 1 returns bytes, other ayahs still None
+        unsafe { std::env::set_var("TAURI_E2E", "1") };
+        let bytes = crate::recitation::try_e2e_fixture_bytes(1)
+            .expect("ayah 1 fixture must be present when TAURI_E2E=1");
+        assert!(!bytes.is_empty(), "fixture bytes must be non-empty");
+        assert!(
+            bytes.starts_with(b"ID3"),
+            "fixture should start with ID3 header"
+        );
+        assert!(
+            crate::recitation::try_e2e_fixture_bytes(2).is_none(),
+            "only ayah 1 is mocked even with TAURI_E2E=1"
+        );
+        assert!(
+            crate::recitation::try_e2e_fixture_bytes(6236).is_none(),
+            "far ayah still not mocked"
+        );
+
+        // Cleanup
+        match orig_e2e {
+            Some(v) => unsafe { std::env::set_var("TAURI_E2E", v) },
+            None => unsafe { std::env::remove_var("TAURI_E2E") },
+        }
+        match orig_path {
+            Some(v) => unsafe { std::env::set_var("TAURI_E2E_FIXTURE_PATH", v) },
+            None => unsafe { std::env::remove_var("TAURI_E2E_FIXTURE_PATH") },
+        }
     }
 }

@@ -42,9 +42,9 @@ fully green, 3-OS blocking CI and a wired updater.
 - [x] Task: Wire `tauri-plugin-updater` in Rust core (`376a786`)
   - [x] Cargo dependency + plugin registration in `lib.rs`
   - Verify: `cargo test` / `clippy` / `fmt` green
-- [ ] Task: Update-check logic (frontend, TDD)
-  - [ ] **Red:** vitest for new `src/lib/update.ts` — 24h min interval persistence (settings), status transitions (checking / update-available / latest / error), silent offline handling
-  - [ ] **Green:** implement to pass
+- [x] Task: Update-check logic (frontend, TDD) (`b1d1a94`)
+  - [x] **Red:** vitest for new `src/lib/update.ts` — 24h min interval persistence (settings), status transitions (checking / update-available / latest / error), silent offline handling
+  - [x] **Green:** implement to pass
   - Verify: new tests green; module coverage >80%
 - [ ] Task: Update UI (banner + settings row, i18n)
   - [ ] `UpdateBanner` component — calm card, "restart to update" one-click (download + restart)

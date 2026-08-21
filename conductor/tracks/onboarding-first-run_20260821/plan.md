@@ -55,3 +55,7 @@
 - [x] Task: Manual verification pass against AC-1…AC-8 (fresh-state launch, locale preselect, complete flow, skip flow, mid-wizard quit, re-run) (90c3c76)
 - [x] Task: Remove nothing unrelated; confirm no regressions in existing suites (90c3c76)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions (88041e7)

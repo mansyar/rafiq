@@ -25,13 +25,13 @@ fully green, 3-OS blocking CI and a wired updater.
   - Verify: recursive EN/ID key parity passes (227 = 227, zero missing); labels render in both locales
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 2: Strict CSP for release builds
+## Phase 2: Strict CSP for release builds [checkpoint: 842b1c8]
 
-- [ ] Task: Add release build config with strict CSP
-  - [ ] Create `src-tauri/tauri.release.json` with the strict policy (`default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost data:; media-src 'self' asset: http://asset.localhost; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'`); base config keeps `csp: null` for dev
-  - [ ] Validate config merge is valid (`tauri build --config` schema check)
-- [ ] Task: Document release-CSP smoke checklist
-  - [ ] Write smoke pass (boot, prayer times, Quran reader, cached recitation playback via asset protocol, settings) to run during Phase 5 release-build verification
+- [x] Task: Add release build config with strict CSP (`842b1c8`)
+  - [x] Create `src-tauri/tauri.release.json` with the strict policy (`default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost data:; media-src 'self' asset: http://asset.localhost; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'`); base config keeps `csp: null` for dev
+  - [x] Validate config merge is valid (`tauri build --config` schema check) — full local release build with the merge config compiled and produced msi + nsis bundles
+- [x] Task: Document release-CSP smoke checklist
+  - [x] Write smoke pass (boot, prayer times, Quran reader, cached recitation playback via asset protocol, settings) to run during Phase 5 release-build verification → `release-smoke-checklist.md` in this track folder
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: Auto-updater (minisign)

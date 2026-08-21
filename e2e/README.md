@@ -33,7 +33,7 @@ Each suite uses a fresh `page`; `e2e/helpers/isolated-dir.ts` (`createIsolatedDi
 
 ## CI
 
-`.github/workflows/e2e.yml` — Windows-first `e2e-windows` (Chromium, `continue-on-error: true` TODO matrix) on `main`/PR. Real matrix/Tauri-native deferred.
+`.github/workflows/e2e.yml` — blocking matrix `e2e` on `[windows-latest, macos-latest, ubuntu-latest]` (Chromium, mocked Tauri) on `main`/PR; per-OS artifacts on failure. Tauri-native runs stay opt-in locally (`TAURI_E2E_NATIVE=1`).
 
 ## Helpers (TDD, vitest)
 

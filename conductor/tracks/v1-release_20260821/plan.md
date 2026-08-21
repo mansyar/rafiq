@@ -34,7 +34,7 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] Write smoke pass (boot, prayer times, Quran reader, cached recitation playback via asset protocol, settings) to run during Phase 5 release-build verification → `release-smoke-checklist.md` in this track folder
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 3: Auto-updater (minisign)
+## Phase 3: Auto-updater (minisign) [checkpoint: ed0f569]
 
 - [x] Task: Generate minisign keypair + updater config (`9220197`)
   - [x] Generate keypair (Tauri signer); public key into `tauri.conf.json` `plugins.updater` with GitHub Releases endpoint

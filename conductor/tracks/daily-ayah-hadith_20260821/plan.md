@@ -81,7 +81,7 @@ command.*
   - [x] `pnpm tauri dev` renders the card; Biome + `tsc --noEmit` pass
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [4f0837c]
 
-## Phase 4 — Integration Gate & Acceptance
+## Phase 4 — Integration Gate & Acceptance [checkpoint: 51ecf52]
 
 *Goal: full quality gate + spec acceptance walk.*
 
@@ -91,7 +91,7 @@ command.*
   - [x] Fix issues; commit
 - [x] Task: Acceptance criteria verification [2b2bbf4]
   - [x] Walk spec AC-1..AC-6; record results in plan notes (see Verification section below)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) [51ecf52]
 
 ## Verification — Acceptance Criteria (AC-1..AC-6) — 2026-08-21
 

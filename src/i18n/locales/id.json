@@ -59,6 +59,8 @@
     "notificationsHint": "Tampilkan notifikasi setiap waktu salat",
     "adhan": "Suara azan",
     "adhanHint": "Putar azan saat notifikasi salat muncul",
+    "toggleOn": "Aktif",
+    "toggleOff": "Nonaktif",
     "noResults": "Tidak ada hasil",
     "or": "atau",
     "runSetupAgain": "Jalankan penyiapan lagi",

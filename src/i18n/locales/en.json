@@ -59,6 +59,8 @@
     "notificationsHint": "Show a notification at each prayer time",
     "adhan": "Adhan sound",
     "adhanHint": "Play adhan when a prayer notification fires",
+    "toggleOn": "On",
+    "toggleOff": "Off",
     "noResults": "No results",
     "or": "or",
     "runSetupAgain": "Run setup again",

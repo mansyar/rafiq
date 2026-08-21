@@ -159,7 +159,7 @@ export function Settings() {
                 disabled={notifQuery.isLoading || notifMutation.isPending}
                 onClick={() => notifMutation.mutate(!notifQuery.data)}
               >
-                {notifQuery.data ? 'On' : 'Off'}
+                {notifQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
               </Button>
             </div>
             <div className="flex items-center justify-between">
@@ -174,7 +174,7 @@ export function Settings() {
                 disabled={adhanQuery.isLoading || adhanMutation.isPending}
                 onClick={() => adhanMutation.mutate(!adhanQuery.data)}
               >
-                {adhanQuery.data ? 'On' : 'Off'}
+                {adhanQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
               </Button>
             </div>
           </div>

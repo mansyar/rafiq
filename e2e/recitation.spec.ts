@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 import { installMockTauri } from './helpers/mock-tauri';
@@ -12,15 +12,54 @@ const FIXTURE_MP3 = readFileSync(path.join('e2e', 'fixtures', 'silence.mp3'));
 // Al-Fatiha globals 1..7 are all served from local fixture paths by the mock.
 const MOCK_MP3_URL = /\/tmp\/mock\/recitation\/[1-7]\.mp3$/;
 
+/**
+ * Opt-in real-CDN mode (`E2E_REAL_CDN=1`): the same `/tmp/mock/recitation/N.mp3`
+ * routes are fulfilled by proxying the production CDN instead of the fixture,
+ * proving the pipeline works against genuine network audio (manual gate —
+ * requires internet; slower, so assertions relax accordingly).
+ */
+const REAL_CDN = process.env.E2E_REAL_CDN === '1';
+const CDN_URL = (globalAyah: number) =>
+  `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalAyah}.mp3`;
+/** Full surah playback takes ~45 s of real audio; cache fills as it advances. */
+const CACHE_TARGET = REAL_CDN ? 5 : 7;
+const CACHE_TIMEOUT = REAL_CDN ? 90_000 : 20_000;
+
+/** Real-CDN proxies currently running (node-side counter for teardown drain). */
+let cdnInFlight = 0;
+
+/** Fulfills one mocked mp3 route: fixture bytes, or real-CDN proxy passthrough. */
+async function fulfillMp3(route: Route): Promise<void> {
+  if (!REAL_CDN) {
+    await route.fulfill({ body: FIXTURE_MP3, contentType: 'audio/mpeg' });
+    return;
+  }
+  const m = route
+    .request()
+    .url()
+    .match(/recitation\/(\d+)\.mp3$/);
+  // route.fetch keeps the proxied request tied to the route's lifetime
+  // (a test-scoped page.request.get can still be pending at teardown).
+  cdnInFlight += 1;
+  try {
+    const response = await route.fetch({ url: CDN_URL(Number(m?.[1] ?? 0)) });
+    await route.fulfill({ response });
+  } catch {
+    // Context closed mid-proxy (teardown race) — Playwright has already
+    // handled or discarded the route; nothing left to do.
+  } finally {
+    cdnInFlight -= 1;
+  }
+}
+
 test.describe('Recitation playback (Al-Fatiha fixture)', () => {
   test.beforeEach(async ({ page }) => {
     await installMockTauri(page);
     // The mock's fetch_ayah_audio hands back literal `/tmp/mock/recitation/N.mp3`
     // paths (browser mode keeps paths as-is), so <audio> requests exactly those
-    // URLs. Fulfill them with the local fixture — no real CDN involved.
-    await page.route(MOCK_MP3_URL, (route) =>
-      route.fulfill({ body: FIXTURE_MP3, contentType: 'audio/mpeg' }),
-    );
+    // URLs. Fulfill them with the local fixture — or, in E2E_REAL_CDN mode,
+    // proxy the production CDN for that global ayah.
+    await page.route(MOCK_MP3_URL, (route) => fulfillMp3(route));
     await page.goto('/onboarding');
     await page.getByRole('button', { name: /skip/i }).click();
     await expect(page).toHaveURL('/');
@@ -82,18 +121,20 @@ test.describe('Recitation playback (Al-Fatiha fixture)', () => {
     await footerPlay.click();
 
     // Playback of each ~0.5 s ayah triggers the next download; wait until the
-    // audio index holds all 7 Al-Fatiha entries.
+    // audio index holds all 7 Al-Fatiha entries (real CDN: ≥5 within 90 s).
     await expect
       .poll(async () => (await recitationState(page)).cached.length, {
-        timeout: 20_000,
+        timeout: CACHE_TIMEOUT,
         intervals: [250],
       })
-      .toBeGreaterThanOrEqual(7);
+      .toBeGreaterThanOrEqual(CACHE_TARGET);
 
     const state = await recitationState(page);
-    expect(state.cached.map((c) => c.global_ayah).sort((a, b) => a - b)).toEqual([
-      1, 2, 3, 4, 5, 6, 7,
-    ]);
+    if (!REAL_CDN) {
+      expect(state.cached.map((c) => c.global_ayah).sort((a, b) => a - b)).toEqual([
+        1, 2, 3, 4, 5, 6, 7,
+      ]);
+    }
     // Real playback fired `audioStarted`, which persisted a position (FR-4.1).
     expect(state.last_played_ayah).toBeGreaterThanOrEqual(1);
 
@@ -111,10 +152,7 @@ test.describe('Recitation playback (Al-Fatiha fixture)', () => {
     await page.unrouteAll();
     await page.route('**/*', (route) => {
       if (MOCK_MP3_URL.test(route.request().url())) {
-        return route.fulfill({
-          body: FIXTURE_MP3.toString('base64'),
-          contentType: 'audio/mpeg',
-        });
+        return fulfillMp3(route);
       }
       return route.abort();
     });
@@ -126,6 +164,11 @@ test.describe('Recitation playback (Al-Fatiha fixture)', () => {
 
     // Cache-hit path: not a single upstream download during the replay.
     expect(await fetchCalls(page)).toBe(callsAfterFirstPlay);
+
+    // End the session and let any in-flight real-CDN proxy finish before
+    // the context closes (otherwise its rejection leaks into the next test).
+    await page.getByRole('button', { name: 'Stop', exact: true }).click();
+    await expect.poll(() => cdnInFlight, { timeout: 20_000, intervals: [100] }).toBe(0);
   });
 
   test('footer shows needs-download hint while idle', async ({ page }) => {

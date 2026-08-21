@@ -60,7 +60,9 @@
     "adhan": "Suara azan",
     "adhanHint": "Putar azan saat notifikasi salat muncul",
     "noResults": "Tidak ada hasil",
-    "or": "atau"
+    "or": "atau",
+    "runSetupAgain": "Jalankan penyiapan lagi",
+    "runSetupAgainHint": "Ulangi langkah penyiapan — bahasa, lokasi, dan metode perhitungan."
   },
   "prayer": {
     "fajr": "Subuh",

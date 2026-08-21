@@ -60,7 +60,9 @@
     "adhan": "Adhan sound",
     "adhanHint": "Play adhan when a prayer notification fires",
     "noResults": "No results",
-    "or": "or"
+    "or": "or",
+    "runSetupAgain": "Run setup again",
+    "runSetupAgainHint": "Revisit the welcome steps — language, location and calculation method."
   },
   "prayer": {
     "fajr": "Fajr",

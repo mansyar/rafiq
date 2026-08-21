@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { LocationPicker } from '@/components/location-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +23,7 @@ import { setSetting } from '@/lib/tauri';
 export function Settings() {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const currentLocale = isSupportedLocale(i18n.resolvedLanguage)
     ? i18n.resolvedLanguage
     : DEFAULT_LOCALE;
@@ -82,6 +84,20 @@ export function Settings() {
           <p className="text-sm text-muted-foreground">{t('page.settings.subtitle')}</p>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Re-run onboarding */}
+          <div className="space-y-1">
+            <Button
+              variant="outline"
+              className="w-full border-emerald-600/40 hover:bg-emerald-600/5 dark:border-emerald-400/40 dark:hover:bg-emerald-400/5"
+              onClick={() => navigate('/onboarding')}
+            >
+              {t('settings.runSetupAgain')}
+            </Button>
+            <p className="text-xs text-muted-foreground">{t('settings.runSetupAgainHint')}</p>
+          </div>
+
+          <Separator />
+
           {/* Language */}
           <fieldset className="space-y-2">
             <legend className="text-sm font-medium">{t('settings.language')}</legend>

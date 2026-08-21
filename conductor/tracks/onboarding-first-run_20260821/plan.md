@@ -25,7 +25,7 @@
 - [x] Task: Commit shell + routing — `feat(onboarding): add full-screen wizard route, guard and shell` (ca8cc6c)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 3 — Wizard Steps UI
+## Phase 3 — Wizard Steps UI [checkpoint: 41631b0]
 
 - [x] Task: Welcome carousel (3 slides: Prayer Times+Adhan · Quran+Recitation · Prayer Log+Analytics) (41631b0)
     - [x] Dot indicators, keyboard navigation, gold/emerald tokens + geometric motifs

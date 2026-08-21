@@ -69,6 +69,12 @@ fn env_guard() -> Option<String> {
     std::env::var("TAURI_E2E_APP_DATA_DIR").ok()
 }
 
+/// Serializes every test that mutates `TAURI_E2E_APP_DATA_DIR`: cargo runs
+/// tests in parallel threads and process env is shared, so unsynchronized
+/// set/remove races made these tests flaky on CI (Linux runner).
+#[cfg(test)]
+static ENV_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
 #[cfg(test)]
 fn restore_env(original: Option<String>) {
     match original {
@@ -233,6 +239,7 @@ mod tests {
 
     #[test]
     fn resolve_data_dir_falls_back_when_env_absent() {
+        let _lock = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         let original = env_guard();
         unsafe { std::env::remove_var("TAURI_E2E_APP_DATA_DIR") };
         let base = Path::new("/tmp/base");
@@ -242,6 +249,7 @@ mod tests {
 
     #[test]
     fn resolve_data_dir_honors_env_when_set() {
+        let _lock = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         let original = env_guard();
         unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", "/tmp/e2e-override") };
         let base = Path::new("/tmp/base");
@@ -251,6 +259,7 @@ mod tests {
 
     #[test]
     fn resolve_data_dir_trims_whitespace_and_ignores_empty() {
+        let _lock = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         let original = env_guard();
         unsafe { std::env::set_var("TAURI_E2E_APP_DATA_DIR", "  /tmp/trimmed  ") };
         let base = Path::new("/tmp/base");
@@ -266,6 +275,7 @@ mod tests {
     fn init_db_uses_resolved_ephemeral_dir() {
         // This replicates the spec's "when TAURI_E2E_APP_DATA_DIR is set, init_db uses that dir"
         // via the resolve helper + init_db, proving the harness contract.
+        let _lock = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         let original = env_guard();
         let ephemeral = std::env::temp_dir().join(format!(
             "rafiq-e2e-test-{}",

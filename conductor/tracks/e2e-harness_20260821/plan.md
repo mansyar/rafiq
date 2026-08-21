@@ -43,7 +43,7 @@
   - [x] `e2e/helpers/prayer.ts`: `triggerTestPrayer(page, prayer)` wrapping `trigger_test_prayer` + wait for `prayer-fired` event
   - [x] Unit-tested where logic-bearing (arg validation, URL mapping)
 
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — 3dc9949 → TBD
 
 ## Phase 3 — Critical-Path E2E Tests
 

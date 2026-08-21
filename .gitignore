@@ -28,3 +28,9 @@ dist-ssr
 
 # Test coverage
 coverage
+
+# E2E (Playwright + tauri-driver)
+test-results/
+playwright-report/
+playwright/.cache/
+e2e/.tmp/

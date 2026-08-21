@@ -1,0 +1,111 @@
+name: Release
+
+# Cuts a GitHub Release when a `v*` tag is pushed.
+# - Builds the desktop app on all three OSes via tauri-action (unsigned binaries).
+# - Produces signed updater artifacts (latest.json + .sig) using the
+#   TAURI_SIGNING_PRIVATE_KEY secret; release notes come from the matching
+#   CHANGELOG.md section.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # No explicit version — read from package.json "packageManager" field
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install Linux system dependencies (Tauri)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file \
+            libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libgtk-3-dev
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Fail fast if the pushed tag doesn't match the version being built —
+      # tauri.conf.json's version is what lands in latest.json for the updater.
+      - name: Verify tag matches package version
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG=$(node -p "require('./package.json').version")
+          CONF=$(node -p "JSON.parse(require('fs').readFileSync('src-tauri/tauri.conf.json','utf8')).version")
+          echo "tag=$TAG package.json=$PKG tauri.conf.json=$CONF"
+          if [ "$TAG" != "$PKG" ] || [ "$TAG" != "$CONF" ]; then
+            echo "::error::Tag v$TAG does not match package.json ($PKG) / tauri.conf.json ($CONF)"
+            exit 1
+          fi
+
+      - name: Extract release notes from CHANGELOG
+        shell: bash
+        run: |
+          node - <<'EOF' > RELEASE_NOTES.md
+          const fs = require('fs');
+          const version = process.env.GITHUB_REF_NAME.slice(1);
+          const changelog = fs.readFileSync('CHANGELOG.md', 'utf8');
+          const start = changelog.indexOf(`## [${version}]`);
+          if (start === -1) {
+            console.error(`No CHANGELOG section found for ${version}`);
+            process.exit(1);
+          }
+          let end = changelog.indexOf('\n## [', start + 1);
+          if (end === -1) end = changelog.length;
+          process.stdout.write(changelog.slice(start, end).trimStart());
+          EOF
+          cat RELEASE_NOTES.md
+
+      - name: Create GitHub Release (idempotent)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists — uploading assets into it"
+          else
+            PRERELEASE_FLAG=""
+            case "$GITHUB_REF_NAME" in *rc*|*beta*|*alpha*) PRERELEASE_FLAG="--prerelease";; esac
+            gh release create "$GITHUB_REF_NAME" \
+              --title "Rafiq $GITHUB_REF_NAME" \
+              --notes-file RELEASE_NOTES.md \
+              $PRERELEASE_FLAG
+          fi
+
+      - name: Build app and upload release assets
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: .
+          tagName: ${{ github.ref_name }}
+          releaseName: Rafiq ${{ github.ref_name }}
+          releaseDraft: false
+          prerelease: false
+          createUpdaterArtifacts: true

@@ -180,6 +180,55 @@ describe('ended → ayah loop (FR-3)', () => {
   });
 });
 
+// ── End-of-surah resolution (FR-3 precedence, FR-4) ─────────────────────────
+
+describe('ended → surah repeat & precedence (FR-3)', () => {
+  /** Playing surah 2 at its last ayah (286, global 293). */
+  const playingLastAyah = () =>
+    playerReducer(
+      playerReducer(
+        initialPlayerState(),
+        requestPlay(pos(2, 286, SURAH2_START), cached(293), SURAH2_END),
+      ),
+      { type: 'audioStarted' },
+    );
+
+  const endedEvent = (): PlayerEvent => ({
+    type: 'ended',
+    // Only the restart target (8) and the just-finished ayah (293) are cached,
+    // so the re-planned lookahead after wrapping is fully visible.
+    cachedGlobals: cached(8, 293),
+    surahStartGlobal: SURAH2_START,
+    surahEndGlobal: SURAH2_END,
+    nextSurah: { id: 3, firstGlobal: 294 },
+  });
+
+  it('surah repeat restarts playback at ayah 1 of the same surah', () => {
+    let state = playerReducer(playingLastAyah(), { type: 'setRepeatMode', mode: 'surah' });
+    state = playerReducer(state, endedEvent());
+    expect(state.current).toEqual(pos(2, 1, SURAH2_START));
+    expect(state.status).toBe('playing');
+    // Lookahead is re-planned from the new position.
+    expect(state.pendingGlobals).toEqual([9, 10, 11]);
+    expect(state.replayToken).toBe(0);
+  });
+
+  it('ayat loop takes precedence over auto-advance', () => {
+    let state = playerReducer(playingLastAyah(), { type: 'setRepeatMode', mode: 'ayah' });
+    state = playerReducer(state, { type: 'setAutoAdvance', enabled: true });
+    state = playerReducer(state, endedEvent());
+    expect(state.current).toEqual(pos(2, 286, SURAH2_START));
+    expect(state.replayToken).toBe(1);
+  });
+
+  it('surah repeat takes precedence over auto-advance when both are on', () => {
+    let state = playerReducer(playingLastAyah(), { type: 'setRepeatMode', mode: 'surah' });
+    state = playerReducer(state, { type: 'setAutoAdvance', enabled: true });
+    state = playerReducer(state, endedEvent());
+    expect(state.current).toEqual(pos(2, 1, SURAH2_START));
+  });
+});
+
 // ── Lookahead window (NFR-2: bounded) ───────────────────────────────────────
 
 describe('computeLookahead', () => {

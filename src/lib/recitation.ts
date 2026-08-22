@@ -274,11 +274,24 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
       return { ...state, autoAdvance: event.enabled };
     case 'ended':
       // FR-3: with repeat-ayah active the same file plays again in place.
-      // Other modes are resolved by later end-of-surah handling.
-      if (!state.current || state.repeatMode !== 'ayah') {
+      if (!state.current || state.repeatMode === 'off') {
         return state;
       }
-      return { ...state, status: 'playing', replayToken: state.replayToken + 1 };
+      if (state.repeatMode === 'ayah') {
+        return { ...state, status: 'playing', replayToken: state.replayToken + 1 };
+      }
+      // FR-3: repeat-surah restarts at ayah 1 (takes precedence over FR-4
+      // auto-advance; ayah loop outranks both).
+      return startPlayback(
+        state,
+        {
+          surahId: state.current.surahId,
+          ayah: 1,
+          global: event.surahStartGlobal,
+        },
+        event.cachedGlobals,
+        event.surahEndGlobal,
+      );
   }
 }
 

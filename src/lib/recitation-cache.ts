@@ -24,7 +24,8 @@ export function deleteRecitationCache(surahId?: number): Promise<number> {
 }
 
 const KB = 1024;
-const MB = 1024 * 1024;
+const MB = 1024 * KB;
+const GB = 1024 * MB;
 
 const LOCALE_TAGS = { en: 'en', id: 'id' } as const;
 
@@ -36,7 +37,12 @@ export function formatCacheSize(bytes: number, locale: 'en' | 'id'): string {
   if (bytes < KB) {
     return `${bytes} B`;
   }
-  const [unit, value] = bytes < MB ? (['KB', bytes / KB] as const) : (['MB', bytes / MB] as const);
+  const [unit, value] =
+    bytes < MB
+      ? (['KB', bytes / KB] as const)
+      : bytes < GB
+        ? (['MB', bytes / MB] as const)
+        : (['GB', bytes / GB] as const);
   const formatted = new Intl.NumberFormat(LOCALE_TAGS[locale], {
     maximumFractionDigits: 1,
   }).format(value);

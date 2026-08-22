@@ -244,8 +244,6 @@ test.describe('Playback preferences (FR-2/FR-3/FR-4)', () => {
 
     // Playback moves past ayah 1 …
     await expect(positionLabel(page)).toHaveText(/1 : [2-7]/, { timeout: 15_000 });
-    // … reaches the end …
-    await expect(positionLabel(page)).toHaveText(/1 : [2-7]|1 : 1/, { timeout: 15_000 });
     // … and wraps to ayah 1 again while audio is still going.
     await expect(positionLabel(page)).toHaveText('1 : 1', { timeout: 15_000 });
     await expect(player(page).getByRole('button', { name: 'Pause', exact: true })).toBeVisible();

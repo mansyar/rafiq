@@ -20,6 +20,17 @@ pub struct RecitationRepo<'a> {
     conn: &'a Connection,
 }
 
+/// Maps one `recitation` row (columns: global_ayah, file_path, size_bytes,
+/// fetched_at) into a [`CachedAudio`] record.
+fn row_to_cached(row: &rusqlite::Row<'_>) -> rusqlite::Result<CachedAudio> {
+    Ok(CachedAudio {
+        global_ayah: row.get::<_, i64>(0)? as u32,
+        file_path: row.get(1)?,
+        size_bytes: row.get::<_, i64>(2)? as u64,
+        fetched_at: row.get(3)?,
+    })
+}
+
 impl<'a> RecitationRepo<'a> {
     pub fn new(conn: &'a Connection) -> Self {
         Self { conn }
@@ -73,14 +84,7 @@ impl<'a> RecitationRepo<'a> {
              WHERE global_ayah BETWEEN ?1 AND ?2
              RETURNING global_ayah, file_path, size_bytes, fetched_at",
         )?;
-        let rows = stmt.query_map(params![start, end], |row| {
-            Ok(CachedAudio {
-                global_ayah: row.get::<_, i64>(0)? as u32,
-                file_path: row.get(1)?,
-                size_bytes: row.get::<_, i64>(2)? as u64,
-                fetched_at: row.get(3)?,
-            })
-        })?;
+        let rows = stmt.query_map(params![start, end], row_to_cached)?;
         rows.collect()
     }
 
@@ -90,14 +94,7 @@ impl<'a> RecitationRepo<'a> {
             "DELETE FROM recitation
              RETURNING global_ayah, file_path, size_bytes, fetched_at",
         )?;
-        let rows = stmt.query_map([], |row| {
-            Ok(CachedAudio {
-                global_ayah: row.get::<_, i64>(0)? as u32,
-                file_path: row.get(1)?,
-                size_bytes: row.get::<_, i64>(2)? as u64,
-                fetched_at: row.get(3)?,
-            })
-        })?;
+        let rows = stmt.query_map([], row_to_cached)?;
         rows.collect()
     }
 
@@ -107,14 +104,7 @@ impl<'a> RecitationRepo<'a> {
             "SELECT global_ayah, file_path, size_bytes, fetched_at
              FROM recitation ORDER BY global_ayah",
         )?;
-        let rows = stmt.query_map([], |row| {
-            Ok(CachedAudio {
-                global_ayah: row.get::<_, i64>(0)? as u32,
-                file_path: row.get(1)?,
-                size_bytes: row.get::<_, i64>(2)? as u64,
-                fetched_at: row.get(3)?,
-            })
-        })?;
+        let rows = stmt.query_map([], row_to_cached)?;
         rows.collect()
     }
 

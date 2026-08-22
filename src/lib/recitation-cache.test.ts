@@ -28,6 +28,11 @@ describe('formatCacheSize (FR-5)', () => {
     expect(formatCacheSize(10 * 1024 * 1024, 'en')).toBe('10 MB');
   });
 
+  it('renders gigabytes once past 1024 MB', () => {
+    expect(formatCacheSize(3 * 1024 * 1024 * 1024, 'en')).toBe('3 GB');
+    expect(formatCacheSize(1536 * 1024 * 1024, 'en')).toBe('1.5 GB');
+  });
+
   it('localizes the decimal separator (ID)', () => {
     expect(formatCacheSize(2560, 'id')).toBe('2,5 KB');
     expect(formatCacheSize(1536 * 1024, 'id')).toContain('MB');

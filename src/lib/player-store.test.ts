@@ -290,6 +290,35 @@ describe('handleEnded boundary routing (FR-3/FR-4)', () => {
     expect(fetchAyahAudioMock).not.toHaveBeenCalled();
   });
 
+  it('ignores a stale ended when playback moved elsewhere during the lookup', async () => {
+    let resolveNext!: (value: RecitationState) => void;
+    getRecitationStateMock.mockReturnValue(
+      new Promise<RecitationState>((resolve) => {
+        resolveNext = resolve;
+      }),
+    );
+    useRecitationPlayer.setState({
+      autoAdvance: true,
+      current: pos(2, 286, S2_START),
+      surahStartGlobal: S2_START,
+      surahEndGlobal: S2_END,
+      cachedFiles: [file(293)],
+    });
+
+    useRecitationPlayer.getState().handleEnded();
+
+    // While the next-surah lookup is pending, the user starts another surah.
+    useRecitationPlayer.setState({ current: pos(5, 1, 201), status: 'playing' });
+    resolveNext(surah3Fixture());
+
+    await vi.waitFor(() => {
+      expect(getRecitationStateMock).toHaveBeenCalled();
+    });
+    const s = useRecitationPlayer.getState();
+    expect(s.current).toEqual(pos(5, 1, 201)); // untouched by the late event
+    expect(s.pendingAutoNav).toBeNull();
+  });
+
   it('consumeAutoNav clears the pending navigation flag', () => {
     useRecitationPlayer.setState({ pendingAutoNav: 3 });
     useRecitationPlayer.getState().consumeAutoNav();

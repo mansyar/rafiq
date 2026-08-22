@@ -263,8 +263,9 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
             nextSurah = null; // degrade to hard stop below
           }
         }
-        if (!get().current) {
-          return; // stopped while awaiting the metadata
+        const live = get().current;
+        if (!live || live.surahId !== fromSurah || live.global !== fromGlobal) {
+          return; // stopped, replayed, or moved elsewhere while we awaited
         }
         dispatch({
           type: 'ended',

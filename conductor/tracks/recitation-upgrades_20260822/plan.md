@@ -31,7 +31,7 @@ and accessibility manually + via existing patterns.
 
 ## Phase 3 — Auto-advance reader integration + E2E
 
-- [ ] Task: Reader auto-navigation: view follows playback across the surah boundary without killing audio (revisit unmount/surah-switch effects in `RecitationAudio`)
+- [x] Task: Reader auto-navigation: view follows playback across the surah boundary without killing audio (revisit unmount/surah-switch effects in `RecitationAudio`) (2618154)
 - [ ] Task: Extend E2E mock (`e2e/helpers/mock-tauri.ts`) for multi-surah playback states + preference persistence
 - [ ] Task: E2E specs: speed cycling, surah-repeat wrap, auto-advance navigation (AC-7)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

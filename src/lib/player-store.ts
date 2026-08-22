@@ -127,9 +127,12 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
   };
 
   // FR-1: restore persisted playback preferences once at startup.
-  void loadPlaybackPrefs().then((prefs) => {
-    set(prefs);
-  });
+  // Failures (e.g. no Tauri runtime) silently keep the defaults.
+  void loadPlaybackPrefs()
+    .then((prefs) => {
+      set(prefs);
+    })
+    .catch(() => {});
 
   return {
     status: 'idle',

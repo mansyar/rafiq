@@ -66,6 +66,8 @@ release — not by telemetry.
 ## Distribution
 - License: MIT / Apache-2.0
 - Channels: GitHub Releases (Windows · macOS · Linux)
+- Updates: signed automatic updates built in — silent daily check, one-click
+  "restart to update"
 - Price: Free forever
 
 ## Content Licensing Notes

@@ -78,6 +78,16 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
   coverage) + release workflow via `tauri-action` on version tags producing
   Win/macOS/Linux artifacts on GitHub Releases
 - **Updates:** tauri-plugin-updater, GitHub Releases endpoint, signed artifacts
+  > **Note (2026-08-22):** Updater wiring for track `v1-release_20260821`:
+  > `bundle.createUpdaterArtifacts: true` produces minisign-signed artifacts +
+  > `latest.json`; release builds merge the strict CSP via
+  > `tauri.release.json` and bundle NSIS on Windows (WiX/MSI rejects semver
+  > pre-release identifiers). The webview side requires ACL grants in
+  > `src-tauri/capabilities/default.json`: `updater:default` +
+  > `process:allow-restart` (missing grants surface as "not allowed" errors
+  > only in real builds — invisible to fakes/mocks). The silent launch check
+  > runs at most once per 24 h, persisted via the `updater_last_check_at`
+  > setting.
 
 ## Target Platforms
 - Windows 10/11 (WebView2)
@@ -85,12 +95,12 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
 - Linux (WebKitGTK) — AppImage / deb / rpm
 
 ## Testing
-- **Rust:** `cargo test` — unit tests for calculation engines and storage (189 tests as of 2026-08-21, includes `TAURI_E2E_APP_DATA_DIR` isolation)
-- **Frontend:** Vitest + React Testing Library (101 tests as of 2026-08-21, helpers `tauri-driver`/`isolated-dir`/`fixtures`/`tauri`/`prayer`)
-- **E2E:** Playwright + `@playwright/test` harness — Windows-first, Vite + mocked Tauri by default (no `tauri-driver` needed). See `e2e/README.md`.
-  > **Note (2026-08-21):** Added E2E harness for track `e2e-harness_20260821`. Commands: `pnpm e2e`, `pnpm e2e:ui`, `pnpm e2e:report` (wired in `playwright.config.ts`). Determinism via `trigger_test_prayer` + ephemeral `app_data_dir` (`TAURI_E2E_APP_DATA_DIR`, Rust `storage::resolve_data_dir`) + `e2e/fixtures/ayah-1.mp3` mocked CDN (Rust `recitation::try_e2e_fixture_bytes` when `TAURI_E2E=1` for `global_ayah==1`). Browser mock `e2e/helpers/mock-tauri.ts` inlines `src-tauri/assets/quran/quran.json` (114 surahs, 6236 ayahs), `cities.json` (3000), `daily/*.json` and persists settings/location via `localStorage` so `onboarding_complete` survives reload. `playwright.config.ts` webServer is `pnpm dev` (Vite 1420) unless `TAURI_E2E_NATIVE=1` → `pnpm tauri dev`. CI job `.github/workflows/e2e.yml` (`e2e-windows`, `windows-latest`, `continue-on-error: true`) installs `pnpm` + `playwright --with-deps chromium` and uploads `playwright-report`/`test-results` on failure. `TODO(matrix)` / `E2E_REAL_CDN` follow-ups deferred.
+- **Rust:** `cargo test` — unit tests for calculation engines and storage (189 tests as of 2026-08-22, includes `TAURI_E2E_APP_DATA_DIR` isolation; +6 integration tests)
+- **Frontend:** Vitest + React Testing Library (134 tests as of 2026-08-22, helpers `tauri-driver`/`isolated-dir`/`fixtures`/`tauri`/`prayer`)
+- **E2E:** Playwright + `@playwright/test` harness — blocking 3-OS matrix (windows/macos/ubuntu) in CI, Vite + mocked Tauri by default (no `tauri-driver` needed). See `e2e/README.md`.
+  > **Note (2026-08-22):** E2E hardened for track `v1-release_20260821`: `.github/workflows/e2e.yml` now runs a **blocking matrix** on windows/macos/ubuntu with per-OS failure artifacts. Suite is 26 tests / 8 specs (`onboarding`, `today`, `quran`, `log`, `calendar`, `settings`, `recitation`, `adhan`). The browser mock delivers real Tauri events (`plugin:event|listen`/`unlisten` registry + `emitTauriEvent`; `trigger_test_prayer` emits `prayer-fired`/`prayer-time`) and serves a fully playable recitation state — complete `get_recitation_state` with reciter/per-surah global offsets/cache, `fetch_ayah_audio` for Al-Fatiha globals 1–7 from `/tmp/mock/recitation/N.mp3` (fulfilled in-spec by the decodable silent fixture `e2e/fixtures/silence.mp3`), and a `convertFileSrc` identity stub. `E2E_REAL_CDN=1` opts the recitation spec into proxying the production CDN (`cdn.islamic.network/…/128/ar.alafasy/<global>.mp3`) as a pre-release manual gate.
 
 ## Distribution
-- GitHub Releases via `tauri-action` — Windows (.msi/.exe), macOS (.dmg),
-  Linux (AppImage/.deb)
+- GitHub Releases via `tauri-action` — Windows (NSIS .exe), macOS (.dmg),
+  Linux (AppImage/.deb/.rpm)
 - License: MIT / Apache-2.0

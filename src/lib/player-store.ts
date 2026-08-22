@@ -1,5 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
+import {
+  loadPlaybackPrefs,
+  saveAutoAdvance,
+  savePlaybackSpeed,
+  saveRepeatMode,
+} from './playback-prefs';
 import type {
   CachedFile,
   PlaybackSpeed,
@@ -13,6 +19,7 @@ import {
   fetchAyahAudio,
   getRecitationState,
   localAudioUrl,
+  nextSpeed,
   persistencePosition,
   playerReducer,
   reportPlayedPosition,
@@ -47,6 +54,10 @@ interface RecitationPlayerStore extends PlayerState {
   setRepeatMode: (mode: RepeatMode) => void;
   /** Toggles continue-to-next-surah (FR-4). */
   setAutoAdvance: (enabled: boolean) => void;
+  /** Steps through the speed presets, wrapping 2x → 0.75x (FR-2). */
+  cycleSpeed: () => void;
+  /** Flips the continue-to-next-surah toggle (FR-4). */
+  toggleAutoAdvance: () => void;
 }
 
 export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
@@ -114,6 +125,11 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
       startFetch(global);
     }
   };
+
+  // FR-1: restore persisted playback preferences once at startup.
+  void loadPlaybackPrefs().then((prefs) => {
+    set(prefs);
+  });
 
   return {
     status: 'idle',
@@ -209,14 +225,25 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
 
     setSpeed: (speed) => {
       dispatch({ type: 'setSpeed', speed });
+      void savePlaybackSpeed(speed);
     },
 
     setRepeatMode: (mode) => {
       dispatch({ type: 'setRepeatMode', mode });
+      void saveRepeatMode(mode);
     },
 
     setAutoAdvance: (enabled) => {
       dispatch({ type: 'setAutoAdvance', enabled });
+      void saveAutoAdvance(enabled);
+    },
+
+    cycleSpeed: () => {
+      get().setSpeed(nextSpeed(get().speed));
+    },
+
+    toggleAutoAdvance: () => {
+      get().setAutoAdvance(!get().autoAdvance);
     },
   };
 });

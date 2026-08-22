@@ -71,7 +71,9 @@ pub fn run() {
             commands::today_hijri,
             commands::fetch_ayah_audio,
             commands::get_recitation_state,
-            commands::report_played_position
+            commands::report_played_position,
+            commands::get_recitation_cache_summary,
+            commands::delete_recitation_cache
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -607,6 +607,50 @@ pub fn get_recitation_state(
     get_recitation_state_impl(&conn, surah_id)
 }
 
+// ── FR-5: recitation cache management ──────────────────────────────────────
+
+pub fn get_recitation_cache_summary_impl(
+    conn: &Connection,
+) -> Result<crate::storage::RecitationCacheSummary, String> {
+    crate::storage::cache_summary(conn).map_err(|e| e.to_string())
+}
+
+/// `surah_id: None` deletes the whole cache; `Some(id)` deletes one surah.
+/// Returns the freed byte count reported by the index.
+pub fn delete_recitation_cache_impl(
+    data_dir: &Path,
+    conn: &Connection,
+    surah_id: Option<u8>,
+) -> Result<u64, String> {
+    match surah_id {
+        Some(id) => crate::recitation::delete_surah_cache(data_dir, conn, id),
+        None => crate::recitation::delete_all_cache(data_dir, conn),
+    }
+}
+
+#[tauri::command]
+pub fn get_recitation_cache_summary(
+    state: State<'_, AppState>,
+) -> Result<crate::storage::RecitationCacheSummary, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    get_recitation_cache_summary_impl(&conn)
+}
+
+#[tauri::command]
+pub fn delete_recitation_cache(
+    state: State<'_, AppState>,
+    surah_id: Option<u8>,
+) -> Result<u64, String> {
+    let conn = state
+        .conn
+        .lock()
+        .map_err(|_| "app state lock poisoned".to_string())?;
+    delete_recitation_cache_impl(state.data_dir.as_path(), &conn, surah_id)
+}
+
 #[tauri::command]
 pub fn db_status(state: State<'_, AppState>) -> Result<DbStatus, String> {
     let conn = state
@@ -1652,6 +1696,66 @@ mod tests {
         assert!(super::report_played_position_impl(&conn, 1, 0).is_err());
         assert!(super::report_played_position_impl(&conn, 1, 8).is_err()); // surah 1 has 7
         assert!(super::report_played_position_impl(&conn, 115, 1).is_err());
+    }
+
+    // ── FR-5: cache summary & deletion (recitation-upgrades track) ──
+
+    use std::path::Path;
+
+    #[test]
+    fn get_recitation_cache_summary_empty_on_fresh_db() {
+        let conn = conn("rec-cache-summary-empty");
+        let summary = super::get_recitation_cache_summary_impl(&conn).unwrap();
+        assert_eq!(summary.total_bytes, 0);
+        assert!(summary.surahs.is_empty());
+    }
+
+    #[test]
+    fn delete_recitation_cache_none_clears_every_row_and_reports_freed_bytes() {
+        let conn = conn("rec-cache-delete-all");
+        mark_audio(&conn, 1);
+        mark_audio(&conn, 9);
+        // Indexed files do not exist on disk here; deletion must tolerate
+        // missing files and still clear the rows.
+        let freed = super::delete_recitation_cache_impl(Path::new("unused"), &conn, None).unwrap();
+        assert_eq!(freed, 200, "freed bytes come from the index");
+        let remaining: i64 = conn
+            .query_row("SELECT COUNT(*) FROM recitation", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(remaining, 0);
+    }
+
+    #[test]
+    fn delete_recitation_cache_some_only_clears_that_surah() {
+        let conn = conn("rec-cache-delete-surah");
+        mark_audio(&conn, 1); // surah 1
+        mark_audio(&conn, 9); // surah 2
+        let freed =
+            super::delete_recitation_cache_impl(Path::new("unused"), &conn, Some(1)).unwrap();
+        assert_eq!(freed, 100);
+        assert!(
+            super::get_recitation_state_impl(&conn, 2)
+                .unwrap()
+                .cached
+                .len()
+                == 1,
+            "surah 2 cache must survive"
+        );
+        assert!(
+            super::get_recitation_state_impl(&conn, 1)
+                .unwrap()
+                .cached
+                .is_empty(),
+            "surah 1 cache cleared"
+        );
+    }
+
+    #[test]
+    fn delete_recitation_cache_rejects_unknown_surah() {
+        let conn = conn("rec-cache-delete-unknown");
+        assert!(
+            super::delete_recitation_cache_impl(Path::new("unused"), &conn, Some(115)).is_err()
+        );
     }
 
     #[test]

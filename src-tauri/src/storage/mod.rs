@@ -5,7 +5,7 @@ mod recitation;
 mod settings;
 
 pub use db::{init_db, resolve_data_dir, schema_version, SCHEMA_VERSION};
-pub use recitation::{CachedAudio, RecitationRepo};
+pub use recitation::{cache_summary, CachedAudio, RecitationCacheSummary, RecitationRepo};
 pub use settings::SettingsRepo;
 
 /// Opens an in-memory database with all migrations applied. Test-only helper

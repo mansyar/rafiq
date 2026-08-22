@@ -12,7 +12,7 @@ All playback-mode semantics live in the pure `playerReducer`
 - [x] Task: Extend reducer/types with playback prefs (`speed`, `repeatMode`, `autoAdvance`) + defaults (46d59cb)
   - [ ] Write failing tests for initial/default pref state
   - [ ] Implement state fields + typed unions (`0.75|1|1.25|1.5|2`, `off|ayah|surah`, boolean)
-- [ ] Task: Implement repeat-ayah loop on `ended` (position stays put) — tests first
+- [x] Task: Implement repeat-ayah loop on `ended` (position stays put) — tests first (9eac9c2)
 - [ ] Task: Implement surah-repeat wrap + precedence rules (loop > repeat > advance) — tests first
 - [ ] Task: Implement auto-advance transition event + hard stop at Surah 114 — tests first
 - [ ] Task: Preference persistence helpers over `get_setting`/`set_setting` with corrupt-value fallbacks — tests first

@@ -8,6 +8,7 @@ import {
 } from './playback-prefs';
 import type {
   CachedFile,
+  NextSurahInfo,
   PlaybackSpeed,
   PlayerEvent,
   PlayerPosition,
@@ -37,10 +38,21 @@ interface RecitationPlayerStore extends PlayerState {
   cachedFiles: CachedFile[];
   /** Last global ayah of the active surah; `null` when idle. */
   surahEndGlobal: number | null;
+  /** First global ayah of the active surah; `null` when idle. */
+  surahStartGlobal: number | null;
+  /**
+   * Surah id the machine auto-advanced into at a boundary (FR-4). The reader
+   * consumes this to follow playback across surahs. Cleared on stop/play.
+   */
+  pendingAutoNav: number | null;
   /** Starts (or restarts) playback at `ayah` of `surahId` (FR-3.1/FR-3.2). */
   play: (surahId: number, ayah: number) => Promise<void>;
   /** Advances to the next ayah; stops at the end of the surah (FR-3.5). */
   advance: () => void;
+  /** Routes the `<audio>` `ended` event through repeat/auto-advance semantics (FR-3/FR-4). */
+  handleEnded: () => void;
+  /** Clears `pendingAutoNav` once the reader has followed playback. */
+  consumeAutoNav: () => void;
   pause: () => void;
   resume: () => void;
   stop: () => void;
@@ -147,6 +159,8 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
     audioUrl: null,
     cachedFiles: [],
     surahEndGlobal: null,
+    surahStartGlobal: null,
+    pendingAutoNav: null,
 
     play: async (surahId: number, ayah: number) => {
       const rs = await getRecitationState(surahId);
@@ -160,6 +174,8 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
       set({
         cachedFiles: rs.cached,
         surahEndGlobal,
+        surahStartGlobal: rs.first_global_ayah,
+        pendingAutoNav: null,
         audioUrl: cachedTarget ? localAudioUrl(cachedTarget.file_path) : null,
       });
       const cachedGlobals = rs.cached.map((c) => c.global_ayah);
@@ -205,8 +221,83 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
     },
 
     stop: () => {
-      set({ audioUrl: null });
+      set({ audioUrl: null, pendingAutoNav: null });
       dispatch({ type: 'stop' });
+    },
+
+    handleEnded: () => {
+      const prev = get();
+      if (!prev.current || prev.surahEndGlobal === null || prev.surahStartGlobal === null) {
+        // Nothing active or incomplete context — fall back to plain advance.
+        prev.advance();
+        return;
+      }
+      const atBoundary = prev.current.global >= prev.surahEndGlobal;
+
+      // Mid-surah: repeat-ayah replays; everything else advances normally.
+      if (!atBoundary && prev.repeatMode !== 'ayah') {
+        prev.advance();
+        return;
+      }
+
+      // Cross-surah continuation needs the next surah's metadata (bounds +
+      // cache list), which lives behind an async local-DB lookup (NFR-2: no
+      // new network calls). The reducer guard makes a late dispatch safe even
+      // if the user stops playback while we await.
+      const needsNext =
+        atBoundary && prev.repeatMode === 'off' && prev.autoAdvance && prev.current.surahId < 114;
+
+      void (async () => {
+        let nextSurah: NextSurahInfo | null = null;
+        const fromSurah = prev.current?.surahId;
+        const fromGlobal = prev.current?.global;
+        if (needsNext && fromSurah !== undefined) {
+          try {
+            const rs = await getRecitationState(fromSurah + 1);
+            nextSurah = {
+              id: rs.surah_id,
+              firstGlobal: rs.first_global_ayah,
+              endGlobal: rs.first_global_ayah + rs.ayah_count - 1,
+            };
+          } catch {
+            nextSurah = null; // degrade to hard stop below
+          }
+        }
+        if (!get().current) {
+          return; // stopped while awaiting the metadata
+        }
+        dispatch({
+          type: 'ended',
+          cachedGlobals: cachedGlobals(),
+          surahStartGlobal: prev.surahStartGlobal ?? 0,
+          surahEndGlobal: prev.surahEndGlobal ?? 0,
+          nextSurah,
+        });
+        const now = get();
+        if (now.status === 'idle') {
+          set({ audioUrl: null }); // clean/hard stop — <audio> goes quiet
+          return;
+        }
+        if (!now.current || now.current.global === fromGlobal) {
+          return; // in-place ayah replay: <audio> restarts via replayToken
+        }
+        // Position changed (wrap or cross-surah): hand the right file over.
+        const target = now.current;
+        const f = now.cachedFiles.find((c) => c.global_ayah === target.global);
+        set({
+          audioUrl: f ? localAudioUrl(f.file_path) : null,
+          pendingAutoNav:
+            fromSurah !== undefined && fromSurah !== target.surahId ? target.surahId : null,
+        });
+        if (!f) {
+          startFetch(target.global);
+        }
+        fetchPending();
+      })();
+    },
+
+    consumeAutoNav: () => {
+      set({ pendingAutoNav: null });
     },
 
     retry: () => {

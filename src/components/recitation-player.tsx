@@ -17,6 +17,7 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
   const current = useRecitationPlayer((s) => s.current);
   const speed = useRecitationPlayer((s) => s.speed);
   const replayToken = useRecitationPlayer((s) => s.replayToken);
+  const pendingAutoNav = useRecitationPlayer((s) => s.pendingAutoNav);
   const audioStarted = useRecitationPlayer((s) => s.audioStarted);
   const advance = useRecitationPlayer((s) => s.advance);
   const pause = useRecitationPlayer((s) => s.pause);
@@ -58,11 +59,13 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
 
   // Switching surahs (prev/next) stops the previous surah's playback; its
   // position is already persisted, so it resumes from there when revisited.
+  // Exception: an auto-advance boundary crossing (FR-4) — the reader follows
+  // via `pendingAutoNav`, so playback must continue seamlessly.
   useEffect(() => {
-    if (current && current.surahId !== surahId) {
+    if (current && current.surahId !== surahId && pendingAutoNav !== current.surahId) {
       stop();
     }
-  }, [surahId, current, stop]);
+  }, [surahId, current, pendingAutoNav, stop]);
 
   return (
     <audio

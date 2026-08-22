@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   RecitationAudio,
   RecitationFooter,
@@ -52,6 +53,18 @@ export function QuranReader() {
   const playerPlay = useRecitationPlayer((s) => s.play);
   const playerActive = playerStatus !== 'idle' && playerCurrent?.surahId === surahId;
 
+  // FR-4: when playback auto-advances across a surah boundary, the reader
+  // follows so audio and view stay in sync.
+  const navigate = useNavigate();
+  const pendingAutoNav = useRecitationPlayer((s) => s.pendingAutoNav);
+  const consumeAutoNav = useRecitationPlayer((s) => s.consumeAutoNav);
+  useEffect(() => {
+    if (pendingAutoNav !== null) {
+      navigate(`/quran/${pendingAutoNav}`);
+      consumeAutoNav();
+    }
+  }, [pendingAutoNav, navigate, consumeAutoNav]);
+
   if (!id || !Number.isInteger(surahId) || surahId < 1 || surahId > 114) {
     return (
       <section className="mx-auto max-w-3xl">
@@ -74,7 +87,9 @@ export function QuranReader() {
 
   return (
     <section aria-labelledby="quran-reader-title" className="mx-auto max-w-4xl space-y-4">
-      {surah && <RecitationAudio surahId={surah.id} />}
+      {/* Mounted for the whole route so the <audio> element survives the
+          cross-surah loading gap during auto-advance (FR-4). */}
+      <RecitationAudio surahId={surahId} />
 
       <div className="flex items-center justify-between">
         <Link

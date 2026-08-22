@@ -4,11 +4,13 @@ import {
   availabilityForStart,
   computeLookahead,
   initialPlayerState,
+  nextSpeed,
   type PlayerEvent,
   type PlayerPosition,
   persistencePosition,
   playerReducer,
   type RecitationState,
+  SPEED_PRESETS,
 } from './recitation';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
@@ -106,6 +108,22 @@ describe('playback preference defaults & persistence in the machine', () => {
     expect(stopped.speed).toBe(2);
     expect(stopped.repeatMode).toBe('ayah');
     expect(stopped.autoAdvance).toBe(true);
+  });
+});
+
+// ── Speed presets & cycling (FR-2) ──────────────────────────────────────────
+
+describe('nextSpeed (FR-2)', () => {
+  it('offers the five discrete presets in ascending order', () => {
+    expect(SPEED_PRESETS).toEqual([0.75, 1, 1.25, 1.5, 2]);
+  });
+
+  it('steps to the next preset and wraps from 2x back to 0.75x', () => {
+    expect(nextSpeed(0.75)).toBe(1);
+    expect(nextSpeed(1)).toBe(1.25);
+    expect(nextSpeed(1.25)).toBe(1.5);
+    expect(nextSpeed(1.5)).toBe(2);
+    expect(nextSpeed(2)).toBe(0.75);
   });
 });
 

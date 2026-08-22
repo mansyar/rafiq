@@ -69,6 +69,14 @@ export type PlayerStatus = 'idle' | 'fetching' | 'playing' | 'paused';
 /** Discrete playback-rate presets cycled by the transport speed button (FR-2). */
 export type PlaybackSpeed = 0.75 | 1 | 1.25 | 1.5 | 2;
 
+export const SPEED_PRESETS: readonly PlaybackSpeed[] = [0.75, 1, 1.25, 1.5, 2];
+
+/** Cycles to the next preset, wrapping from 2x back to 0.75x (FR-2). */
+export function nextSpeed(current: PlaybackSpeed): PlaybackSpeed {
+  const index = SPEED_PRESETS.indexOf(current);
+  return SPEED_PRESETS[(index + 1) % SPEED_PRESETS.length];
+}
+
 /** What happens when an ayah/surah finishes (FR-3). */
 export type RepeatMode = 'off' | 'ayah' | 'surah';
 

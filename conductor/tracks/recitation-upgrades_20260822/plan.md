@@ -20,14 +20,14 @@ All playback-mode semantics live in the pure `playerReducer`
 - [x] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc) (6b0b20a)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (6b0b20a)
 
-## Phase 2 — Transport UI & i18n
+## Phase 2 — Transport UI & i18n [checkpoint: 4767002]
 
 UI scaffolding per project rule needs no unit tests; verify i18n completeness
 and accessibility manually + via existing patterns.
 
 - [x] Task: Speed cycle button in reader footer (label `1.25×`, aria-label, EN/ID keys) (4767002)
 - [x] Task: Repeat segmented control + "Continue to next surah" toggle in footer (EN/ID keys) (4767002)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (4767002)
 
 ## Phase 3 — Auto-advance reader integration + E2E
 

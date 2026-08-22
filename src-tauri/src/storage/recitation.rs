@@ -65,6 +65,42 @@ impl<'a> RecitationRepo<'a> {
             .optional()
     }
 
+    /// Deletes the cached rows in `[start, end]` and returns them (so callers
+    /// can remove the backing files).
+    pub fn delete_in_range(&self, start: u32, end: u32) -> rusqlite::Result<Vec<CachedAudio>> {
+        let mut stmt = self.conn.prepare(
+            "DELETE FROM recitation
+             WHERE global_ayah BETWEEN ?1 AND ?2
+             RETURNING global_ayah, file_path, size_bytes, fetched_at",
+        )?;
+        let rows = stmt.query_map(params![start, end], |row| {
+            Ok(CachedAudio {
+                global_ayah: row.get::<_, i64>(0)? as u32,
+                file_path: row.get(1)?,
+                size_bytes: row.get::<_, i64>(2)? as u64,
+                fetched_at: row.get(3)?,
+            })
+        })?;
+        rows.collect()
+    }
+
+    /// Deletes every cached row and returns them (FR-5 "delete all").
+    pub fn delete_all(&self) -> rusqlite::Result<Vec<CachedAudio>> {
+        let mut stmt = self.conn.prepare(
+            "DELETE FROM recitation
+             RETURNING global_ayah, file_path, size_bytes, fetched_at",
+        )?;
+        let rows = stmt.query_map([], |row| {
+            Ok(CachedAudio {
+                global_ayah: row.get::<_, i64>(0)? as u32,
+                file_path: row.get(1)?,
+                size_bytes: row.get::<_, i64>(2)? as u64,
+                fetched_at: row.get(3)?,
+            })
+        })?;
+        rows.collect()
+    }
+
     /// Returns every cached row, ascending by global ayah.
     pub fn list_all(&self) -> rusqlite::Result<Vec<CachedAudio>> {
         let mut stmt = self.conn.prepare(

@@ -172,6 +172,53 @@ pub async fn download(client: &reqwest::Client, global_ayah: u32) -> Result<Vec<
     Ok(bytes.to_vec())
 }
 
+/// Removes the cached files for the deleted rows. Missing files are
+/// tolerated (the index deletion is authoritative); other IO errors bubble.
+fn remove_cache_files(rows: &[CachedAudio]) -> std::io::Result<()> {
+    for row in rows {
+        let path = PathBuf::from(&row.file_path);
+        match std::fs::remove_file(&path) {
+            Ok(()) => {}
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+            Err(e) => return Err(e),
+        }
+    }
+    Ok(())
+}
+
+/// Deletes one surah's cached ayahs: index rows **and** files. Missing files
+/// are tolerated. Returns the freed byte count from the index (FR-5).
+pub fn delete_surah_cache(
+    cache_dir: &Path,
+    conn: &Connection,
+    surah_id: u8,
+) -> Result<u64, String> {
+    let surah =
+        crate::quran::get_surah(surah_id).ok_or_else(|| format!("unknown surah: {surah_id}"))?;
+    let first_global = crate::quran::global_ayah(surah_id, 1)
+        .ok_or_else(|| format!("unknown surah: {surah_id}"))?;
+    let last_global = first_global + surah.ayah_count as u32 - 1;
+    let repo = RecitationRepo::new(conn);
+    let rows = repo
+        .delete_in_range(first_global, last_global)
+        .map_err(|e| format!("failed to delete recitation index rows: {e}"))?;
+    let freed = rows.iter().map(|r| r.size_bytes).sum();
+    remove_cache_files(&rows).map_err(|e| format!("failed to remove cached files: {e}"))?;
+    Ok(freed)
+}
+
+/// Deletes every cached ayah: all index rows **and** files. Returns the
+/// freed byte count from the index (FR-5).
+pub fn delete_all_cache(cache_dir: &Path, conn: &Connection) -> Result<u64, String> {
+    let repo = RecitationRepo::new(conn);
+    let rows = repo
+        .delete_all()
+        .map_err(|e| format!("failed to clear recitation index: {e}"))?;
+    let freed = rows.iter().map(|r| r.size_bytes).sum();
+    remove_cache_files(&rows).map_err(|e| format!("failed to remove cached files: {e}"))?;
+    Ok(freed)
+}
+
 #[cfg(test)]
 mod tests {
     use std::fs;
@@ -406,5 +453,74 @@ mod tests {
             Some(v) => unsafe { std::env::set_var("TAURI_E2E_FIXTURE_PATH", v) },
             None => unsafe { std::env::remove_var("TAURI_E2E_FIXTURE_PATH") },
         }
+    }
+
+    // ── FR-5: cache deletion ───────────────────────────────────────────────
+
+    use crate::recitation::{delete_all_cache, delete_surah_cache};
+
+    #[test]
+    fn delete_surah_cache_removes_rows_and_files_for_that_surah_only() {
+        let dir = cache_dir();
+        let conn = conn();
+        // Surah 1 (globals 1..=7): two files; Surah 2 (8..): one file.
+        with_indexed_file(&dir, &conn, 1, Some(100));
+        with_indexed_file(&dir, &conn, 7, Some(250));
+        with_indexed_file(&dir, &conn, 8, Some(400));
+
+        let freed = delete_surah_cache(&dir, &conn, 1).expect("delete surah 1");
+        assert_eq!(freed, 350, "freed bytes must equal the surah's rows");
+
+        let repo = RecitationRepo::new(&conn);
+        assert!(repo.get(1).unwrap().is_none(), "row 1 deleted");
+        assert!(repo.get(7).unwrap().is_none(), "row 7 deleted");
+        assert!(repo.get(8).unwrap().is_some(), "surah 2 row kept");
+        assert!(!cache_file_path(&dir, 1).exists(), "file 1 removed");
+        assert!(!cache_file_path(&dir, 7).exists(), "file 7 removed");
+        assert!(
+            cache_file_path(&dir, 8).exists(),
+            "surah 2 file must survive"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn delete_surah_cache_tolerates_already_missing_files() {
+        let dir = cache_dir();
+        let conn = conn();
+        with_indexed_file(&dir, &conn, 1, Some(100));
+        // Simulate a file that vanished outside the app's knowledge.
+        fs::remove_file(cache_file_path(&dir, 1)).unwrap();
+
+        let freed = delete_surah_cache(&dir, &conn, 1).expect("missing file tolerated");
+        assert_eq!(freed, 100, "bytes come from the index, not the disk");
+        assert!(RecitationRepo::new(&conn).get(1).unwrap().is_none());
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn delete_all_cache_clears_every_row_and_file() {
+        let dir = cache_dir();
+        let conn = conn();
+        with_indexed_file(&dir, &conn, 3, Some(120));
+        with_indexed_file(&dir, &conn, 9, Some(340));
+
+        let freed = delete_all_cache(&dir, &conn).expect("delete all");
+        assert_eq!(freed, 460);
+        let remaining: i64 = conn
+            .query_row("SELECT COUNT(*) FROM recitation", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(remaining, 0, "index must be empty");
+        assert!(!cache_file_path(&dir, 3).exists());
+        assert!(!cache_file_path(&dir, 9).exists());
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn delete_surah_cache_rejects_unknown_surah() {
+        let dir = cache_dir();
+        let conn = conn();
+        assert!(delete_surah_cache(&dir, &conn, 115).is_err());
+        let _ = fs::remove_dir_all(&dir);
     }
 }

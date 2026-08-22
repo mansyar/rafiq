@@ -25,8 +25,8 @@ All playback-mode semantics live in the pure `playerReducer`
 UI scaffolding per project rule needs no unit tests; verify i18n completeness
 and accessibility manually + via existing patterns.
 
-- [ ] Task: Speed cycle button in reader footer (label `1.25×`, aria-label, EN/ID keys)
-- [ ] Task: Repeat segmented control + "Continue to next surah" toggle in footer (EN/ID keys)
+- [x] Task: Speed cycle button in reader footer (label `1.25×`, aria-label, EN/ID keys) (4767002)
+- [x] Task: Repeat segmented control + "Continue to next surah" toggle in footer (EN/ID keys) (4767002)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Auto-advance reader integration + E2E

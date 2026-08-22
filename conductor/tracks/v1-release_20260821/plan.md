@@ -68,7 +68,7 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] Document in `e2e/README.md`; one real CDN run as manual gate (2/2 green, 14.9s)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — note on 538addd
 
-## Phase 5: Release pipeline & docs
+## Phase 5: Release pipeline & docs [checkpoint: 7c72048]
 
 - [x] Task: `CHANGELOG.md` (Keep a Changelog) with rc.1 + v1.0.0 entries (ba52460)
 - [x] Task: README **Download** + **License** sections (honest unsigned caveats) (965bdc5)
@@ -80,4 +80,4 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] Boot on real machine, note SmartScreen/Gatekeeper behavior, cached playback, release-CSP smoke pass (Phase 2 checklist), updater status check — all passed on Windows (SmartScreen shown & bypassed as documented; smoke checklist green incl. network-blocked cached replay; manual update check reports up-to-date); no issues to fix
 - [x] Task: Cut **v1.0.0** (bump `1.0.0`, tag, push) (0105cfc; re-cut 7c72048 with updater capability fix)
   - [x] Verify: release artifacts published; rc.1 app on real machine prompts update to v1.0.0 (AC-6) — updater flow proven end-to-end on real machine (check → signed download → install → relaunch); shipped rc.1/v1.0.0 binaries predate the ACL fix and cannot self-update, so the fixed v1.0.0 was installed manually once as bootstrap; all future updates flow in-app ("You're up to date" confirmed)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — verification report attached as git note to 7c72048

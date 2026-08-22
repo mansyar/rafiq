@@ -36,7 +36,7 @@ and accessibility manually + via existing patterns.
 - [x] Task: E2E specs: speed cycling, surah-repeat wrap, auto-advance navigation (AC-7) (639f18b)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (639f18b)
 
-## Phase 4 — Cache backend (Rust, TDD)
+## Phase 4 — Cache backend (Rust, TDD) [checkpoint: dc06bf7]
 
 - [x] Task: `RecitationRepo`: list-all + per-surah aggregation (sizes via existing `size_bytes`; group by quran metadata boundaries) — cargo tests first (c75358d)
 - [x] Task: `RecitationRepo`: delete-per-surah + delete-all removing rows **and** files; tolerate missing files — cargo tests first (temp-dir fixtures) (5c236d6)

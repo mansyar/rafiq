@@ -16,7 +16,7 @@ All playback-mode semantics live in the pure `playerReducer`
 - [x] Task: Implement surah-repeat wrap + precedence rules (loop > repeat > advance) — tests first (296daef)
 - [x] Task: Implement auto-advance transition event + hard stop at Surah 114 — tests first (d063a12)
 - [x] Task: Preference persistence helpers over `get_setting`/`set_setting` with corrupt-value fallbacks — tests first (e532a10)
-- [ ] Task: Store actions `cycleSpeed` / `setRepeatMode` / `toggleAutoAdvance` writing through to settings — tests first
+- [x] Task: Store actions `cycleSpeed` / `setRepeatMode` / `toggleAutoAdvance` writing through to settings — tests first (8f931cb)
 - [ ] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 

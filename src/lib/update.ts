@@ -72,9 +72,11 @@ async function performCheck(ports: UpdatePorts, nowMs: number): Promise<CheckOut
     return remote === null
       ? { status: 'latest' }
       : { status: 'available', version: remote.version, notes: remote.body ?? null };
-  } catch {
+  } catch (err) {
     // Offline or backend hiccup: degrade silently (FR-5.4); persistence is
-    // best-effort and its own failure must not surface either.
+    // best-effort and its own failure must not surface either. The raw error
+    // still goes to the webview console for diagnosability.
+    console.error('[updater] update check failed:', err);
     try {
       await ports.writeLastCheck(nowMs);
     } catch {

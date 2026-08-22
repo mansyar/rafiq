@@ -8,6 +8,8 @@
     "core:window:allow-set-title",
     "opener:default",
     "notification:default",
-    "autostart:default"
+    "autostart:default",
+    "updater:default",
+    "process:allow-restart"
   ]
 }

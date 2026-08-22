@@ -4,7 +4,7 @@
 > logic-bearing task; tests required only for logic-bearing code (project rule);
 > phase checkpoints attach verification reports as git notes.
 
-## Phase 1 — Player state machine & preferences (pure logic, TDD)
+## Phase 1 — Player state machine & preferences (pure logic, TDD) [checkpoint: 6b0b20a]
 
 All playback-mode semantics live in the pure `playerReducer`
 (`src/lib/recitation.ts`) — DOM-free Vitest coverage first.
@@ -18,7 +18,7 @@ All playback-mode semantics live in the pure `playerReducer`
 - [x] Task: Preference persistence helpers over `get_setting`/`set_setting` with corrupt-value fallbacks — tests first (e532a10)
 - [x] Task: Store actions `cycleSpeed` / `setRepeatMode` / `toggleAutoAdvance` writing through to settings — tests first (8f931cb)
 - [x] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc) (6b0b20a)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (6b0b20a)
 
 ## Phase 2 — Transport UI & i18n
 

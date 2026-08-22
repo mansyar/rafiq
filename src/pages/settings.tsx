@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LocationPicker } from '@/components/location-picker';
@@ -6,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_LOCALE, isSupportedLocale, type Locale, SUPPORTED_LOCALES } from '@/lib/locale';
+import { useRecitationPlayer } from '@/lib/player-store';
 import {
   CALCULATION_METHODS,
   type CalculationMethod,
@@ -16,6 +19,11 @@ import {
   setCalculationMethod,
   setNotificationEnabled,
 } from '@/lib/prayer';
+import {
+  deleteRecitationCache,
+  formatCacheSize,
+  getRecitationCacheSummary,
+} from '@/lib/recitation-cache';
 import { setSetting } from '@/lib/tauri';
 import { useUpdateStore } from '@/lib/update-store';
 
@@ -72,6 +80,29 @@ export function Settings() {
   // ── Updates ───────────────────────────────────────────────────────────
   const updateStatus = useUpdateStore((s) => s.status);
   const manualUpdateCheck = useUpdateStore((s) => s.manualCheck);
+
+  // ── Recitation cache (FR-5) ───────────────────────────────────────────
+  const [confirmClear, setConfirmClear] = useState(false);
+  const cacheQuery = useQuery({
+    queryKey: ['recitation-cache'],
+    queryFn: getRecitationCacheSummary,
+  });
+  const cacheDelete = useMutation({
+    mutationFn: (surahId: number | null) => deleteRecitationCache(surahId ?? undefined),
+    onSuccess: async (_freed, surahId) => {
+      // Stop playback gracefully when the file it is playing was just deleted.
+      const player = useRecitationPlayer.getState();
+      if (
+        player.status !== 'idle' &&
+        player.current &&
+        (surahId === null || player.current.surahId === surahId)
+      ) {
+        player.stop();
+      }
+      setConfirmClear(false);
+      await queryClient.invalidateQueries({ queryKey: ['recitation-cache'] });
+    },
+  });
 
   const updateStatusText =
     updateStatus.kind === 'available'
@@ -216,6 +247,97 @@ export function Settings() {
                 : t('settings.checkForUpdates')}
             </Button>
           </div>
+
+          <Separator />
+
+          {/* Recitation downloads (FR-5) */}
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-medium">{t('settings.cacheTitle')}</legend>
+            <p className="text-xs text-muted-foreground">{t('settings.cacheHint')}</p>
+            {cacheQuery.isError && (
+              <p className="text-xs text-destructive" role="alert">
+                {String(cacheQuery.error)}
+              </p>
+            )}
+            {cacheQuery.data && (
+              <>
+                {cacheQuery.data.surahs.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">{t('settings.cacheEmpty')}</p>
+                ) : (
+                  <div className="space-y-1" aria-live="polite">
+                    <p className="text-sm font-medium tabular-nums">
+                      {t('settings.cacheTotal', {
+                        size: formatCacheSize(cacheQuery.data.total_bytes, currentLocale),
+                      })}
+                    </p>
+                    {cacheQuery.data.surahs.map((s) => (
+                      <div key={s.surah_id} className="flex items-center justify-between gap-2">
+                        <span className="text-sm text-muted-foreground tabular-nums">
+                          {t('settings.cacheSurahRow', {
+                            surah: s.surah_id,
+                            ayahs: s.ayah_count,
+                            size: formatCacheSize(s.size_bytes, currentLocale),
+                          })}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          aria-label={t('settings.cacheDeleteSurah', { surah: s.surah_id })}
+                          disabled={cacheDelete.isPending}
+                          onClick={() => cacheDelete.mutate(s.surah_id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  {confirmClear ? (
+                    <>
+                      <span className="text-xs text-destructive" role="alert">
+                        {t('settings.cacheConfirmClear')}
+                      </span>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={cacheDelete.isPending}
+                          onClick={() => cacheDelete.mutate(null)}
+                        >
+                          {t('settings.cacheYes')}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={cacheDelete.isPending}
+                          onClick={() => setConfirmClear(false)}
+                        >
+                          {t('settings.cancel')}
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <span />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={
+                          !cacheQuery.data ||
+                          cacheQuery.data.total_bytes === 0 ||
+                          cacheDelete.isPending
+                        }
+                        onClick={() => setConfirmClear(true)}
+                      >
+                        {t('settings.cacheClearAll')}
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+          </fieldset>
         </CardContent>
       </Card>
     </section>

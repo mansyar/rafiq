@@ -71,7 +71,17 @@
     "checking": "Checking…",
     "upToDate": "You're up to date",
     "updateAvailable": "Version {{version}} is ready to install",
-    "updateError": "Couldn't check right now"
+    "updateError": "Couldn't check right now",
+    "cacheTitle": "Recitation downloads",
+    "cacheHint": "Audio you've downloaded for listening offline.",
+    "cacheTotal": "Total used: {{size}}",
+    "cacheSurahRow": "Surah {{surah}} · {{ayahs}} ayahs · {{size}}",
+    "cacheDeleteSurah": "Delete Surah {{surah}} downloads",
+    "cacheClearAll": "Clear all",
+    "cacheConfirmClear": "Delete all downloaded recitations?",
+    "cacheYes": "Yes, delete",
+    "cancel": "Cancel",
+    "cacheEmpty": "Nothing downloaded yet."
   },
   "update": {
     "title": "Update available",

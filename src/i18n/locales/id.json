@@ -71,7 +71,17 @@
     "checking": "Memeriksa…",
     "upToDate": "Sudah versi terbaru",
     "updateAvailable": "Versi {{version}} siap dipasang",
-    "updateError": "Tidak dapat memeriksa saat ini"
+    "updateError": "Tidak dapat memeriksa saat ini",
+    "cacheTitle": "Unduhan tilawah",
+    "cacheHint": "Audio yang telah diunduh untuk didengarkan luring.",
+    "cacheTotal": "Total terpakai: {{size}}",
+    "cacheSurahRow": "Surah {{surah}} · {{ayahs}} ayat · {{size}}",
+    "cacheDeleteSurah": "Hapus unduhan Surah {{surah}}",
+    "cacheClearAll": "Hapus semua",
+    "cacheConfirmClear": "Hapus semua unduhan tilawah?",
+    "cacheYes": "Ya, hapus",
+    "cancel": "Batal",
+    "cacheEmpty": "Belum ada yang diunduh."
   },
   "update": {
     "title": "Pembaruan tersedia",

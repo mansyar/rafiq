@@ -150,7 +150,13 @@
       "downloading": "Mengunduh audio tilawah\u2026",
       "downloadingAhead": "Menyiapkan {{count}} ayat lagi\u2026",
       "error": "Gagal mengunduh audio tilawah. Periksa koneksi Anda.",
-      "reciter": "Dibacakan oleh {{name}}"
+      "reciter": "Dibacakan oleh {{name}}",
+      "speed": "Kecepatan pemutaran {{speed}}",
+      "repeatGroup": "Ulangi",
+      "repeatOff": "Mati",
+      "repeatAyah": "Ayat",
+      "repeatSurah": "Surah",
+      "autoAdvance": "Lanjut ke surah berikutnya"
     }
   },
   "log": {

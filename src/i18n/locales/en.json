@@ -150,7 +150,13 @@
       "downloading": "Downloading recitation\u2026",
       "downloadingAhead": "Preparing {{count}} more ayahs\u2026",
       "error": "Couldn\u2019t download the recitation. Check your connection.",
-      "reciter": "Recited by {{name}}"
+      "reciter": "Recited by {{name}}",
+      "speed": "Playback speed {{speed}}",
+      "repeatGroup": "Repeat",
+      "repeatOff": "Off",
+      "repeatAyah": "Ayah",
+      "repeatSurah": "Surah",
+      "autoAdvance": "Continue to next surah"
     }
   },
   "log": {

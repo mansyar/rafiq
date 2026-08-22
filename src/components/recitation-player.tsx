@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useRecitationPlayer, useRecitationState } from '@/lib/player-store';
-import { availabilityForStart } from '@/lib/recitation';
+import { availabilityForStart, type RepeatMode } from '@/lib/recitation';
 import { cn } from '@/lib/utils';
 
 /**
@@ -15,6 +15,8 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
   const status = useRecitationPlayer((s) => s.status);
   const audioUrl = useRecitationPlayer((s) => s.audioUrl);
   const current = useRecitationPlayer((s) => s.current);
+  const speed = useRecitationPlayer((s) => s.speed);
+  const replayToken = useRecitationPlayer((s) => s.replayToken);
   const audioStarted = useRecitationPlayer((s) => s.audioStarted);
   const advance = useRecitationPlayer((s) => s.advance);
   const pause = useRecitationPlayer((s) => s.pause);
@@ -32,6 +34,24 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
       el.pause();
     }
   }, [status, audioUrl]);
+
+  // FR-2: apply the selected speed instantly, including mid-playback.
+  useEffect(() => {
+    const el = audioRef.current;
+    if (el) {
+      el.playbackRate = speed;
+    }
+  }, [speed]);
+
+  // FR-3: repeat-ayah replays the same file in place — restart from the top
+  // without changing the src (the store bumps `replayToken`).
+  useEffect(() => {
+    const el = audioRef.current;
+    if (el && replayToken > 0 && status === 'playing') {
+      el.currentTime = 0;
+      void el.play().catch(() => {});
+    }
+  }, [replayToken, status]);
 
   // Leaving the reader pauses playback and keeps the position (FR-4.2).
   useEffect(() => () => pause(), [pause]);
@@ -117,6 +137,77 @@ export function RecitationPlayButton({ surahId }: { surahId: number }) {
   );
 }
 
+const REPEAT_MODES: readonly RepeatMode[] = ['off', 'ayah', 'surah'] as const;
+
+/**
+ * Playback preference controls (FR-2/FR-3/FR-4): speed preset cycler,
+ * repeat-mode segmented control, continue-to-next-surah toggle.
+ */
+function RecitationPreferenceControls() {
+  const { t } = useTranslation();
+  const speed = useRecitationPlayer((s) => s.speed);
+  const cycleSpeed = useRecitationPlayer((s) => s.cycleSpeed);
+  const repeatMode = useRecitationPlayer((s) => s.repeatMode);
+  const setRepeatMode = useRecitationPlayer((s) => s.setRepeatMode);
+  const autoAdvance = useRecitationPlayer((s) => s.autoAdvance);
+  const toggleAutoAdvance = useRecitationPlayer((s) => s.toggleAutoAdvance);
+
+  const repeatLabels: Record<RepeatMode, string> = {
+    off: t('quran.audio.repeatOff'),
+    ayah: t('quran.audio.repeatAyah'),
+    surah: t('quran.audio.repeatSurah'),
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <button
+        type="button"
+        onClick={cycleSpeed}
+        aria-label={t('quran.audio.speed', { speed })}
+        className="rounded-md border px-2 py-1 text-xs font-medium tabular-nums text-ink-900 transition-colors hover:bg-muted dark:text-ink-50"
+      >
+        {speed}×
+      </button>
+
+      <fieldset
+        aria-label={t('quran.audio.repeatGroup')}
+        className="flex items-center overflow-hidden rounded-md border"
+      >
+        {REPEAT_MODES.map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => setRepeatMode(mode)}
+            aria-pressed={repeatMode === mode}
+            className={cn(
+              'px-2 py-1 text-xs font-medium transition-colors',
+              repeatMode === mode
+                ? 'bg-emerald-600 text-white'
+                : 'text-ink-900 hover:bg-muted dark:text-ink-50',
+            )}
+          >
+            {repeatLabels[mode]}
+          </button>
+        ))}
+      </fieldset>
+
+      <button
+        type="button"
+        onClick={toggleAutoAdvance}
+        aria-pressed={autoAdvance}
+        className={cn(
+          'rounded-md border px-2 py-1 text-xs font-medium transition-colors',
+          autoAdvance
+            ? 'border-emerald-600 bg-emerald-600/10 text-emerald-700 dark:text-emerald-300'
+            : 'text-ink-900 hover:bg-muted dark:text-ink-50',
+        )}
+      >
+        {t('quran.audio.autoAdvance')}
+      </button>
+    </div>
+  );
+}
+
 /**
  * Compact player footer inside the reader (FR-3.4): transport, position,
  * download progress / calm retry, reciter name.
@@ -198,6 +289,8 @@ export function RecitationFooter({ surahId }: { surahId: number }) {
         {progress === 'downloading' && t('quran.audio.downloading')}
         {progress === 'ahead' && t('quran.audio.downloadingAhead', { count: pendingCount })}
       </span>
+
+      <RecitationPreferenceControls />
 
       {recitation && (
         <span className="text-xs text-muted-foreground">

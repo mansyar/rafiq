@@ -66,6 +66,12 @@ export const AHEAD = 3;
 
 export type PlayerStatus = 'idle' | 'fetching' | 'playing' | 'paused';
 
+/** Discrete playback-rate presets cycled by the transport speed button (FR-2). */
+export type PlaybackSpeed = 0.75 | 1 | 1.25 | 1.5 | 2;
+
+/** What happens when an ayah/surah finishes (FR-3). */
+export type RepeatMode = 'off' | 'ayah' | 'surah';
+
 export interface PlayerPosition {
   surahId: number;
   ayah: number;
@@ -78,6 +84,12 @@ export interface PlayerState {
   pendingGlobals: number[];
   fetchingTarget: boolean;
   error: string | null;
+  /** Playback rate preset (FR-1/FR-2), persisted via settings by the store. */
+  speed: PlaybackSpeed;
+  /** Active repeat mode (FR-3), persisted via settings by the store. */
+  repeatMode: RepeatMode;
+  /** Continue into the next surah at natural end (FR-4), persisted via settings. */
+  autoAdvance: boolean;
 }
 
 export type PlayerEvent =
@@ -94,7 +106,10 @@ export type PlayerEvent =
   | { type: 'audioStarted' }
   | { type: 'pause' }
   | { type: 'resume' }
-  | { type: 'stop' };
+  | { type: 'stop' }
+  | { type: 'setSpeed'; speed: PlaybackSpeed }
+  | { type: 'setRepeatMode'; mode: RepeatMode }
+  | { type: 'setAutoAdvance'; enabled: boolean };
 
 export function initialPlayerState(): PlayerState {
   return {
@@ -103,6 +118,9 @@ export function initialPlayerState(): PlayerState {
     pendingGlobals: [],
     fetchingTarget: false,
     error: null,
+    speed: 1,
+    repeatMode: 'off',
+    autoAdvance: false,
   };
 }
 
@@ -128,15 +146,18 @@ export function computeLookahead(
 
 /**
  * Starts playback at `position`, fetching first if uncached. The lookahead
- * window is (re)planned from `position`.
+ * window is (re)planned from `position`. Playback preferences are carried
+ * over from `state` so mode changes survive a new play request.
  */
 function startPlayback(
+  state: PlayerState,
   position: PlayerPosition,
   cachedGlobals: readonly number[],
   surahEndGlobal: number,
 ): PlayerState {
   const needsFetch = !new Set(cachedGlobals).has(position.global);
   return {
+    ...state,
     status: needsFetch ? 'fetching' : 'playing',
     current: position,
     pendingGlobals: computeLookahead(position, surahEndGlobal, cachedGlobals),
@@ -161,6 +182,7 @@ function advancePlayback(
   const pendingGlobals =
     pruned.length > 0 ? pruned : computeLookahead(position, surahEndGlobal, cachedGlobals);
   return {
+    ...state,
     status: needsFetch ? 'fetching' : 'playing',
     current: position,
     pendingGlobals,
@@ -172,7 +194,7 @@ function advancePlayback(
 export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerState {
   switch (event.type) {
     case 'requestPlay':
-      return startPlayback(event.position, event.cachedGlobals, event.surahEndGlobal);
+      return startPlayback(state, event.position, event.cachedGlobals, event.surahEndGlobal);
     case 'advance':
       return advancePlayback(state, event.position, event.cachedGlobals, event.surahEndGlobal);
     case 'fetchSucceeded': {
@@ -210,7 +232,19 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
     case 'resume':
       return state.status === 'paused' ? { ...state, status: 'playing' } : state;
     case 'stop':
-      return initialPlayerState();
+      // Transport state clears; user preferences persist across stops.
+      return {
+        ...initialPlayerState(),
+        speed: state.speed,
+        repeatMode: state.repeatMode,
+        autoAdvance: state.autoAdvance,
+      };
+    case 'setSpeed':
+      return { ...state, speed: event.speed };
+    case 'setRepeatMode':
+      return { ...state, repeatMode: event.mode };
+    case 'setAutoAdvance':
+      return { ...state, autoAdvance: event.enabled };
   }
 }
 

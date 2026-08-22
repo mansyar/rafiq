@@ -41,7 +41,71 @@ describe('initialPlayerState', () => {
       pendingGlobals: [],
       fetchingTarget: false,
       error: null,
+      speed: 1,
+      repeatMode: 'off',
+      autoAdvance: false,
     });
+  });
+});
+
+// ── Playback preferences state (FR-1..FR-4 foundations) ────────────────────
+
+describe('playback preference defaults & persistence in the machine', () => {
+  it('starts with speed 1x, repeat off, auto-advance off', () => {
+    expect(initialPlayerState()).toMatchObject({
+      speed: 1,
+      repeatMode: 'off',
+      autoAdvance: false,
+    });
+  });
+
+  it('setSpeed / setRepeatMode / setAutoAdvance update preferences', () => {
+    let state = playerReducer(initialPlayerState(), { type: 'setSpeed', speed: 1.5 });
+    expect(state.speed).toBe(1.5);
+    state = playerReducer(state, { type: 'setRepeatMode', mode: 'ayah' });
+    expect(state.repeatMode).toBe('ayah');
+    state = playerReducer(state, { type: 'setAutoAdvance', enabled: true });
+    expect(state.autoAdvance).toBe(true);
+  });
+
+  it('preferences survive requestPlay, advance, pause and fetch activity', () => {
+    let state = playerReducer(initialPlayerState(), { type: 'setSpeed', speed: 0.75 });
+    state = playerReducer(state, { type: 'setRepeatMode', mode: 'surah' });
+    state = playerReducer(state, { type: 'setAutoAdvance', enabled: true });
+    state = playerReducer(state, requestPlay(pos(2, 1, SURAH2_START), cached(), SURAH2_END));
+    expect(state.speed).toBe(0.75);
+    expect(state.repeatMode).toBe('surah');
+    expect(state.autoAdvance).toBe(true);
+    state = playerReducer(state, { type: 'fetchSucceeded', global: SURAH2_START });
+    expect(state.repeatMode).toBe('surah');
+    state = playerReducer(state, { type: 'pause' });
+    expect(state.autoAdvance).toBe(true);
+    state = playerReducer(state, { type: 'resume' });
+    state = playerReducer(state, {
+      type: 'advance',
+      position: pos(2, 2, SURAH2_START),
+      cachedGlobals: cached(),
+      surahEndGlobal: SURAH2_END,
+    });
+    expect(state.speed).toBe(0.75);
+    expect(state.repeatMode).toBe('surah');
+    expect(state.autoAdvance).toBe(true);
+  });
+
+  it('stop clears transport state but keeps preferences', () => {
+    let state = playerReducer(initialPlayerState(), { type: 'setSpeed', speed: 2 });
+    state = playerReducer(state, { type: 'setRepeatMode', mode: 'ayah' });
+    state = playerReducer(state, { type: 'setAutoAdvance', enabled: true });
+    state = playerReducer(state, requestPlay(pos(2, 1, SURAH2_START), cached(8), SURAH2_END));
+    const stopped = playerReducer(state, { type: 'stop' });
+    expect(stopped.status).toBe('idle');
+    expect(stopped.current).toBeNull();
+    expect(stopped.pendingGlobals).toEqual([]);
+    expect(stopped.fetchingTarget).toBe(false);
+    expect(stopped.error).toBeNull();
+    expect(stopped.speed).toBe(2);
+    expect(stopped.repeatMode).toBe('ayah');
+    expect(stopped.autoAdvance).toBe(true);
   });
 });
 
@@ -224,6 +288,9 @@ describe('playerReducer', () => {
       pendingGlobals: [],
       fetchingTarget: false,
       error: null,
+      speed: 1,
+      repeatMode: 'off',
+      autoAdvance: false,
     });
   });
 });

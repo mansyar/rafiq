@@ -2,10 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import type {
   CachedFile,
+  PlaybackSpeed,
   PlayerEvent,
   PlayerPosition,
   PlayerState,
   RecitationState,
+  RepeatMode,
 } from './recitation';
 import {
   fetchAyahAudio,
@@ -39,6 +41,12 @@ interface RecitationPlayerStore extends PlayerState {
   retry: () => void;
   /** Called from the `<audio>` element's `play` event. */
   audioStarted: () => void;
+  /** Cycles/sets the playback-rate preset (FR-2). */
+  setSpeed: (speed: PlaybackSpeed) => void;
+  /** Switches repeat mode (FR-3). */
+  setRepeatMode: (mode: RepeatMode) => void;
+  /** Toggles continue-to-next-surah (FR-4). */
+  setAutoAdvance: (enabled: boolean) => void;
 }
 
 export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
@@ -53,6 +61,9 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
       pendingGlobals: get().pendingGlobals,
       fetchingTarget: get().fetchingTarget,
       error: get().error,
+      speed: get().speed,
+      repeatMode: get().repeatMode,
+      autoAdvance: get().autoAdvance,
     };
     const next = playerReducer(prev, event);
     const position = persistencePosition(next, event);
@@ -109,6 +120,9 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
     pendingGlobals: [],
     fetchingTarget: false,
     error: null,
+    speed: 1,
+    repeatMode: 'off',
+    autoAdvance: false,
     audioUrl: null,
     cachedFiles: [],
     surahEndGlobal: null,
@@ -189,6 +203,18 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
 
     audioStarted: () => {
       dispatch({ type: 'audioStarted' });
+    },
+
+    setSpeed: (speed) => {
+      dispatch({ type: 'setSpeed', speed });
+    },
+
+    setRepeatMode: (mode) => {
+      dispatch({ type: 'setRepeatMode', mode });
+    },
+
+    setAutoAdvance: (enabled) => {
+      dispatch({ type: 'setAutoAdvance', enabled });
     },
   };
 });

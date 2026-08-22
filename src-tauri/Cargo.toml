@@ -1,6 +1,6 @@
 [package]
 name = "rafiq"
-version = "1.0.0"
+version = "1.1.0"
 description = "Rafiq — Muslim Companion (رفيق)"
 authors = ["Ansyar"]
 edition = "2021"

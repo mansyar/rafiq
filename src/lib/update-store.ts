@@ -76,7 +76,10 @@ export const useUpdateStore = create<UpdateStore>((set, get) => ({
     try {
       // On success the process relaunches and this never returns.
       await ports.installRemote();
-    } catch {
+    } catch (err) {
+      // Same diagnosability contract as performCheck: UI stays calm, console
+      // carries the raw error.
+      console.error('[updater] install failed:', err);
       set({ installing: false });
       set({ status: { kind: 'error' } });
     }

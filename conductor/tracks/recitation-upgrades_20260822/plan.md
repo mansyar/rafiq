@@ -17,7 +17,7 @@ All playback-mode semantics live in the pure `playerReducer`
 - [x] Task: Implement auto-advance transition event + hard stop at Surah 114 — tests first (d063a12)
 - [x] Task: Preference persistence helpers over `get_setting`/`set_setting` with corrupt-value fallbacks — tests first (e532a10)
 - [x] Task: Store actions `cycleSpeed` / `setRepeatMode` / `toggleAutoAdvance` writing through to settings — tests first (8f931cb)
-- [ ] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc)
+- [x] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc) (6b0b20a)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2 — Transport UI & i18n

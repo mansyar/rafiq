@@ -7,9 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - Unreleased
+## [1.0.0] - 2026-08-22
 
-Same changes as [1.0.0-rc.1]; promoted to stable after real-machine verification.
+First stable release of Rafiq — a calm, offline-first Muslim companion for desktop.
+
+### Added
+
+- Prayer times for seven calculation methods, with city search (3,000+ cities) or manual coordinates; times are computed locally and work fully offline.
+- Quran reader covering all 114 surahs with three translations (Saheeh International, The Clear Quran, Kemenag) and verse-by-verse recitation audio that downloads ahead of playback and is cached for offline replay.
+- Adhan playback at each prayer time with an in-app prompt to log the prayer as performed.
+- Daily reflection card pairing a Qur'an verse with a hadith from Nawawi's 40.
+- Hijri calendar view with month navigation and today's date anchored to astronomical calculation.
+- English and Indonesian interfaces throughout.
+- Silent background update checks (at most once per day) with a one-click "restart to update" flow; updates are verified against a minisign signature.
+
+### Notes
+
+- Windows and macOS builds are not code-signed yet; SmartScreen (Windows) and Gatekeeper (macOS) may show a warning on first run. See the README for what to expect.
 
 ## [1.0.0-rc.1] - 2026-08-22
 

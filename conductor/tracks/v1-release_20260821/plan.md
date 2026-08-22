@@ -78,6 +78,6 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] Verify: GitHub Release with Win/macOS/Linux artifacts + updater JSON (run 32535889073 green; latest.json live with signed per-platform entries)
 - [x] Task: rc.1 real-machine verification
   - [x] Boot on real machine, note SmartScreen/Gatekeeper behavior, cached playback, release-CSP smoke pass (Phase 2 checklist), updater status check — all passed on Windows (SmartScreen shown & bypassed as documented; smoke checklist green incl. network-blocked cached replay; manual update check reports up-to-date); no issues to fix
-- [ ] Task: Cut **v1.0.0** (bump `1.0.0`, tag, push)
+- [~] Task: Cut **v1.0.0** (bump `1.0.0`, tag, push)
   - Verify: release artifacts published; rc.1 app on real machine prompts update to v1.0.0 (AC-6)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

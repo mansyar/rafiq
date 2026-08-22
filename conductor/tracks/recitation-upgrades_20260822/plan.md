@@ -49,4 +49,4 @@ and accessibility manually + via existing patterns.
 - [x] Task: Delete actions: per-surah immediate, delete-all behind confirm dialog, empty-state, post-delete query invalidation (56440f3)
 - [x] Task: Stop playback gracefully when the playing file is deleted mid-playback (56440f3)
 - [x] Task: i18n completeness pass (EN/ID) + accessibility review of all new controls
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (56440f3)

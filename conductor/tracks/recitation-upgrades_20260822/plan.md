@@ -38,9 +38,9 @@ and accessibility manually + via existing patterns.
 
 ## Phase 4 — Cache backend (Rust, TDD)
 
-- [ ] Task: `RecitationRepo`: list-all + per-surah aggregation (sizes via existing `size_bytes`; group by quran metadata boundaries) — cargo tests first
-- [ ] Task: `RecitationRepo`: delete-per-surah + delete-all removing rows **and** files; tolerate missing files — cargo tests first (temp-dir fixtures)
-- [ ] Task: Tauri commands `get_recitation_cache_summary` / `delete_recitation_cache` (+ registration in `lib.rs`, command-level tests)
+- [x] Task: `RecitationRepo`: list-all + per-surah aggregation (sizes via existing `size_bytes`; group by quran metadata boundaries) — cargo tests first (c75358d)
+- [x] Task: `RecitationRepo`: delete-per-surah + delete-all removing rows **and** files; tolerate missing files — cargo tests first (temp-dir fixtures) (5c236d6)
+- [x] Task: Tauri commands `get_recitation_cache_summary` / `delete_recitation_cache` (+ registration in `lib.rs`, command-level tests) (dc06bf7)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5 — Settings cache card & graceful teardown

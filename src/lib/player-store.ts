@@ -64,6 +64,7 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
       speed: get().speed,
       repeatMode: get().repeatMode,
       autoAdvance: get().autoAdvance,
+      replayToken: get().replayToken,
     };
     const next = playerReducer(prev, event);
     const position = persistencePosition(next, event);
@@ -123,6 +124,7 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
     speed: 1,
     repeatMode: 'off',
     autoAdvance: false,
+    replayToken: 0,
     audioUrl: null,
     cachedFiles: [],
     surahEndGlobal: null,

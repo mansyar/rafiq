@@ -80,6 +80,12 @@ export function nextSpeed(current: PlaybackSpeed): PlaybackSpeed {
 /** What happens when an ayah/surah finishes (FR-3). */
 export type RepeatMode = 'off' | 'ayah' | 'surah';
 
+/** Metadata of the surah following the one being played (FR-4). */
+export interface NextSurahInfo {
+  id: number;
+  firstGlobal: number;
+}
+
 export interface PlayerPosition {
   surahId: number;
   ayah: number;
@@ -98,6 +104,11 @@ export interface PlayerState {
   repeatMode: RepeatMode;
   /** Continue into the next surah at natural end (FR-4), persisted via settings. */
   autoAdvance: boolean;
+  /**
+   * Bumped whenever repeat-ayah replays the current file in place; lets the
+   * `<audio>` wrapper restart playback without changing `src` (FR-3).
+   */
+  replayToken: number;
 }
 
 export type PlayerEvent =
@@ -117,7 +128,14 @@ export type PlayerEvent =
   | { type: 'stop' }
   | { type: 'setSpeed'; speed: PlaybackSpeed }
   | { type: 'setRepeatMode'; mode: RepeatMode }
-  | { type: 'setAutoAdvance'; enabled: boolean };
+  | { type: 'setAutoAdvance'; enabled: boolean }
+  | {
+      type: 'ended';
+      cachedGlobals: number[];
+      surahStartGlobal: number;
+      surahEndGlobal: number;
+      nextSurah: NextSurahInfo | null;
+    };
 
 export function initialPlayerState(): PlayerState {
   return {
@@ -129,6 +147,7 @@ export function initialPlayerState(): PlayerState {
     speed: 1,
     repeatMode: 'off',
     autoAdvance: false,
+    replayToken: 0,
   };
 }
 
@@ -253,6 +272,13 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
       return { ...state, repeatMode: event.mode };
     case 'setAutoAdvance':
       return { ...state, autoAdvance: event.enabled };
+    case 'ended':
+      // FR-3: with repeat-ayah active the same file plays again in place.
+      // Other modes are resolved by later end-of-surah handling.
+      if (!state.current || state.repeatMode !== 'ayah') {
+        return state;
+      }
+      return { ...state, status: 'playing', replayToken: state.replayToken + 1 };
   }
 }
 

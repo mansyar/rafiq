@@ -46,6 +46,7 @@ describe('initialPlayerState', () => {
       speed: 1,
       repeatMode: 'off',
       autoAdvance: false,
+      replayToken: 0,
     });
   });
 });
@@ -124,6 +125,58 @@ describe('nextSpeed (FR-2)', () => {
     expect(nextSpeed(1.25)).toBe(1.5);
     expect(nextSpeed(1.5)).toBe(2);
     expect(nextSpeed(2)).toBe(0.75);
+  });
+});
+
+// ── End-of-ayah resolution (FR-3) ───────────────────────────────────────────
+
+describe('ended → ayah loop (FR-3)', () => {
+  /** Playing surah 2 at ayah 285 (global 292), one ayah before the end. */
+  const playingNearEnd = () =>
+    playerReducer(
+      playerReducer(
+        initialPlayerState(),
+        requestPlay(pos(2, 285, SURAH2_START), cached(292), SURAH2_END),
+      ),
+      { type: 'audioStarted' },
+    );
+
+  const endedEvent = (): PlayerEvent => ({
+    type: 'ended',
+    cachedGlobals: cached(292),
+    surahStartGlobal: SURAH2_START,
+    surahEndGlobal: SURAH2_END,
+    nextSurah: { id: 3, firstGlobal: 294 },
+  });
+
+  it('repeat mode ayah replays the same ayah in place', () => {
+    let state = playingNearEnd();
+    state = playerReducer(state, { type: 'setRepeatMode', mode: 'ayah' });
+    state = playerReducer(state, endedEvent());
+    expect(state.current).toEqual(pos(2, 285, SURAH2_START));
+    expect(state.status).toBe('playing');
+    expect(state.replayToken).toBe(1);
+  });
+
+  it('each replay of the same ayah bumps the replay token again', () => {
+    let state = playerReducer(playingNearEnd(), { type: 'setRepeatMode', mode: 'ayah' });
+    state = playerReducer(state, endedEvent());
+    state = playerReducer(state, endedEvent());
+    expect(state.current).toEqual(pos(2, 285, SURAH2_START));
+    expect(state.replayToken).toBe(2);
+  });
+
+  it('does not persist the position on an in-place replay', () => {
+    let state = playerReducer(playingNearEnd(), { type: 'setRepeatMode', mode: 'ayah' });
+    state = playerReducer(state, endedEvent());
+    expect(persistencePosition(state, endedEvent())).toBeNull();
+  });
+
+  it('with mode off the machine waits for the transport decision', () => {
+    const state = playerReducer(playingNearEnd(), endedEvent());
+    expect(state.current).toEqual(pos(2, 285, SURAH2_START));
+    expect(state.status).toBe('playing');
+    expect(state.replayToken).toBe(0);
   });
 });
 
@@ -309,6 +362,7 @@ describe('playerReducer', () => {
       speed: 1,
       repeatMode: 'off',
       autoAdvance: false,
+      replayToken: 0,
     });
   });
 });

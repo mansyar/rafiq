@@ -191,7 +191,7 @@ fn remove_cache_files(rows: &[CachedAudio]) -> std::io::Result<()> {
 /// are resolved from each row's recorded path (index-authoritative), so
 /// `cache_dir` is accepted only for signature symmetry with the fetch path.
 pub fn delete_surah_cache(
-    cache_dir: &Path,
+    _cache_dir: &Path,
     conn: &Connection,
     surah_id: u8,
 ) -> Result<u64, String> {
@@ -211,8 +211,8 @@ pub fn delete_surah_cache(
 
 /// Deletes every cached ayah: all index rows **and** files. Returns the
 /// freed byte count from the index (FR-5). See `delete_surah_cache` for the
-/// role of `cache_dir`.
-pub fn delete_all_cache(cache_dir: &Path, conn: &Connection) -> Result<u64, String> {
+/// role of `_cache_dir`.
+pub fn delete_all_cache(_cache_dir: &Path, conn: &Connection) -> Result<u64, String> {
     let repo = RecitationRepo::new(conn);
     let rows = repo
         .delete_all()

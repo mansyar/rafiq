@@ -45,8 +45,8 @@ and accessibility manually + via existing patterns.
 
 ## Phase 5 — Settings cache card & graceful teardown
 
-- [ ] Task: Cache summary card in Settings (total size + per-surah rows, TanStack Query hook)
-- [ ] Task: Delete actions: per-surah immediate, delete-all behind confirm dialog, empty-state, post-delete query invalidation
-- [ ] Task: Stop playback gracefully when the playing file is deleted mid-playback
-- [ ] Task: i18n completeness pass (EN/ID) + accessibility review of all new controls
+- [x] Task: Cache summary card in Settings (total size + per-surah rows, TanStack Query hook) (56440f3)
+- [x] Task: Delete actions: per-surah immediate, delete-all behind confirm dialog, empty-state, post-delete query invalidation (56440f3)
+- [x] Task: Stop playback gracefully when the playing file is deleted mid-playback (56440f3)
+- [x] Task: i18n completeness pass (EN/ID) + accessibility review of all new controls
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

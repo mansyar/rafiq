@@ -81,3 +81,6 @@ fully green, 3-OS blocking CI and a wired updater.
 - [x] Task: Cut **v1.0.0** (bump `1.0.0`, tag, push) (0105cfc; re-cut 7c72048 with updater capability fix)
   - [x] Verify: release artifacts published; rc.1 app on real machine prompts update to v1.0.0 (AC-6) — updater flow proven end-to-end on real machine (check → signed download → install → relaunch); shipped rc.1/v1.0.0 binaries predate the ACL fix and cannot self-update, so the fixed v1.0.0 was installed manually once as bootstrap; all future updates flow in-app ("You're up to date" confirmed)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) — verification report attached as git note to 7c72048
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (536d3d3) — Cargo.toml version drift 0.1.0→1.0.0; console.error on install failure

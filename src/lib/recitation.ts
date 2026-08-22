@@ -84,6 +84,7 @@ export type RepeatMode = 'off' | 'ayah' | 'surah';
 export interface NextSurahInfo {
   id: number;
   firstGlobal: number;
+  endGlobal: number;
 }
 
 export interface PlayerPosition {
@@ -274,7 +275,7 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
       return { ...state, autoAdvance: event.enabled };
     case 'ended':
       // FR-3: with repeat-ayah active the same file plays again in place.
-      if (!state.current || state.repeatMode === 'off') {
+      if (!state.current) {
         return state;
       }
       if (state.repeatMode === 'ayah') {
@@ -282,16 +283,39 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
       }
       // FR-3: repeat-surah restarts at ayah 1 (takes precedence over FR-4
       // auto-advance; ayah loop outranks both).
-      return startPlayback(
-        state,
-        {
-          surahId: state.current.surahId,
-          ayah: 1,
-          global: event.surahStartGlobal,
-        },
-        event.cachedGlobals,
-        event.surahEndGlobal,
-      );
+      if (state.repeatMode === 'surah') {
+        return startPlayback(
+          state,
+          {
+            surahId: state.current.surahId,
+            ayah: 1,
+            global: event.surahStartGlobal,
+          },
+          event.cachedGlobals,
+          event.surahEndGlobal,
+        );
+      }
+      // FR-4: auto-advance continues into the next surah when one exists.
+      if (state.autoAdvance && event.nextSurah) {
+        return startPlayback(
+          state,
+          {
+            surahId: event.nextSurah.id,
+            ayah: 1,
+            global: event.nextSurah.firstGlobal,
+          },
+          event.cachedGlobals,
+          event.nextSurah.endGlobal,
+        );
+      }
+      // FR-3.5 / AC-4: nothing requested a continuation — resolve to a clean
+      // stop, preserving user preferences (hard stop after Surah 114).
+      return {
+        ...initialPlayerState(),
+        speed: state.speed,
+        repeatMode: state.repeatMode,
+        autoAdvance: state.autoAdvance,
+      };
   }
 }
 

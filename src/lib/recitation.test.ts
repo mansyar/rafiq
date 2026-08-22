@@ -146,7 +146,7 @@ describe('ended → ayah loop (FR-3)', () => {
     cachedGlobals: cached(292),
     surahStartGlobal: SURAH2_START,
     surahEndGlobal: SURAH2_END,
-    nextSurah: { id: 3, firstGlobal: 294 },
+    nextSurah: { id: 3, firstGlobal: 294, endGlobal: 493 },
   });
 
   it('repeat mode ayah replays the same ayah in place', () => {
@@ -172,11 +172,14 @@ describe('ended → ayah loop (FR-3)', () => {
     expect(persistencePosition(state, endedEvent())).toBeNull();
   });
 
-  it('with mode off the machine waits for the transport decision', () => {
-    const state = playerReducer(playingNearEnd(), endedEvent());
-    expect(state.current).toEqual(pos(2, 285, SURAH2_START));
-    expect(state.status).toBe('playing');
+  it('with mode off the machine resolves a clean stop keeping preferences', () => {
+    let state = playingNearEnd();
+    state = playerReducer(state, { type: 'setSpeed', speed: 1.5 });
+    state = playerReducer(state, endedEvent());
+    expect(state.status).toBe('idle');
+    expect(state.current).toBeNull();
     expect(state.replayToken).toBe(0);
+    expect(state.speed).toBe(1.5);
   });
 });
 
@@ -200,7 +203,7 @@ describe('ended → surah repeat & precedence (FR-3)', () => {
     cachedGlobals: cached(8, 293),
     surahStartGlobal: SURAH2_START,
     surahEndGlobal: SURAH2_END,
-    nextSurah: { id: 3, firstGlobal: 294 },
+    nextSurah: { id: 3, firstGlobal: 294, endGlobal: 493 },
   });
 
   it('surah repeat restarts playback at ayah 1 of the same surah', () => {
@@ -226,6 +229,55 @@ describe('ended → surah repeat & precedence (FR-3)', () => {
     state = playerReducer(state, { type: 'setAutoAdvance', enabled: true });
     state = playerReducer(state, endedEvent());
     expect(state.current).toEqual(pos(2, 1, SURAH2_START));
+  });
+});
+
+// ── Auto-advance across the surah boundary (FR-4) ───────────────────────────
+
+describe('ended → auto-advance (FR-4)', () => {
+  /** Playing surah 2 at its last ayah (286, global 293). */
+  const playingLastAyah = () =>
+    playerReducer(
+      playerReducer(
+        initialPlayerState(),
+        requestPlay(pos(2, 286, SURAH2_START), cached(293), SURAH2_END),
+      ),
+      { type: 'audioStarted' },
+    );
+
+  const endedEvent = (): PlayerEvent => ({
+    type: 'ended',
+    // The first ayah of the next surah is already cached so the transition is
+    // straight to playing and the re-planned lookahead is fully visible.
+    cachedGlobals: cached(294),
+    surahStartGlobal: SURAH2_START,
+    surahEndGlobal: SURAH2_END,
+    nextSurah: { id: 3, firstGlobal: 294, endGlobal: 493 },
+  });
+
+  it('starts the next surah at ayah 1 when auto-advance is on', () => {
+    let state = playerReducer(playingLastAyah(), { type: 'setAutoAdvance', enabled: true });
+    state = playerReducer(state, endedEvent());
+    expect(state.current).toEqual(pos(3, 1, 294));
+    expect(state.status).toBe('playing');
+    // Lookahead bounded by the NEXT surah's end (493), not the previous one.
+    expect(state.pendingGlobals).toEqual([295, 296, 297]);
+  });
+
+  it('hard-stops after the final surah instead of wrapping (AC-4)', () => {
+    let state = playerReducer(playingLastAyah(), { type: 'setAutoAdvance', enabled: true });
+    state = playerReducer(state, { type: 'setRepeatMode', mode: 'off' });
+    state = playerReducer(state, {
+      type: 'ended',
+      cachedGlobals: cached(6236),
+      surahStartGlobal: 6230,
+      surahEndGlobal: 6236,
+      nextSurah: null,
+    });
+    expect(state.status).toBe('idle');
+    expect(state.current).toBeNull();
+    // Preferences survive the hard stop.
+    expect(state.autoAdvance).toBe(true);
   });
 });
 

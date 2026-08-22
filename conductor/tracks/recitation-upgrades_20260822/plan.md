@@ -9,7 +9,7 @@
 All playback-mode semantics live in the pure `playerReducer`
 (`src/lib/recitation.ts`) — DOM-free Vitest coverage first.
 
-- [ ] Task: Extend reducer/types with playback prefs (`speed`, `repeatMode`, `autoAdvance`) + defaults
+- [x] Task: Extend reducer/types with playback prefs (`speed`, `repeatMode`, `autoAdvance`) + defaults (46d59cb)
   - [ ] Write failing tests for initial/default pref state
   - [ ] Implement state fields + typed unions (`0.75|1|1.25|1.5|2`, `off|ayah|surah`, boolean)
 - [ ] Task: Implement repeat-ayah loop on `ended` (position stays put) — tests first

@@ -76,9 +76,8 @@ fully green, 3-OS blocking CI and a wired updater.
   - [x] On `v*` tag: `tauri-apps/tauri-action` on windows/macos/ubuntu, unsigned, `createUpdaterArtifacts` with signing secret, release notes from CHANGELOG section
 - [x] Task: Cut **v1.0.0-rc.1** (bump `1.0.0-rc.1` in `tauri.conf.json` + `package.json`, tag, push) (050edb1)
   - [x] Verify: GitHub Release with Win/macOS/Linux artifacts + updater JSON (run 32535889073 green; latest.json live with signed per-platform entries)
-- [ ] Task: rc.1 real-machine verification
-  - [ ] Boot on real machine, note SmartScreen/Gatekeeper behavior, cached playback, release-CSP smoke pass (Phase 2 checklist), updater status check
-  - [ ] Fix any issues found
+- [x] Task: rc.1 real-machine verification
+  - [x] Boot on real machine, note SmartScreen/Gatekeeper behavior, cached playback, release-CSP smoke pass (Phase 2 checklist), updater status check — all passed on Windows (SmartScreen shown & bypassed as documented; smoke checklist green incl. network-blocked cached replay; manual update check reports up-to-date); no issues to fix
 - [ ] Task: Cut **v1.0.0** (bump `1.0.0`, tag, push)
   - Verify: release artifacts published; rc.1 app on real machine prompts update to v1.0.0 (AC-6)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

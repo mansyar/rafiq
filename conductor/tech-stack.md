@@ -66,6 +66,13 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
   > dependency plus an `app.security.assetProtocol` scope of
   > `$APPDATA/recitation/**`. Without the feature the webview gets
   > `ERR_CONNECTION_REFUSED` on every asset URL.
+  > **Note (2026-08-22):** Recitation-upgrades track: playback preferences
+  > (`recitation_speed`, `recitation_repeat_mode`, `recitation_auto_advance`)
+  > persist through the generic settings key/value store with corrupt-value
+  > fallbacks. Cache management adds the `get_recitation_cache_summary`
+  > (single-pass per-surah aggregation) and `delete_recitation_cache`
+  > (per-surah or whole-cache; deletes rows **and** files, tolerates missing
+  > files) commands. E2E mock now serves recitation globals 1–10.
 - **Licensing:** per `product.md` Content Licensing Notes
 
 ## Dev Tools

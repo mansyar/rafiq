@@ -40,7 +40,10 @@ never monetized or surveilled.
    per-surah navigation.
 3. **Audio Recitation** — Mishary Rashid Alafasy; per-ayah audio with
     download-on-demand (explicit play, visible progress), cached forever
-    locally; offline playback; last-played position remembered per surah.
+    locally; offline playback; last-played position remembered per surah;
+    playback speed presets (0.75×–2×); repeat modes (ayah / surah); optional
+    continue-to-next-surah auto-advance; cache management in Settings
+    (per-surah delete, clear-all).
 4. **Prayer Log + Analytics** — log each prayer; track on-time vs qada; streak
    tracking; progress reports (daily / weekly / monthly).
 5. **Hijri Calendar** — Umm al-Qura basis; Hijri↔Gregorian conversion; today's

@@ -29,12 +29,12 @@ and accessibility manually + via existing patterns.
 - [x] Task: Repeat segmented control + "Continue to next surah" toggle in footer (EN/ID keys) (4767002)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (4767002)
 
-## Phase 3 — Auto-advance reader integration + E2E
+## Phase 3 — Auto-advance reader integration + E2E [checkpoint: 639f18b]
 
 - [x] Task: Reader auto-navigation: view follows playback across the surah boundary without killing audio (revisit unmount/surah-switch effects in `RecitationAudio`) (2618154)
 - [x] Task: Extend E2E mock (`e2e/helpers/mock-tauri.ts`) for multi-surah playback states + preference persistence (639f18b)
 - [x] Task: E2E specs: speed cycling, surah-repeat wrap, auto-advance navigation (AC-7) (639f18b)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (639f18b)
 
 ## Phase 4 — Cache backend (Rust, TDD)
 

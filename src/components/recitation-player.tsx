@@ -18,8 +18,10 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
   const speed = useRecitationPlayer((s) => s.speed);
   const replayToken = useRecitationPlayer((s) => s.replayToken);
   const pendingAutoNav = useRecitationPlayer((s) => s.pendingAutoNav);
+  const autoAdvance = useRecitationPlayer((s) => s.autoAdvance);
+  const repeatMode = useRecitationPlayer((s) => s.repeatMode);
   const audioStarted = useRecitationPlayer((s) => s.audioStarted);
-  const advance = useRecitationPlayer((s) => s.advance);
+  const handleEnded = useRecitationPlayer((s) => s.handleEnded);
   const pause = useRecitationPlayer((s) => s.pause);
   const stop = useRecitationPlayer((s) => s.stop);
 
@@ -60,12 +62,21 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
   // Switching surahs (prev/next) stops the previous surah's playback; its
   // position is already persisted, so it resumes from there when revisited.
   // Exception: an auto-advance boundary crossing (FR-4) — the reader follows
-  // via `pendingAutoNav`, so playback must continue seamlessly.
+  // playback via `pendingAutoNav`. The direction fallback covers the frame
+  // where the nav flag was already consumed but the route transition has not
+  // committed yet: playback being AHEAD of the view means we are following,
+  // not that the user switched away.
   useEffect(() => {
-    if (current && current.surahId !== surahId && pendingAutoNav !== current.surahId) {
+    if (!current || current.surahId === surahId) {
+      return;
+    }
+    const following =
+      pendingAutoNav === current.surahId ||
+      (autoAdvance && repeatMode === 'off' && current.surahId > surahId);
+    if (!following) {
       stop();
     }
-  }, [surahId, current, pendingAutoNav, stop]);
+  }, [surahId, current, pendingAutoNav, autoAdvance, repeatMode, stop]);
 
   return (
     <audio
@@ -74,7 +85,7 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
       preload="auto"
       style={{ display: 'none' }}
       onPlay={audioStarted}
-      onEnded={advance}
+      onEnded={handleEnded}
       data-testid="recitation-audio"
     >
       <track kind="captions" />

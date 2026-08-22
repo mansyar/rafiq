@@ -9,8 +9,9 @@ import { installMockTauri } from './helpers/mock-tauri';
 // Real, decodable 0.5 s silent MP3 so headless Chromium actually starts and
 // ends playback for every ayah (driving advance/persistence in the store).
 const FIXTURE_MP3 = readFileSync(path.join('e2e', 'fixtures', 'silence.mp3'));
-// Al-Fatiha globals 1..7 are all served from local fixture paths by the mock.
-const MOCK_MP3_URL = /\/tmp\/mock\/recitation\/[1-7]\.mp3$/;
+// Globals 1..7 (Al-Fatiha) plus 8..10 (Al-Baqarah lookahead after the
+// auto-advance boundary) are served from local fixture paths by the mock.
+const MOCK_MP3_URL = /\/tmp\/mock\/recitation\/(?:[1-9]|10)\.mp3$/;
 
 /**
  * Opt-in real-CDN mode (`E2E_REAL_CDN=1`): the same `/tmp/mock/recitation/N.mp3`
@@ -180,5 +181,90 @@ test.describe('Recitation playback (Al-Fatiha fixture)', () => {
     await expect(
       page.locator('[aria-label="Recitation player"] span[aria-live="polite"]'),
     ).toHaveText(/Audio downloads when you press play/);
+  });
+});
+
+test.describe('Playback preferences (FR-2/FR-3/FR-4)', () => {
+  test.beforeEach(async ({ page }) => {
+    await installMockTauri(page);
+    await page.route(MOCK_MP3_URL, (route) => fulfillMp3(route));
+    await page.goto('/onboarding');
+    await page.getByRole('button', { name: /skip/i }).click();
+    await expect(page).toHaveURL('/');
+  });
+
+  const player = (page: Page) => page.locator('[aria-label="Recitation player"]');
+  const positionLabel = (page: Page) => player(page).locator('span[aria-live="polite"]');
+
+  test('speed button cycles presets, wraps, and persists across reload (AC-1)', async ({
+    page,
+  }) => {
+    await page.goto('/quran/1');
+    const speedBtn = page.getByRole('button', { name: /Playback speed/ });
+    await expect(speedBtn).toHaveText('1×');
+
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText('1.25×');
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText('1.5×');
+    await speedBtn.click();
+    await expect(speedBtn).toHaveText('2×');
+    await speedBtn.click(); // wraps past 2× back to the slowest preset
+    await expect(speedBtn).toHaveText('0.75×');
+
+    // Preference survives a full app restart (settings-backed hydration).
+    await page.reload();
+    await expect(speedBtn).toHaveText('0.75×');
+  });
+
+  test('repeat-ayah keeps replaying the same ayah in place (FR-3)', async ({ page }) => {
+    await page.goto('/quran/1');
+    const repeatGroup = page.getByRole('group', { name: 'Repeat' });
+    await repeatGroup.getByRole('button', { name: 'Ayah', exact: true }).click();
+
+    const play = player(page).getByRole('button', { name: 'Play', exact: true });
+    await play.click({ timeout: 10_000 });
+
+    // Two fixture ayah-durations (~0.5 s each) pass; playback must still be
+    // sitting on ayah 1 and still running.
+    await expect(positionLabel(page)).toHaveText('1 : 1');
+    await page.waitForTimeout(1600);
+    await expect(positionLabel(page)).toHaveText('1 : 1');
+    await expect(player(page).getByRole('button', { name: 'Pause', exact: true })).toBeVisible();
+  });
+
+  test('repeat-surah wraps back to ayah 1 at the end of Al-Fatiha (FR-3)', async ({ page }) => {
+    await page.goto('/quran/1');
+    const repeatGroup = page.getByRole('group', { name: 'Repeat' });
+    await repeatGroup.getByRole('button', { name: 'Surah', exact: true }).click();
+
+    await player(page).getByRole('button', { name: 'Play', exact: true }).click({
+      timeout: 10_000,
+    });
+
+    // Playback moves past ayah 1 …
+    await expect(positionLabel(page)).toHaveText(/1 : [2-7]/, { timeout: 15_000 });
+    // … reaches the end …
+    await expect(positionLabel(page)).toHaveText(/1 : [2-7]|1 : 1/, { timeout: 15_000 });
+    // … and wraps to ayah 1 again while audio is still going.
+    await expect(positionLabel(page)).toHaveText('1 : 1', { timeout: 15_000 });
+    await expect(player(page).getByRole('button', { name: 'Pause', exact: true })).toBeVisible();
+  });
+
+  test('auto-advance carries playback from Al-Fatiha into Al-Baqarah hands-free (FR-4)', async ({
+    page,
+  }) => {
+    await page.goto('/quran/1');
+    await page.getByRole('button', { name: 'Continue to next surah' }).click();
+
+    await player(page).getByRole('button', { name: 'Play', exact: true }).click({
+      timeout: 10_000,
+    });
+
+    // After the last Fatiha ayah ends, the reader follows playback into
+    // surah 2 without any user interaction.
+    await expect(page).toHaveURL(/\/quran\/2$/, { timeout: 20_000 });
+    await expect(positionLabel(page)).toHaveText('2 : 1', { timeout: 20_000 });
+    await expect(player(page).getByRole('button', { name: 'Pause', exact: true })).toBeVisible();
   });
 });

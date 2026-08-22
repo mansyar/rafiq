@@ -567,11 +567,12 @@ export async function installMockTauri(page: Page): Promise<void> {
             if (cachedEntry) {
               return { ...cachedEntry };
             }
-            // Al-Fatiha occupies globals 1..7; serve every one of them from
-            // local fixture paths so lookahead prefetches succeed and no
-            // spurious download-error state races the specs. Bytes come from
-            // the page.route fulfiller in recitation.spec.ts (no real CDN).
-            if (ayah >= 1 && ayah <= 7) {
+            // Al-Fatiha occupies globals 1..7; serve them plus the first
+            // ayahs of Al-Baqarah (8..10) from local fixture paths so the
+            // auto-advance lookahead after the Fatiha→Baqarah boundary
+            // succeeds without any network. Bytes come from the page.route
+            // fulfiller in recitation.spec.ts (no real CDN).
+            if (ayah >= 1 && ayah <= 10) {
               const entry = {
                 global_ayah: ayah,
                 file_path: `/tmp/mock/recitation/${ayah}.mp3`,
@@ -580,7 +581,7 @@ export async function installMockTauri(page: Page): Promise<void> {
               recitationIndex.set(ayah, entry);
               return { ...entry };
             }
-            throw new Error('network disabled in mock — only Al-Fatiha (1..7) mocked');
+            throw new Error('network disabled in mock — only globals 1..10 mocked');
           }
           case 'get_recitation_state': {
             // Complete RecitationState so RecitationPlayButton/Footer enable;

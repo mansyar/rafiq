@@ -50,3 +50,7 @@ and accessibility manually + via existing patterns.
 - [x] Task: Stop playback gracefully when the playing file is deleted mid-playback (56440f3)
 - [x] Task: i18n completeness pass (EN/ID) + accessibility review of all new controls
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (56440f3)
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions (f035865)

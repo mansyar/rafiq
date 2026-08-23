@@ -11,8 +11,8 @@ real scrolling behavior that unit tests cannot see.
 
 - [x] Task: Follow-state machine — following ⇄ suspended via user-scrolled-away / active-in-view / button-tapped / reset events; idle-safe no-ops — tests first (`src/lib/follow-scroll.ts`) (ed0f989)
 - [x] Task: Reduced-motion scroll-behavior helper (`scrollBehaviorFor`) — tests first (ed0f989)
-- [ ] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Verify coverage (>80% changed logic) & quality gates (biome, tsc)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (ed0f989)
 
 ## Phase 2 — Reader integration & floating jump button
 

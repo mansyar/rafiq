@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LocateFixed } from 'lucide-react';
-import { useEffect, useReducer, useRef } from 'react';
+import { type RefObject, useEffect, useReducer, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -24,10 +24,7 @@ import { cn } from '@/lib/utils';
 const TRANSLATIONS: QuranTranslation[] = ['sahih', 'clear', 'kemenag'];
 
 /** Resolves the DOM node of an ayah card from the reader's ref registry. */
-function ayahElement(
-  refs: React.RefObject<Map<number, HTMLElement>>,
-  ayah: number,
-): HTMLElement | null {
+function ayahElement(refs: RefObject<Map<number, HTMLElement>>, ayah: number): HTMLElement | null {
   return refs.current?.get(ayah) ?? null;
 }
 

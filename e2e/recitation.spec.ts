@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import type { Page, Route } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 import { installMockTauri } from './helpers/mock-tauri';
@@ -264,5 +264,113 @@ test.describe('Playback preferences (FR-2/FR-3/FR-4)', () => {
     await expect(page).toHaveURL(/\/quran\/2$/, { timeout: 20_000 });
     await expect(positionLabel(page)).toHaveText('2 : 1', { timeout: 20_000 });
     await expect(player(page).getByRole('button', { name: 'Pause', exact: true })).toBeVisible();
+  });
+});
+
+test.describe('Recitation follow-scroll (FR-1..FR-4)', () => {
+  const player = (page: Page) => page.locator('[aria-label="Recitation player"]');
+  const positionLabel = (page: Page) => player(page).locator('span[aria-live="polite"]');
+
+  test.beforeEach(async ({ page }) => {
+    await installMockTauri(page);
+    await page.route(MOCK_MP3_URL, fulfillMp3);
+    await page.goto('/onboarding');
+    await page.getByRole('button', { name: 'Skip' }).click();
+    await expect(page).toHaveURL('/');
+  });
+
+  const ayahCard = (page: Page, n: number) =>
+    page.getByRole('button', { name: new RegExp(`Ayah ${n} `) });
+
+  const isInViewport = (page: Page, locator: Locator) =>
+    locator.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return (
+        r.top >= 0 && r.left >= 0 && r.bottom <= window.innerHeight && r.right <= window.innerWidth
+      );
+    });
+
+  test('keeps the recited ayah in view as playback advances (AC-1)', async ({ page }) => {
+    await page.goto('/quran/1');
+    await player(page).getByRole('button', { name: 'Play', exact: true }).click({
+      timeout: 10_000,
+    });
+    // Clicking the footer can leave the viewport below the cards; align with
+    // ayah 1 so following starts engaged rather than suspended (FR-2).
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    // Wait for the second ayah to become active, then confirm it is on screen.
+    await expect(positionLabel(page)).toHaveText('1 : 2', { timeout: 15_000 });
+    await expect.poll(() => isInViewport(page, ayahCard(page, 2)), { timeout: 5_000 }).toBe(true);
+  });
+
+  test('reveals the jump pill after scrolling away and snaps back on tap (AC-2)', async ({
+    page,
+  }) => {
+    await page.goto('/quran/1');
+    await page
+      .getByRole('group', { name: 'Repeat' })
+      .getByRole('button', { name: 'Surah', exact: true })
+      .click();
+    await player(page).getByRole('button', { name: 'Play', exact: true }).click({
+      timeout: 10_000,
+    });
+    await expect(positionLabel(page)).toHaveText(/1 : [1-7]/, { timeout: 15_000 });
+
+    // Scroll far below the recited verse; the chase suspends and the pill appears.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const jump = page.getByTestId('jump-to-recitation');
+    await expect(jump).toBeVisible({ timeout: 5_000 });
+
+    // Tapping it centers the active card and hides the pill again (resume).
+    await jump.click();
+    await expect(jump).toBeHidden({ timeout: 5_000 });
+    await expect.poll(() => isInViewport(page, ayahCard(page, 1))).toBe(true);
+  });
+
+  test('resumes following silently when the user scrolls back into range (AC-3)', async ({
+    page,
+  }) => {
+    await page.goto('/quran/1');
+    await page
+      .getByRole('group', { name: 'Repeat' })
+      .getByRole('button', { name: 'Surah', exact: true })
+      .click();
+    await player(page).getByRole('button', { name: 'Play', exact: true }).click({
+      timeout: 10_000,
+    });
+    await expect(positionLabel(page)).toHaveText(/1 : [1-7]/, { timeout: 15_000 });
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(page.getByTestId('jump-to-recitation')).toBeVisible({ timeout: 5_000 });
+
+    // Returning without touching the pill re-engages the chase on its own.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(page.getByTestId('jump-to-recitation')).toBeHidden({ timeout: 5_000 });
+  });
+
+  test('pill stays useful while paused and disappears when playback stops (AC-4)', async ({
+    page,
+  }) => {
+    await page.goto('/quran/1');
+    await page
+      .getByRole('group', { name: 'Repeat' })
+      .getByRole('button', { name: 'Surah', exact: true })
+      .click();
+    await player(page).getByRole('button', { name: 'Play', exact: true }).click({
+      timeout: 10_000,
+    });
+    await expect(positionLabel(page)).toHaveText(/1 : [1-7]/, { timeout: 15_000 });
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(page.getByTestId('jump-to-recitation')).toBeVisible({ timeout: 5_000 });
+
+    // Paused playback keeps the escape hatch available...
+    await player(page).getByRole('button', { name: 'Pause', exact: true }).click();
+    await expect(page.getByTestId('jump-to-recitation')).toBeVisible();
+
+    // ...and stopping clears it entirely (idle resets following).
+    await player(page).getByRole('button', { name: 'Stop', exact: true }).click();
+    await expect(page.getByTestId('jump-to-recitation')).toBeHidden({ timeout: 5_000 });
   });
 });

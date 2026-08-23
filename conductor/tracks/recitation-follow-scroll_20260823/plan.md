@@ -21,7 +21,7 @@ real scrolling behavior that unit tests cannot see.
 - [x] Task: i18n parity check + accessibility review of the new control (946ef07)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (946ef07)
 
-## Phase 3 — E2E coverage [checkpoint: 946ef07]
+## Phase 3 — E2E coverage [checkpoint: 331404b]
 
-- [ ] Task: `e2e/recitation.spec.ts` — new describe covering AC-1..AC-4 with fixture audio
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: `e2e/recitation.spec.ts` — new describe covering AC-1..AC-4 with fixture audio (331404b)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (331404b)

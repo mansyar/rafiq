@@ -37,7 +37,9 @@ never monetized or surveilled.
    prayer time.
 2. **Quran Reader** — Arabic text with English translations (Sahih International,
    The Clear Quran) and Indonesian translation (Kemenag); parallel view;
-   per-surah navigation.
+   per-surah navigation; while recitation plays the reader follows along,
+   keeping the recited ayah in view (manual scrolling suspends the chase, with
+   a floating jump-back control).
 3. **Audio Recitation** — Mishary Rashid Alafasy; per-ayah audio with
     download-on-demand (explicit play, visible progress), cached forever
     locally; offline playback; last-played position remembered per surah;

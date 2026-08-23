@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { LocateFixed } from 'lucide-react';
+import { useEffect, useReducer, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -9,6 +10,7 @@ import {
 } from '@/components/recitation-player';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { followReducer, initialFollowState, scrollBehaviorFor } from '@/lib/follow-scroll';
 import { useRecitationPlayer } from '@/lib/player-store';
 import {
   getQuranTranslation,
@@ -20,6 +22,19 @@ import {
 import { cn } from '@/lib/utils';
 
 const TRANSLATIONS: QuranTranslation[] = ['sahih', 'clear', 'kemenag'];
+
+/** Resolves the DOM node of an ayah card from the reader's ref registry. */
+function ayahElement(
+  refs: React.RefObject<Map<number, HTMLElement>>,
+  ayah: number,
+): HTMLElement | null {
+  return refs.current?.get(ayah) ?? null;
+}
+
+/** AC-5/NFR-3: instant jumps under reduced motion, animated otherwise. */
+function preferredScrollBehavior(): ScrollBehavior {
+  return scrollBehaviorFor(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
 
 export function QuranReader() {
   const { t } = useTranslation();
@@ -64,6 +79,59 @@ export function QuranReader() {
       consumeAutoNav();
     }
   }, [pendingAutoNav, navigate, consumeAutoNav]);
+
+  // ── Follow-scroll (recitation-follow-scroll track) ──
+  // FR-1: while playing, keep the recited ayah centered. FR-2: manual
+  // scrolling suspends the chase until the verse re-enters view.
+  const [followPhase, dispatchFollow] = useReducer(followReducer, undefined, initialFollowState);
+  const ayahRefs = useRef<Map<number, HTMLElement>>(new Map());
+
+  // FR-1: every ayah change during playback re-centers while following.
+  useEffect(() => {
+    if (!playerActive || playerStatus !== 'playing' || followPhase !== 'following') return;
+    const el = playerCurrent ? ayahElement(ayahRefs, playerCurrent.ayah) : null;
+    el?.scrollIntoView({ block: 'center', behavior: preferredScrollBehavior() });
+  }, [playerActive, playerStatus, playerCurrent, followPhase]);
+
+  // FR-2: watch the viewport; any overlap of the active card counts as in view.
+  useEffect(() => {
+    if (!playerActive) return;
+    const evaluate = () => {
+      const el = playerCurrent ? ayahElement(ayahRefs, playerCurrent.ayah) : null;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!inView && followPhase === 'following') dispatchFollow({ type: 'activeLeftView' });
+      else if (inView && followPhase === 'suspended') dispatchFollow({ type: 'activeInView' });
+    };
+    evaluate();
+    window.addEventListener('scroll', evaluate, { passive: true });
+    window.addEventListener('resize', evaluate);
+    return () => {
+      window.removeEventListener('scroll', evaluate);
+      window.removeEventListener('resize', evaluate);
+    };
+  }, [playerActive, playerCurrent, followPhase]);
+
+  // FR-4: stopping playback or switching surahs always restarts following.
+  useEffect(() => {
+    if (playerStatus === 'idle') dispatchFollow({ type: 'reset' });
+  }, [playerStatus]);
+  useEffect(() => {
+    if (surahId < 1) return; // re-run keyed on surahId is the point (FR-4)
+    dispatchFollow({ type: 'reset' });
+  }, [surahId]);
+
+  const showJump =
+    playerActive &&
+    (playerStatus === 'playing' || playerStatus === 'paused') &&
+    followPhase === 'suspended';
+
+  const jumpToRecitation = () => {
+    const el = playerCurrent ? ayahElement(ayahRefs, playerCurrent.ayah) : null;
+    el?.scrollIntoView({ block: 'center', behavior: preferredScrollBehavior() });
+    dispatchFollow({ type: 'jumpRequested' });
+  };
 
   if (!id || !Number.isInteger(surahId) || surahId < 1 || surahId > 114) {
     return (
@@ -199,6 +267,10 @@ export function QuranReader() {
                 return (
                   <button
                     key={ayah.number}
+                    ref={(el) => {
+                      if (el) ayahRefs.current.set(ayah.number, el);
+                      else ayahRefs.current.delete(ayah.number);
+                    }}
                     type="button"
                     onClick={startFromAyah}
                     aria-label={
@@ -280,6 +352,19 @@ export function QuranReader() {
             <span />
           )}
         </div>
+      )}
+
+      {/* FR-3: calm way back to the recited verse after scrolling away. */}
+      {showJump && (
+        <button
+          type="button"
+          onClick={jumpToRecitation}
+          data-testid="jump-to-recitation"
+          className="fixed bottom-6 left-1/2 z-40 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-lg transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        >
+          <LocateFixed className="size-4 text-gold-700 dark:text-gold-200" aria-hidden="true" />
+          {t('quran.audio.jumpToAyah')}
+        </button>
       )}
     </section>
   );

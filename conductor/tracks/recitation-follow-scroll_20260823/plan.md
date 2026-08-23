@@ -19,9 +19,9 @@ real scrolling behavior that unit tests cannot see.
 - [x] Task: Wire overlap detection (IntersectionObserver) + auto-center effect into `quran-reader.tsx` through the machine (FR-1/FR-2/FR-4); reset on stop/new play/surah navigation (946ef07)
 - [x] Task: Floating "Jump to reciting ayah" pill with EN/ID catalog keys (FR-3) (946ef07)
 - [x] Task: i18n parity check + accessibility review of the new control (946ef07)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (946ef07)
 
-## Phase 3 — E2E coverage
+## Phase 3 — E2E coverage [checkpoint: 946ef07]
 
 - [ ] Task: `e2e/recitation.spec.ts` — new describe covering AC-1..AC-4 with fixture audio
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

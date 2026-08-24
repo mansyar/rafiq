@@ -9,7 +9,7 @@ precedes every implementation task. Tests required only for logic-bearing code
 (assets, resolution engine, commands); presentational UI exempt per project
 rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 
-## Phase 1 — Event data assets & validation (Rust, TDD)
+## Phase 1 — Event data assets & validation (Rust, TDD) [checkpoint: ea88244]
 
 - [x] Task: Author content assets [4ad62c8]
   - [x] `src-tauri/assets/hijri-events/events.json` — exactly 8 events:
@@ -35,21 +35,23 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 
 ## Phase 2 — Resolution logic (pure functions, TDD)
 
-- [ ] Task: Write failing tests for event-for-date resolution *(Red)*
-  - [ ] Verified anchor: 2026-06-16 → Islamic New Year (1 Muḥarram 1448);
+- [x] Task: Write failing tests for event-for-date resolution *(Red)* [2f4901a]
+  - [x] Verified anchor: 2026-06-16 → Islamic New Year (1 Muḥarram 1448);
         ordinary day → none
-  - [ ] Each of the 8 events resolves on sample dates across two Hijri years
-- [ ] Task: Write failing tests for upcoming-events computation *(Red)*
-  - [ ] Today-is-event leads with `is_today`; next-3 crosses Gregorian month
+  - [x] Each of the 8 events resolves on sample dates across two Hijri years
+- [x] Task: Write failing tests for upcoming-events computation *(Red)* [2f4901a]
+  - [x] Today-is-event leads with `is_today`; next-3 crosses Gregorian month
         boundary; crosses Hijri year boundary; forward search bounded (~370
         days) and terminates
-- [ ] Task: Write failing tests for Daily Reflection override integration
-      *(Red)*
-  - [ ] Event day → `Some(event)`; adjacent days → `None`; non-event rotation
+- [x] Task: Write failing tests for Daily Reflection override integration
+      *(Red)* [2f4901a]
+  - [x] Event day → `Some(event)`; adjacent days → `None`; non-event rotation
         byte-identical to pre-track behavior *(AC-4)*
-- [ ] Task: Implement pure resolution functions + additive extension of
-      `daily_content_for_date` *(Green)*
-- [ ] Task: Refactor + verify coverage ≥80%
+- [x] Task: Implement pure resolution functions + additive extension of
+      `daily_content_for_date` *(Green)* [e07a6ac]
+- [x] Task: Refactor + verify coverage ≥80%
+      (cargo llvm-cov: 89.47% lines / 92.11% functions / 91.23% branches on
+      `hijri_events/mod.rs`; no refactor needed)
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
 ## Phase 3 — Command surface (TDD)

@@ -6,13 +6,13 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
 
 ## Phase 1 — Shared `QueryError` component & i18n foundation
 
-- [ ] Task: Write failing component tests for `QueryError`
-  - [ ] Tests: renders localized message + Retry button with `role="alert"`; button disabled while refetching; click calls `refetch()`; keyboard accessible
-  - [ ] Confirm tests fail (Red phase)
-- [ ] Task: Implement `src/components/query-error.tsx`
-  - [ ] Green: component passes tests; styled with existing `ui/button` + `text-destructive` patterns
-- [ ] Task: Add shared i18n keys (`common.retry`, `common.logging`, error strings) to `en.json` + `id.json`
-  - [ ] Verify parity via existing `locale.test.ts` (keys added to both files, no placeholder drift)
+- [x] Task: Write failing component tests for `QueryError` [c703c87]
+  - [x] Tests: renders localized message + Retry button with `role="alert"`; button disabled while refetching; click calls `refetch()`; keyboard accessible
+  - [x] Confirm tests fail (Red phase)
+- [x] Task: Implement `src/components/query-error.tsx` [c703c87]
+  - [x] Green: component passes tests; styled with existing `ui/button` + `text-destructive` patterns
+- [x] Task: Add shared i18n keys (`common.retry`, `common.logging`, error strings) to `en.json` + `id.json` [c703c87]
+  - [x] Verify parity via existing `locale.test.ts` (keys added to both files, no placeholder drift) — added a structural parity test (identical key paths + placeholder-token match) backing AC-7
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2 — Sticky error states: every page recovers

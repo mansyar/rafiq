@@ -30,7 +30,7 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] On error: stable card with `QueryError` + retry (empty state still hides)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 3 — Silent failure fixes
+## Phase 3 — Silent failure fixes [checkpoint: 1a5c204]
 
 - [x] Task: Update banner install-failure state (TDD) (315eeed)
   - [x] Failing tests in `update-store.test.ts`: `kind === 'error'` remains visible/actionable; retry action re-triggers install; banner test updated
@@ -45,7 +45,7 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] Disable toggle while mutation pending; inline error text on `onError` (notifications / adhan / autostart)
 - [x] Task: Quran translation switcher — pending + inline error (1a5c204)
   - [x] Disable group while `translationMutation.isPending`; surface failure inline
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4 — Double-submit guards & i18n leak
 

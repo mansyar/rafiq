@@ -98,6 +98,11 @@
     "restartToUpdate": "Mulai ulang untuk memperbarui",
     "installing": "Memperbarui…"
   },
+  "common": {
+    "retry": "Coba lagi",
+    "retrying": "Mencoba lagi…",
+    "logging": "Mencatat…"
+  },
   "prayer": {
     "fajr": "Subuh",
     "sunrise": "Terbit",

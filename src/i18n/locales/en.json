@@ -98,6 +98,11 @@
     "restartToUpdate": "Restart to update",
     "installing": "Updating…"
   },
+  "common": {
+    "retry": "Retry",
+    "retrying": "Retrying…",
+    "logging": "Logging…"
+  },
   "prayer": {
     "fajr": "Fajr",
     "sunrise": "Sunrise",

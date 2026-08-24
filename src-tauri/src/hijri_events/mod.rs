@@ -12,7 +12,7 @@
 
 use std::sync::OnceLock;
 
-use chrono::NaiveDate;
+use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
 
 // Reuse the exact shapes already established for curated content.
@@ -71,31 +71,91 @@ pub fn all_event_content() -> &'static [EventContent] {
     EVENT_CONTENT.get_or_init(load_event_content_inner)
 }
 
+/// Internal matcher: the observance for a civil date plus its computed
+/// Hijri date (single engine conversion).
+fn match_for_date(date: NaiveDate) -> Option<(&'static HijriEventDef, crate::hijri::HijriDate)> {
+    let h =
+        crate::hijri::gregorian_to_hijri(date.year(), date.month() as u8, date.day() as u8).ok()?;
+    let def = all_event_defs()
+        .iter()
+        .find(|e| e.hijri_month == h.month && e.hijri_day == h.day)?;
+    Some((def, h))
+}
+
 /// The observance matching a civil Gregorian date, if any.
 ///
 /// Pure: converts via the Umm al-Qura engine and compares the resulting
 /// Hijri month/day against bundled definitions.
-pub fn event_def_for_date(_date: NaiveDate) -> Option<&'static HijriEventDef> {
-    // Red-phase stub: Green matches computed month/day.
-    None
+pub fn event_def_for_date(date: NaiveDate) -> Option<&'static HijriEventDef> {
+    match_for_date(date).map(|(def, _)| def)
 }
 
 /// The next `limit` upcoming observances from `today` (inclusive), oldest
-/// first. The forward search is bounded (~370 days) so it always terminates.
-pub fn upcoming_events(_today: NaiveDate, _limit: usize) -> Vec<UpcomingEvent> {
-    // Red-phase stub: Green walks forward day by day.
-    Vec::new()
+/// first, at most one occurrence per observance. The forward search is
+/// bounded to ~370 days — every observance recurs within one Hijri year
+/// (~355 days) — so it always terminates.
+pub fn upcoming_events(today: NaiveDate, limit: usize) -> Vec<UpcomingEvent> {
+    let mut out: Vec<UpcomingEvent> = Vec::with_capacity(limit);
+    if limit == 0 {
+        return out;
+    }
+    for offset in 0..370i64 {
+        let day = today + chrono::TimeDelta::try_days(offset).expect("offset is in range");
+        let Some((def, h)) = match_for_date(day) else {
+            continue;
+        };
+        if out.iter().any(|u| u.id == def.id) {
+            continue;
+        }
+        out.push(UpcomingEvent {
+            id: def.id.clone(),
+            hijri_year: h.year,
+            gregorian_date: day.format("%Y-%m-%d").to_string(),
+            is_today: offset == 0,
+        });
+        if out.len() == limit {
+            break;
+        }
+    }
+    out
 }
 
 /// Daily content with an observance override attached on event days.
 ///
-/// On non-event days this is exactly `daily::daily_content_for_date`.
+/// On non-event days this is exactly `daily::daily_content_for_date` —
+/// rotation output is untouched (spec AC-4).
 pub fn daily_content_with_event(
     date: NaiveDate,
     translation: crate::quran::QuranTranslation,
 ) -> Result<crate::daily::DailyContent, String> {
-    // Red-phase stub: no override attached yet.
-    crate::daily::daily_content_for_date(date, translation)
+    let mut content = crate::daily::daily_content_for_date(date, translation)?;
+    if let Some((def, _)) = match_for_date(date) {
+        content.event = Some(build_override(&def.id, translation)?);
+    }
+    Ok(content)
+}
+
+/// Resolve the bundled thematic pair for an observance into frontend-ready
+/// payloads (ayah text resolved against bundled Quran — no duplication).
+fn build_override(
+    event_id: &str,
+    translation: crate::quran::QuranTranslation,
+) -> Result<crate::daily::EventOverride, String> {
+    let entry = all_event_content()
+        .iter()
+        .find(|c| c.event_id == event_id)
+        .ok_or_else(|| format!("no override content defined for event '{event_id}'"))?;
+    Ok(crate::daily::EventOverride {
+        event_id: event_id.to_string(),
+        ayah: crate::daily::resolve_ayah(&entry.ayah, translation)?,
+        hadith: crate::daily::DailyHadith {
+            id: entry.hadith.id.clone(),
+            arabic: entry.hadith.arabic.clone(),
+            en: entry.hadith.en.clone(),
+            id_translation: entry.hadith.id_translation.clone(),
+            source: entry.hadith.source.clone(),
+        },
+    })
 }
 
 #[cfg(test)]
@@ -332,12 +392,18 @@ mod tests {
 
     #[test]
     fn upcoming_crosses_hijri_year_boundary() {
-        // Late 1447: the next observance rolls into Hijri year 1448.
-        let up = upcoming_events(ymd(2026, 11, 1), 1);
+        // The day after Eid al-Adha 1448: nothing remains in Hijri 1448,
+        // so the next observance must roll into the NEXT Hijri year.
+        let after_eid = crate::hijri::hijri_to_gregorian(1448, 12, 11).unwrap();
+        let today =
+            NaiveDate::from_ymd_opt(after_eid.year, after_eid.month as u32, after_eid.day as u32)
+                .unwrap();
+        let up = upcoming_events(today, 1);
         assert_eq!(up.len(), 1);
         assert_eq!(up[0].id, "islamic_new_year");
-        assert_eq!(up[0].hijri_year, 1448);
-        let expected = crate::hijri::hijri_to_gregorian(1448, 1, 1).unwrap();
+        assert_eq!(up[0].hijri_year, 1449);
+        assert!(!up[0].is_today);
+        let expected = crate::hijri::hijri_to_gregorian(1449, 1, 1).unwrap();
         assert_eq!(up[0].gregorian_date, g2s(expected));
     }
 

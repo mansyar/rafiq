@@ -18,13 +18,13 @@ the loop since OS trays cannot be scripted by Playwright.
 
 ## Phase 2 — Tray runtime integration (Rust)
 
-- [ ] Task: Bundle monochrome template tray icon asset (light/dark adaptive) (FR-1)
-- [ ] Task: Build tray icon + default menu in `setup`; left-click show/focus, right-click menu events (FR-1, FR-4)
-- [ ] Task: Intercept window close → hide-to-tray + one-time explainer notification through existing notification plugin; minimize untouched (FR-2, FR-8, AC-1, AC-8)
-- [ ] Task: ~30 s refresh task updating menu info row + tooltip from `get_next_prayer` data path; no busy polling (FR-3, FR-5, NFR-3)
-- [ ] Task: `set_tray_labels` command accepting localized strings; rebuild menu live (NFR-1)
-- [ ] Task: Upgrade `single_instance` handler → show + focus hidden window (FR-6, AC-4)
-- [ ] Task: Quit path exits process cleanly — tray dropped, scheduler thread terminated (AC-5, NFR-5)
+- [x] Task: Bundle monochrome template tray icon asset (light/dark adaptive) (a004005)
+- [x] Task: Build tray icon + default menu in `setup`; left-click show/focus, right-click menu events (FR-1, FR-4) (32214a1)
+- [x] Task: Intercept window close → hide-to-tray + one-time explainer notification through existing notification plugin; minimize untouched (FR-2, FR-8, AC-1, AC-8) (32214a1)
+- [x] Task: ~30 s refresh task updating menu info row + tooltip from `get_next_prayer` data path; no busy polling (FR-3, FR-5, NFR-3) (102b7cb)
+- [x] Task: `set_tray_labels` command accepting localized strings; rebuild menu live (NFR-1) (102b7cb)
+- [x] Task: Upgrade `single_instance` handler → show + focus hidden window (FR-6, AC-4) (102b7cb)
+- [x] Task: Quit path exits process cleanly — tray dropped, scheduler thread terminated (AC-5, NFR-5) (32214a1)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Localized labels & Settings autostart card (frontend)

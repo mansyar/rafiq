@@ -2,6 +2,13 @@
   "appTitle": "Rafiq — Sahabat Muslim",
   "brand": "Rafiq",
   "tagline": "Sahabat Muslim",
+  "tray": {
+    "nextPrefix": "Berikutnya:",
+    "completeSetup": "Selesaikan penyiapan di Rafiq",
+    "show": "Tampilkan Rafiq",
+    "quit": "Keluar dari Rafiq",
+    "hintBody": "Rafiq masih berjalan di system tray — pengingat adhan tetap aktif. Anda bisa keluar kapan saja dari menu tray."
+  },
   "nav": {
     "today": "Hari Ini",
     "quran": "Al-Qur\u2019an",
@@ -61,6 +68,8 @@
     "adhanHint": "Putar azan saat notifikasi salat muncul",
     "toggleOn": "Aktif",
     "toggleOff": "Nonaktif",
+    "launchAtLogin": "Jalankan saat masuk",
+    "launchAtLoginHint": "Mulai Rafiq otomatis saat Anda masuk",
     "noResults": "Tidak ada hasil",
     "or": "atau",
     "runSetupAgain": "Jalankan penyiapan lagi",

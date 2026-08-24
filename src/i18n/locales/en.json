@@ -2,6 +2,13 @@
   "appTitle": "Rafiq — Muslim Companion",
   "brand": "Rafiq",
   "tagline": "Muslim Companion",
+  "tray": {
+    "nextPrefix": "Next:",
+    "completeSetup": "Complete setup in Rafiq",
+    "show": "Show Rafiq",
+    "quit": "Quit Rafiq",
+    "hintBody": "Rafiq is still running in the system tray — adhan reminders continue. You can quit anytime from the tray menu."
+  },
   "nav": {
     "today": "Today",
     "quran": "Quran",
@@ -61,6 +68,8 @@
     "adhanHint": "Play adhan when a prayer notification fires",
     "toggleOn": "On",
     "toggleOff": "Off",
+    "launchAtLogin": "Launch at login",
+    "launchAtLoginHint": "Start Rafiq automatically when you sign in",
     "noResults": "No results",
     "or": "or",
     "runSetupAgain": "Run setup again",

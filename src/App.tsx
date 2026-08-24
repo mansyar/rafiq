@@ -1,10 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AdhanPlayer } from '@/components/adhan-player';
 import { Layout } from '@/components/layout';
 import { OnboardingGuard } from '@/components/onboarding-guard';
 import { PrayerPrompt } from '@/components/prayer-prompt';
 import { UpdateBanner } from '@/components/update-banner';
+import { syncTrayLabels } from '@/lib/tray-labels';
 import { CalendarPage } from '@/pages/calendar';
 import { LogPage } from '@/pages/log';
 import { Onboarding } from '@/pages/onboarding';
@@ -23,6 +26,16 @@ const queryClient = new QueryClient({
 });
 
 export function App() {
+  // Keep tray menu/tooltip/notification copy in sync with the active
+  // i18n catalog (NFR-1): push on mount and on every language change.
+  const { i18n } = useTranslation();
+  useEffect(() => {
+    void syncTrayLabels();
+    const onChange = () => void syncTrayLabels();
+    i18n.on('languageChanged', onChange);
+    return () => i18n.off('languageChanged', onChange);
+  }, [i18n]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AdhanPlayer />

@@ -56,12 +56,15 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 
 ## Phase 3 — Command surface (TDD)
 
-- [ ] Task: Write failing tests for commands *(Red)*
-  - [ ] `get_upcoming_hijri_events(limit)` impl; `MonthGrid` day entries carry
+- [x] Task: Write failing tests for commands *(Red)* [77ac89c]
+  - [x] `get_upcoming_hijri_events(limit)` impl; `MonthGrid` day entries carry
         `event_id`; `DailyContent` serializes the optional `event` field
-- [ ] Task: Implement new command + extend `hijri_month_grid_impl` /
-      daily-content response; register in the invoke handler *(Green)*
-- [ ] Task: Refactor + verify coverage ≥80% for touched modules
+        *(serialization itself already delivered at e07a6ac)*
+- [x] Task: Implement new command + extend `hijri_month_grid_impl` /
+      daily-content response; register in the invoke handler *(Green)* [0e46821]
+- [x] Task: Refactor + verify coverage ≥80% for touched modules
+      (cargo llvm-cov under `hijri daily` filter: hijri/mod.rs 94.83%,
+      hijri_events 89.47%, daily 89.77%; no refactor needed)
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
 ## Phase 4 — Frontend UI & i18n (en/id)

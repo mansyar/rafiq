@@ -200,10 +200,12 @@ pub fn set_quran_translation_impl(
 
 /// Returns today's daily ayah + hadith using the OS local date and the
 /// persisted `quran_translation` setting (invalid → fallback to default).
+/// On a bundled observance day the response carries a thematic `event`
+/// override (spec FR-5); ordinary days keep the plain rotation.
 pub fn get_daily_content_impl(conn: &Connection) -> Result<crate::daily::DailyContent, String> {
     let translation = get_quran_translation_impl(conn).unwrap_or_default();
     let date = chrono::Local::now().date_naive();
-    crate::daily::daily_content_for_date(date, translation)
+    crate::hijri_events::daily_content_with_event(date, translation)
 }
 
 /// Pure test helper: daily content for an explicit date (bypasses Local::now).
@@ -212,7 +214,7 @@ pub fn get_daily_content_for_date_impl(
     date: NaiveDate,
 ) -> Result<crate::daily::DailyContent, String> {
     let translation = get_quran_translation_impl(conn).unwrap_or_default();
-    crate::daily::daily_content_for_date(date, translation)
+    crate::hijri_events::daily_content_with_event(date, translation)
 }
 
 /// Resolves a persisted `Location` to concrete coordinates + timezone.
@@ -404,9 +406,20 @@ pub fn hijri_to_gregorian_impl(
     crate::hijri::hijri_to_gregorian(year, month, day)
 }
 
-/// Grid of all days in the given Hijri month, with the local "today" day flagged.
+/// Grid of all days in the given Hijri month, with the local "today" day
+/// flagged and bundled observances attached (spec FR-2).
 pub fn hijri_month_grid_impl(year: i32, month: u8) -> Result<crate::hijri::MonthGrid, String> {
-    crate::hijri::month_grid(year, month, crate::hijri::today())
+    let mut grid = crate::hijri::month_grid(year, month, crate::hijri::today())?;
+    for day in &mut grid.days {
+        let date = NaiveDate::from_ymd_opt(
+            day.gregorian_year,
+            day.gregorian_month as u32,
+            day.gregorian_day as u32,
+        )
+        .ok_or("grid produced an invalid civil date")?;
+        day.event_id = crate::hijri_events::event_def_for_date(date).map(|def| def.id.to_string());
+    }
+    Ok(grid)
 }
 
 /// Today's local date expressed in the Umm al-Qura Hijri calendar.
@@ -427,9 +440,10 @@ pub fn get_upcoming_hijri_events_on(
     today: NaiveDate,
     limit: Option<usize>,
 ) -> Result<Vec<crate::hijri_events::UpcomingEvent>, String> {
-    // Red-phase stub: Green wires crate::hijri_events::upcoming_events.
-    let _ = (today, limit);
-    Ok(Vec::new())
+    Ok(crate::hijri_events::upcoming_events(
+        today,
+        limit.unwrap_or(3),
+    ))
 }
 
 /// Trims and validates a settings key.
@@ -960,6 +974,13 @@ pub fn hijri_month_grid(year: i32, month: u8) -> Result<crate::hijri::MonthGrid,
 #[tauri::command]
 pub fn today_hijri() -> Result<crate::hijri::HijriDate, String> {
     today_hijri_impl()
+}
+
+#[tauri::command]
+pub fn get_upcoming_hijri_events(
+    limit: Option<usize>,
+) -> Result<Vec<crate::hijri_events::UpcomingEvent>, String> {
+    get_upcoming_hijri_events_impl(limit)
 }
 
 #[cfg(test)]

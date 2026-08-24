@@ -84,6 +84,7 @@ pub fn run() {
             commands::hijri_to_gregorian,
             commands::hijri_month_grid,
             commands::today_hijri,
+            commands::get_upcoming_hijri_events,
             commands::fetch_ayah_audio,
             commands::get_recitation_state,
             commands::report_played_position,

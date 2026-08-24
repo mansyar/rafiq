@@ -414,6 +414,24 @@ pub fn today_hijri_impl() -> Result<crate::hijri::HijriDate, String> {
     crate::hijri::today_hijri()
 }
 
+/// Upcoming Hijri observances starting today, chronological. `limit` defaults
+/// to 3 when omitted (spec FR-2/FR-3).
+pub fn get_upcoming_hijri_events_impl(
+    limit: Option<usize>,
+) -> Result<Vec<crate::hijri_events::UpcomingEvent>, String> {
+    get_upcoming_hijri_events_on(crate::hijri::today(), limit)
+}
+
+/// Pure test helper: upcoming observances for an explicit date.
+pub fn get_upcoming_hijri_events_on(
+    today: NaiveDate,
+    limit: Option<usize>,
+) -> Result<Vec<crate::hijri_events::UpcomingEvent>, String> {
+    // Red-phase stub: Green wires crate::hijri_events::upcoming_events.
+    let _ = (today, limit);
+    Ok(Vec::new())
+}
+
 /// Trims and validates a settings key.
 fn validate_key(key: &str) -> Result<String, String> {
     let trimmed = key.trim();
@@ -1777,5 +1795,60 @@ mod tests {
                 .last_played_ayah,
             Some(3)
         );
+    }
+
+    // ---- Hijri events: command surface (Phase 3) ----
+
+    #[test]
+    fn upcoming_hijri_events_on_leads_with_today_event() {
+        let today = chrono::NaiveDate::from_ymd_opt(2026, 6, 16).unwrap();
+        let up = super::get_upcoming_hijri_events_on(today, None).unwrap();
+        assert_eq!(up.len(), 3, "default limit is 3");
+        assert_eq!(up[0].id, "islamic_new_year");
+        assert!(up[0].is_today);
+        assert_eq!(up[0].gregorian_date, "2026-06-16");
+        assert_eq!(up[0].hijri_year, 1448);
+    }
+
+    #[test]
+    fn upcoming_hijri_events_impl_honors_limit() {
+        let two = super::get_upcoming_hijri_events_impl(Some(2)).unwrap();
+        assert_eq!(two.len(), 2);
+        let none = super::get_upcoming_hijri_events_impl(Some(0)).unwrap();
+        assert!(none.is_empty());
+    }
+
+    #[test]
+    fn hijri_month_grid_flags_observance_days() {
+        // Muharram 1448 hosts Islamic New Year (day 1) and Ashura (day 10).
+        let grid = super::hijri_month_grid_impl(1448, 1).unwrap();
+        let d1 = grid.days.iter().find(|d| d.hijri_day == 1).unwrap();
+        assert_eq!(d1.event_id.as_deref(), Some("islamic_new_year"));
+        let d10 = grid.days.iter().find(|d| d.hijri_day == 10).unwrap();
+        assert_eq!(d10.event_id.as_deref(), Some("ashura"));
+        let ordinary = grid.days.iter().find(|d| d.hijri_day == 5).unwrap();
+        assert!(ordinary.event_id.is_none());
+    }
+
+    #[test]
+    fn hijri_month_grid_ordinary_month_has_no_events() {
+        // Safar has no bundled observances.
+        let grid = super::hijri_month_grid_impl(1448, 2).unwrap();
+        assert!(grid.days.iter().all(|d| d.event_id.is_none()));
+    }
+
+    #[test]
+    fn daily_content_command_includes_event_override_on_observance() {
+        let conn = conn("daily-event");
+        let event_day = chrono::NaiveDate::from_ymd_opt(2026, 6, 16).unwrap();
+        let c = super::get_daily_content_for_date_impl(&conn, event_day).unwrap();
+        let ev = c.event.expect("observance day must carry the override");
+        assert_eq!(ev.event_id, "islamic_new_year");
+        assert!(!ev.ayah.arabic.trim().is_empty());
+        assert!(!ev.hadith.arabic.trim().is_empty());
+
+        let adjacent = chrono::NaiveDate::from_ymd_opt(2026, 6, 17).unwrap();
+        let adj = super::get_daily_content_for_date_impl(&conn, adjacent).unwrap();
+        assert!(adj.event.is_none(), "ordinary days stay override-free");
     }
 }

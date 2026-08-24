@@ -31,7 +31,7 @@ pub struct GregorianDate {
 }
 
 /// One cell of a Hijri month grid: a Hijri day with its Gregorian counterpart.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct GridDay {
     /// Hijri day of the month (1-based).
     pub hijri_day: u8,
@@ -42,6 +42,9 @@ pub struct GridDay {
     pub weekday: u8,
     /// True when this day equals the app's local "today".
     pub is_today: bool,
+    /// Observance id when this civil date hosts a bundled Hijri event
+    /// (spec FR-2); `None` on ordinary days.
+    pub event_id: Option<String>,
 }
 
 /// All days of one Hijri month with their Gregorian counterparts.
@@ -106,6 +109,9 @@ pub fn month_grid(year: i32, month: u8, today: NaiveDate) -> Result<MonthGrid, S
                 weekday: g.weekday,
                 is_today: NaiveDate::from_ymd_opt(g.year, g.month as u32, g.day as u32)
                     == Some(today),
+                // Filled by the command layer (hijri_month_grid_impl), which
+                // composes the calendar engine with bundled event data.
+                event_id: None,
             })
         })
         .collect::<Result<Vec<_>, String>>()?;

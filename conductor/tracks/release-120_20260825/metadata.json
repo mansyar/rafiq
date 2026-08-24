@@ -1,0 +1,9 @@
+{
+  "id": "release-120_20260825",
+  "title": "Release 1.2.0 - ship resilience polish",
+  "type": "chore",
+  "status": "new",
+  "created": "2026-08-25",
+  "updated": "2026-08-25",
+  "summary": "Cut v1.2.0: version bump (package.json, tauri.conf.json, Cargo.toml), CHANGELOG finalization (move [Unreleased] to [1.2.0]), CI green confirmation, refreshed release smoke checklist, tag + publish via the proven release pipeline, real-machine in-app updater verification 1.1.0 -> 1.2.0. Signing deferred."
+}

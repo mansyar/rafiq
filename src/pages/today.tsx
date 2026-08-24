@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { DailyReflectionCard } from '@/components/daily-reflection-card';
+import { QueryError } from '@/components/query-error';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { UpcomingEventsStrip } from '@/components/upcoming-events-strip';
@@ -129,7 +130,7 @@ export function Today() {
           <Separator />
 
           {/* States */}
-          {!resolved.data && !isLoading && (
+          {!resolved.data && !isLoading && !isError && (
             <div className="rounded-md border border-gold-200 bg-gold-50 p-4 text-sm dark:border-gold-900 dark:bg-gold-950/30">
               <p className="text-ink-800 dark:text-ink-100">{t('today.notSet')}</p>
               <Link
@@ -147,16 +148,16 @@ export function Today() {
             </p>
           )}
 
-          {isError && errorMessage && (
-            <p className="text-sm text-destructive" role="alert">
-              {t('today.error', { message: errorMessage })}
-            </p>
-          )}
-
-          {resolved.data && times.isError && !times.data && (
-            <p className="text-sm text-destructive" role="alert">
-              {t('today.error', { message: String(times.error) })}
-            </p>
+          {isError && (
+            <QueryError
+              message={t('today.error', { message: errorMessage ?? '' })}
+              onRetry={() => {
+                void resolved.refetch();
+                void method.refetch();
+                void times.refetch();
+              }}
+              retrying={resolved.isFetching || method.isFetching || times.isFetching}
+            />
           )}
 
           {/* Prayer list */}

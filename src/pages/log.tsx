@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { QueryError } from '@/components/query-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -341,6 +342,12 @@ export function LogPage() {
                     </CardContent>
                   </Card>
                 </div>
+              ) : analyticsQuery.isError ? (
+                <QueryError
+                  message={t('log.analyticsError')}
+                  onRetry={() => void analyticsQuery.refetch()}
+                  retrying={analyticsQuery.isFetching}
+                />
               ) : (
                 !analyticsQuery.isLoading && (
                   <p role="status" aria-live="polite" className="text-sm text-muted-foreground">

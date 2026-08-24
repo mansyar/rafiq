@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
+import { QueryError } from '@/components/query-error';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getUpcomingHijriEvents, type UpcomingEvent } from '@/lib/hijri';
 import { cn } from '@/lib/utils';
@@ -73,6 +74,29 @@ export function UpcomingEventsStrip() {
     queryFn: () => getUpcomingHijriEvents(3),
     staleTime: 1000 * 60 * 30,
   });
+
+  if (query.isError) {
+    return (
+      <Card
+        aria-labelledby="upcoming-events-title"
+        data-testid="upcoming-events-strip"
+        className="border-gold-200/60 dark:border-gold-900/40"
+      >
+        <CardHeader className="pb-3">
+          <CardTitle id="upcoming-events-title" className="font-heading text-lg">
+            {t('hijriEvents.strip.title')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <QueryError
+            message={t('hijriEvents.strip.error')}
+            onRetry={() => void query.refetch()}
+            retrying={query.isFetching}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (!query.data?.length) return null;
 

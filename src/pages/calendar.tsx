@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateConverter } from '@/components/date-converter';
+import { QueryError } from '@/components/query-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type GridDay, getMonthGrid, todayHijri } from '@/lib/hijri';
@@ -125,8 +126,11 @@ export function CalendarPage() {
   const gregMonths = t('calendar.gregMonths', { returnObjects: true }) as unknown as string[];
 
   const isLoading = todayQuery.isLoading || gridQuery.isLoading;
-  const isError = gridQuery.isError;
-  const errorMessage = (gridQuery.error as Error | undefined)?.message ?? null;
+  const isError = todayQuery.isError || gridQuery.isError;
+  const errorMessage =
+    (gridQuery.error as Error | undefined)?.message ??
+    (todayQuery.error as Error | undefined)?.message ??
+    null;
 
   return (
     <section aria-labelledby="page-calendar" className="mx-auto max-w-3xl space-y-6">
@@ -185,10 +189,15 @@ export function CalendarPage() {
               {t('calendar.loading')}
             </p>
           )}
-          {isError && errorMessage && (
-            <p className="text-sm text-destructive" role="alert">
-              {t('calendar.error', { message: errorMessage })}
-            </p>
+          {isError && (
+            <QueryError
+              message={t('calendar.error', { message: errorMessage ?? '' })}
+              onRetry={() => {
+                void todayQuery.refetch();
+                if (effective) void gridQuery.refetch();
+              }}
+              retrying={todayQuery.isFetching || gridQuery.isFetching}
+            />
           )}
 
           {effective && grid && (

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import { QueryError } from '@/components/query-error';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { formatAyahReference, getHadithTranslation, useDailyContent } from '@/lib/daily';
@@ -57,9 +58,11 @@ export function DailyReflectionCard() {
           <p className="text-sm text-muted-foreground">{t('daily.subtitle')}</p>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-destructive" role="alert">
-            {t('daily.error', { message: String(daily.error) })}
-          </p>
+          <QueryError
+            message={t('daily.errorGeneric')}
+            onRetry={() => void daily.refetch()}
+            retrying={daily.isFetching}
+          />
         </CardContent>
       </Card>
     );

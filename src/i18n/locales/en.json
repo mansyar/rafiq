@@ -128,6 +128,7 @@
     "subtitle": "Ayah & hadith for today",
     "loading": "Loading daily reflection…",
     "error": "Could not load daily reflection: {{message}}",
+    "errorGeneric": "Couldn't load today's reflection.",
     "ayahLabel": "Ayah of the Day",
     "hadithLabel": "Hadith of the Day",
     "openInQuran": "Open in Quran",
@@ -142,7 +143,8 @@
     "strip": {
       "title": "Upcoming observances",
       "todayPrefix": "Today:",
-      "estimatedSuffix": "(estimated)"
+      "estimatedSuffix": "(estimated)",
+      "error": "Couldn't load upcoming observances."
     },
     "markerLabel": "{{name}} — {{description}}",
     "events": {
@@ -230,6 +232,7 @@
     "empty": "No prayers logged yet. Tap a prayer above when you have prayed — every day is a fresh start.",
     "loading": "Loading your log\u2026",
     "error": "Couldn\u2019t load your log.",
+    "analyticsError": "Couldn't load your statistics.",
     "noLocation": {
       "hint": "Set your location to start logging prayers.",
       "openSettings": "Open settings"

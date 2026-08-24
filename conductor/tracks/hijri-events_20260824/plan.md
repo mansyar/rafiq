@@ -28,7 +28,9 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
   - [x] Hadith fields non-empty; every event id has a content entry
 - [x] Task: Implement loader module `src-tauri/src/hijri_events/`
       (`include_str!` + `OnceLock`, mirroring `daily/` pattern) *(Green)* [ea88244]
-- [ ] Task: Refactor + verify coverage ≥80% for the new module
+- [x] Task: Refactor + verify coverage ≥80% for the new module
+      (cargo llvm-cov: 86.24% line coverage on `hijri_events/mod.rs`; no
+      refactor needed — minimal serde parsers)
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
 ## Phase 2 — Resolution logic (pure functions, TDD)

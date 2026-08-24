@@ -87,6 +87,18 @@ pub fn build_tray_menu(
     ]
 }
 
+/// Settings key persisting whether the one-time hide-to-tray explainer has
+/// been shown (FR-2 / AC-2). Value "1" once shown.
+pub const TRAY_HINT_SHOWN_KEY: &str = "tray_hint_shown";
+
+/// Decide whether the one-time hide-to-tray explainer notification should be
+/// shown, based on the persisted setting value. Only an affirmative stored
+/// value ("1"/"true"/"enabled") suppresses it — anything else (missing,
+/// empty, falsy, corrupt) shows the hint exactly once more.
+pub fn should_show_tray_hint(stored: Option<&str>) -> bool {
+    !matches!(stored, Some(v) if matches!(v.trim(), "1" | "true" | "enabled"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -210,5 +222,27 @@ mod tests {
                 }
             );
         }
+    }
+
+    // ── should_show_tray_hint ───────────────────────────────────────────────
+
+    #[test]
+    fn hint_shows_when_setting_is_missing() {
+        assert!(should_show_tray_hint(None));
+    }
+
+    #[test]
+    fn hint_shows_for_empty_or_falsy_values() {
+        assert!(should_show_tray_hint(Some("")));
+        assert!(should_show_tray_hint(Some("0")));
+        assert!(should_show_tray_hint(Some("false")));
+        assert!(should_show_tray_hint(Some("garbage")));
+    }
+
+    #[test]
+    fn hint_suppressed_only_after_affirmative_stored_value() {
+        assert!(!should_show_tray_hint(Some("1")));
+        assert!(!should_show_tray_hint(Some("true")));
+        assert!(!should_show_tray_hint(Some("enabled")));
     }
 }

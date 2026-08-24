@@ -9,6 +9,7 @@ pub mod quran;
 pub mod recitation;
 pub mod scheduler;
 pub mod storage;
+pub mod tray;
 
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;

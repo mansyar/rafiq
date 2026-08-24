@@ -2,7 +2,7 @@
   "id": "ux-resilience_20260825",
   "title": "UX polish — error resilience & feedback",
   "type": "chore",
-  "status": "new",
+  "status": "complete",
   "created": "2026-08-25",
   "updated": "2026-08-25",
   "summary": "Make every failure path visible, localized, and recoverable: shared QueryError/retry component on all query error branches, silent-failure fixes (update banner, adhan, recitation, settings toggles, translation switcher), double-submit guards (prayer prompt, log delete, location picker), and i18n leak cleanup."

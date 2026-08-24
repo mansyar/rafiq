@@ -11,7 +11,7 @@ the loop since OS trays cannot be scripted by Playwright.
 ## Phase 1 — Pure tray/background logic (TDD)
 
 - [x] Task: Next-prayer countdown formatter — `"Next: Asr · 16:12"` from scheduler data, midnight/all-prayers-passed rollover, `None` → placeholder signal — tests first (`src-tauri/src/tray/mod.rs`) (FR-3, AC-3, AC-6) (da380a8)
-- [ ] Task: Tray-menu model builder — localized labels + optional next-prayer info → ordered items (disabled info row / Show Rafiq / Quit Rafiq) — tests first (`src-tauri/src/tray/mod.rs`) (FR-3)
+- [x] Task: Tray-menu model builder — localized labels + optional next-prayer info → ordered items (disabled info row / Show Rafiq / Quit Rafiq) — tests first (`src-tauri/src/tray/mod.rs`) (FR-3) (9fb54b0)
 - [ ] Task: Hint-once policy — read/flip persisted `tray_hint_shown` key, restart-stable — tests first (`src-tauri/src/tray/mod.rs`) (FR-2, AC-2)
 - [ ] Task: Verify coverage (>80% changed logic) & quality gates (clippy, cargo test)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

@@ -103,3 +103,12 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
       Playwright 41/41 chromium)*
 - [x] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
       *(checkpoint report attached to 1a1c4a1)*
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions
+      *(Low finding: cross-layer i18n key coverage — new Vitest guard
+      `src/lib/hijri-events-catalog.test.ts` parses bundled `events.json`
+      and asserts every observance id has name+description in both en/id
+      catalogs plus shared strip/marker strings; mutation-verified Red
+      before Green)* [8f21703]

@@ -20,14 +20,14 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
         `id_translation`, `source`)
 - [x] Task: Verify licensing for override content; record sources + date in
       `src-tauri/assets/ATTRIBUTION.md` [4ad62c8]
-- [ ] Task: Write failing tests for asset loading & validation *(Red)*
-  - [ ] Exactly 8 events; unique ids; `hijri_month` 1–12 / `hijri_day` 1–30
+- [x] Task: Write failing tests for asset loading & validation *(Red)* [346c5a2]
+  - [x] Exactly 8 events; unique ids; `hijri_month` 1–12 / `hijri_day` 1–30
         ranges
-  - [ ] Every content ayah ref resolves against bundled Quran data; no
+  - [x] Every content ayah ref resolves against bundled Quran data; no
         duplicated Quran text
-  - [ ] Hadith fields non-empty; every event id has a content entry
-- [ ] Task: Implement loader module `src-tauri/src/hijri_events/`
-      (`include_str!` + `OnceLock`, mirroring `daily/` pattern) *(Green)*
+  - [x] Hadith fields non-empty; every event id has a content entry
+- [x] Task: Implement loader module `src-tauri/src/hijri_events/`
+      (`include_str!` + `OnceLock`, mirroring `daily/` pattern) *(Green)* [ea88244]
 - [ ] Task: Refactor + verify coverage ≥80% for the new module
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 

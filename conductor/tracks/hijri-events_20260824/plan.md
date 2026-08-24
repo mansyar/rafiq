@@ -11,15 +11,15 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 
 ## Phase 1 — Event data assets & validation (Rust, TDD)
 
-- [ ] Task: Author content assets
-  - [ ] `src-tauri/assets/hijri-events/events.json` — exactly 8 events:
+- [x] Task: Author content assets [4ad62c8]
+  - [x] `src-tauri/assets/hijri-events/events.json` — exactly 8 events:
         stable `id`, `hijri_month`, `hijri_day`, `estimated` flag (Laylat
         al-Qadr only)
-  - [ ] `src-tauri/assets/hijri-events/content.json` — per-event thematic
+  - [x] `src-tauri/assets/hijri-events/content.json` — per-event thematic
         pair: ayah ref (`surah_id`, `ayah_number`) + hadith (`arabic`, `en`,
         `id_translation`, `source`)
-- [ ] Task: Verify licensing for override content; record sources + date in
-      `src-tauri/assets/ATTRIBUTION.md`
+- [x] Task: Verify licensing for override content; record sources + date in
+      `src-tauri/assets/ATTRIBUTION.md` [4ad62c8]
 - [ ] Task: Write failing tests for asset loading & validation *(Red)*
   - [ ] Exactly 8 events; unique ids; `hijri_month` 1–12 / `hijri_day` 1–30
         ranges

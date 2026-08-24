@@ -12,6 +12,7 @@
 
 use std::sync::OnceLock;
 
+use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 
 // Reuse the exact shapes already established for curated content.
@@ -32,6 +33,17 @@ pub struct EventContent {
     pub event_id: String,
     pub ayah: AyahRef,
     pub hadith: Hadith,
+}
+
+/// An upcoming observance occurrence resolved to its Gregorian date.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct UpcomingEvent {
+    pub id: String,
+    pub hijri_year: i32,
+    /// Occurrence date, formatted `YYYY-MM-DD`.
+    pub gregorian_date: String,
+    /// True when the occurrence is `today` itself.
+    pub is_today: bool,
 }
 
 // Bundled assets — validated by tests in this module.
@@ -57,6 +69,33 @@ pub fn all_event_defs() -> &'static [HijriEventDef] {
 
 pub fn all_event_content() -> &'static [EventContent] {
     EVENT_CONTENT.get_or_init(load_event_content_inner)
+}
+
+/// The observance matching a civil Gregorian date, if any.
+///
+/// Pure: converts via the Umm al-Qura engine and compares the resulting
+/// Hijri month/day against bundled definitions.
+pub fn event_def_for_date(_date: NaiveDate) -> Option<&'static HijriEventDef> {
+    // Red-phase stub: Green matches computed month/day.
+    None
+}
+
+/// The next `limit` upcoming observances from `today` (inclusive), oldest
+/// first. The forward search is bounded (~370 days) so it always terminates.
+pub fn upcoming_events(_today: NaiveDate, _limit: usize) -> Vec<UpcomingEvent> {
+    // Red-phase stub: Green walks forward day by day.
+    Vec::new()
+}
+
+/// Daily content with an observance override attached on event days.
+///
+/// On non-event days this is exactly `daily::daily_content_for_date`.
+pub fn daily_content_with_event(
+    date: NaiveDate,
+    translation: crate::quran::QuranTranslation,
+) -> Result<crate::daily::DailyContent, String> {
+    // Red-phase stub: no override attached yet.
+    crate::daily::daily_content_for_date(date, translation)
 }
 
 #[cfg(test)]
@@ -229,5 +268,145 @@ mod tests {
                 c.event_id
             );
         }
+    }
+
+    // --- Resolution logic (Phase 2 — Red phase) ---
+
+    fn ymd(y: i32, m: u8, d: u8) -> NaiveDate {
+        NaiveDate::from_ymd_opt(y, m as u32, d as u32).unwrap()
+    }
+
+    fn g2s(g: crate::hijri::GregorianDate) -> String {
+        format!("{}-{:02}-{:02}", g.year, g.month, g.day)
+    }
+
+    #[test]
+    fn anchor_islamic_new_year_2026_06_16() {
+        let ev = event_def_for_date(ymd(2026, 6, 16));
+        assert!(
+            ev.is_some(),
+            "2026-06-16 (1 Muharram 1448) must resolve to an event"
+        );
+        assert_eq!(ev.unwrap().id, "islamic_new_year");
+    }
+
+    #[test]
+    fn ordinary_day_has_no_event() {
+        // A known ordinary day right after the anchor.
+        assert!(event_def_for_date(ymd(2026, 6, 18)).is_none());
+    }
+
+    #[test]
+    fn every_event_resolves_across_two_hijri_years() {
+        assert!(!all_event_defs().is_empty(), "no event defs loaded");
+        for year in [1447i32, 1448] {
+            for def in all_event_defs() {
+                let g = crate::hijri::hijri_to_gregorian(year, def.hijri_month, def.hijri_day)
+                    .unwrap_or_else(|e| panic!("{} in {year}: {e}", def.id));
+                let matched = event_def_for_date(ymd(g.year, g.month, g.day))
+                    .unwrap_or_else(|| panic!("event {} did not resolve in {year}", def.id));
+                assert_eq!(matched.id, def.id, "wrong event matched in {year}");
+            }
+        }
+    }
+
+    #[test]
+    fn upcoming_leads_with_today_on_event_day() {
+        let up = upcoming_events(ymd(2026, 6, 16), 3);
+        assert!(!up.is_empty(), "upcoming_events returned nothing");
+        assert_eq!(up[0].id, "islamic_new_year");
+        assert!(up[0].is_today, "today's event must be flagged");
+        assert_eq!(up[0].gregorian_date, "2026-06-16");
+        assert_eq!(up[0].hijri_year, 1448);
+    }
+
+    #[test]
+    fn upcoming_from_ordinary_day_starts_with_next_event() {
+        let up = upcoming_events(ymd(2026, 6, 17), 3);
+        assert_eq!(up.len(), 3);
+        assert_eq!(up[0].id, "ashura", "next after 3 Muharram is Ashura");
+        assert!(!up[0].is_today);
+        let expected = crate::hijri::hijri_to_gregorian(1448, 1, 10).unwrap();
+        assert_eq!(up[0].gregorian_date, g2s(expected));
+    }
+
+    #[test]
+    fn upcoming_crosses_hijri_year_boundary() {
+        // Late 1447: the next observance rolls into Hijri year 1448.
+        let up = upcoming_events(ymd(2026, 11, 1), 1);
+        assert_eq!(up.len(), 1);
+        assert_eq!(up[0].id, "islamic_new_year");
+        assert_eq!(up[0].hijri_year, 1448);
+        let expected = crate::hijri::hijri_to_gregorian(1448, 1, 1).unwrap();
+        assert_eq!(up[0].gregorian_date, g2s(expected));
+    }
+
+    #[test]
+    fn upcoming_respects_limit_and_chronology() {
+        let up = upcoming_events(ymd(2026, 6, 17), 3);
+        assert_eq!(up.len(), 3, "limit must be honored");
+        let mut ids = HashSet::new();
+        let mut prev: Option<NaiveDate> = None;
+        for e in &up {
+            assert!(ids.insert(e.id.as_str()), "duplicate event in upcoming");
+            let d = NaiveDate::parse_from_str(&e.gregorian_date, "%Y-%m-%d")
+                .expect("gregorian_date must be YYYY-MM-DD");
+            if let Some(p) = prev {
+                assert!(d > p, "upcoming events must be chronological");
+            }
+            prev = Some(d);
+        }
+        assert!(upcoming_events(ymd(2026, 6, 17), 0).is_empty());
+    }
+
+    #[test]
+    fn override_attaches_on_event_day_only_and_keeps_rotation() {
+        // Event day: override present with fully resolved content.
+        let event_day =
+            daily_content_with_event(ymd(2026, 6, 16), crate::quran::QuranTranslation::Sahih)
+                .expect("content must resolve");
+        let ev = event_day
+            .event
+            .as_ref()
+            .expect("override must attach on islamic_new_year");
+        assert_eq!(ev.event_id, "islamic_new_year");
+        assert!(
+            !ev.ayah.arabic.trim().is_empty(),
+            "override ayah must be resolved"
+        );
+        assert!(
+            !ev.hadith.arabic.trim().is_empty(),
+            "override hadith must be resolved"
+        );
+
+        // Adjacent ordinary day: no override, rotation unchanged (AC-4).
+        let adjacent = ymd(2026, 6, 17);
+        let direct =
+            crate::daily::daily_content_for_date(adjacent, crate::quran::QuranTranslation::Sahih)
+                .expect("direct content must resolve");
+        assert!(!direct.ayah.arabic.trim().is_empty());
+        let wrapped = daily_content_with_event(adjacent, crate::quran::QuranTranslation::Sahih)
+            .expect("wrapped content must resolve");
+        assert!(
+            wrapped.event.is_none(),
+            "ordinary day must not carry an override"
+        );
+        assert_eq!(wrapped.ayah.id, direct.ayah.id, "rotation unchanged (AC-4)");
+        assert_eq!(
+            wrapped.hadith.id, direct.hadith.id,
+            "rotation unchanged (AC-4)"
+        );
+
+        // Serialization stays additive: omitted when None, present when Some.
+        let v_plain = serde_json::to_value(&wrapped).unwrap();
+        assert!(
+            v_plain.get("event").is_none(),
+            "absent override must be omitted from JSON"
+        );
+        let v_event = serde_json::to_value(&event_day).unwrap();
+        assert!(
+            v_event.get("event").is_some(),
+            "override must serialize on event day"
+        );
     }
 }

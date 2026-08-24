@@ -49,6 +49,14 @@ pub struct DailyHadith {
     pub source: String,
 }
 
+/// Thematic content override shown on an observance day (spec FR-5).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct EventOverride {
+    pub event_id: String,
+    pub ayah: DailyAyah,
+    pub hadith: DailyHadith,
+}
+
 /// Tauri command response for today's content.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct DailyContent {
@@ -56,6 +64,10 @@ pub struct DailyContent {
     pub date: String,
     pub ayah: DailyAyah,
     pub hadith: DailyHadith,
+    /// Present only when the date is an Islamic observance. Additive and
+    /// omitted from JSON when absent, keeping older consumers compatible.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub event: Option<EventOverride>,
 }
 
 // Bundled assets — validated at generation time.
@@ -115,7 +127,7 @@ pub fn hadith_index_for_date(date: NaiveDate) -> usize {
     rotation_index(days_since_epoch(date), all_hadiths().len())
 }
 
-fn resolve_ayah(
+pub(crate) fn resolve_ayah(
     ref_: &AyahRef,
     translation: crate::quran::QuranTranslation,
 ) -> Result<DailyAyah, String> {
@@ -188,6 +200,9 @@ pub fn daily_content_for_date(
         date: date.format("%Y-%m-%d").to_string(),
         ayah: daily_ayah_for_date_with_translation(date, translation)?,
         hadith: daily_hadith_for_date(date),
+        // Rotation stays untouched here; the hijri_events wrapper attaches
+        // overrides so normal-day output is unchanged (spec AC-4).
+        event: None,
     })
 }
 

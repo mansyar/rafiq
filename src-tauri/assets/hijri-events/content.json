@@ -1,0 +1,122 @@
+[
+  {
+    "event_id": "islamic_new_year",
+    "ayah": {
+      "id": "hevent-islamic-new-year-ayah",
+      "surah_id": 9,
+      "ayah_number": 36
+    },
+    "hadith": {
+      "id": "hevent-islamic-new-year-hadith",
+      "arabic": "لَا تَزُولُ قَدَمَا عَبْدٍ يَوْمَ الْقِيَامَةِ حَتَّى يُسْأَلَ عَنْ عُمُرِهِ فِيمَ أَفْنَاهُ، وَعَنْ عِلْمِهِ فِيمَ مَا فَعَلَ بِهِ",
+      "en": "A servant's feet will not move on the Day of Resurrection until he is asked about his life and how he spent it, and about his knowledge and what he did with it.",
+      "id_translation": "Kaki seorang hamba tidak akan berpindah pada hari kiamat sehingga ia ditanya tentang umurnya dan bagaimana ia menghabiskannya, serta tentang ilmunya dan apa yang ia perbuat dengannya.",
+      "source": "Tirmidhi 2417 · Abu Barzah al-Aslami (RA)"
+    }
+  },
+  {
+    "event_id": "ashura",
+    "ayah": {
+      "id": "hevent-ashura-ayah",
+      "surah_id": 2,
+      "ayah_number": 183
+    },
+    "hadith": {
+      "id": "hevent-ashura-hadith",
+      "arabic": "صِيَامُ يَوْمِ عَاشُورَاءَ أَحْتَسِبُ عَلَى اللَّهِ أَنْ يُكَفِّرَ السَّنَةَ الَّتِي قَبْلَهُ",
+      "en": "Fasting the day of Ashura — I hope in Allah that it will expiate the sins of the year before it.",
+      "id_translation": "Berpuasa pada hari Asyura — aku berharap kepada Allah agar ia menghapus dosa-dosa tahun sebelumnya.",
+      "source": "Muslim 1162 · Abu Qatadah (RA)"
+    }
+  },
+  {
+    "event_id": "mawlid_an_nabi",
+    "ayah": {
+      "id": "hevent-mawlid-ayah",
+      "surah_id": 21,
+      "ayah_number": 107
+    },
+    "hadith": {
+      "id": "hevent-mawlid-hadith",
+      "arabic": "إِنَّمَا بُعِثْتُ لِأُتَمِّمَ مَكَارِمَ الْأَخْلَاقِ",
+      "en": "I was sent only to perfect noble character.",
+      "id_translation": "Sesungguhnya aku diutus hanya untuk menyempurnakan akhlak yang mulia.",
+      "source": "Musnad Ahmad 8952"
+    }
+  },
+  {
+    "event_id": "ramadan_begins",
+    "ayah": {
+      "id": "hevent-ramadan-begins-ayah",
+      "surah_id": 2,
+      "ayah_number": 185
+    },
+    "hadith": {
+      "id": "hevent-ramadan-begins-hadith",
+      "arabic": "مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ",
+      "en": "Whoever fasts Ramadan out of faith and seeking reward, his previous sins are forgiven.",
+      "id_translation": "Barangsiapa berpuasa Ramadhan karena iman dan mengharap pahala, diampuni dosa-dosanya yang telah lalu.",
+      "source": "Bukhari 38 · Muslim 759 · Abu Hurairah (RA)"
+    }
+  },
+  {
+    "event_id": "laylat_al_qadr",
+    "ayah": {
+      "id": "hevent-laylat-al-qadr-ayah",
+      "surah_id": 97,
+      "ayah_number": 1
+    },
+    "hadith": {
+      "id": "hevent-laylat-al-qadr-hadith",
+      "arabic": "مَنْ قَامَ لَيْلَةَ الْقَدْرِ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ",
+      "en": "Whoever stands in prayer on the Night of Decree out of faith and seeking reward, his previous sins are forgiven.",
+      "id_translation": "Barangsiapa mendirikan salat pada malam Lailatul Qadar karena iman dan mengharap pahala, diampuni dosa-dosanya yang telah lalu.",
+      "source": "Bukhari 2017 · Muslim 760 · Abu Hurairah (RA)"
+    }
+  },
+  {
+    "event_id": "eid_al_fitr",
+    "ayah": {
+      "id": "hevent-eid-al-fitr-ayah",
+      "surah_id": 14,
+      "ayah_number": 7
+    },
+    "hadith": {
+      "id": "hevent-eid-al-fitr-hadith",
+      "arabic": "كَانَ النَّبِيُّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ لَا يَغْدُو يَوْمَ الْفِطْرِ حَتَّى يَأْكُلَ تَمَرَاتٍ",
+      "en": "The Prophet ﷺ would not go out on the morning of Eid al-Fitr until he had eaten some dates.",
+      "id_translation": "Nabi ﷺ tidak pernah berangkat pada pagi Idul Fitri hingga beliau mahkan beberapa buah kurma.",
+      "source": "Bukhari 953 · Anas ibn Malik (RA)"
+    }
+  },
+  {
+    "event_id": "arafah",
+    "ayah": {
+      "id": "hevent-arafah-ayah",
+      "surah_id": 5,
+      "ayah_number": 3
+    },
+    "hadith": {
+      "id": "hevent-arafah-hadith",
+      "arabic": "الْحَجُّ عَرَفَةُ",
+      "en": "Hajj is Arafah.",
+      "id_translation": "Haji adalah Arafah.",
+      "source": "Tirmidhi 889"
+    }
+  },
+  {
+    "event_id": "eid_al_adha",
+    "ayah": {
+      "id": "hevent-eid-al-adha-ayah",
+      "surah_id": 37,
+      "ayah_number": 107
+    },
+    "hadith": {
+      "id": "hevent-eid-al-adha-hadith",
+      "arabic": "مَا عَمِلَ ابْنُ آدَمَ يَوْمَ النَّحْرِ عَمَلًا أَحَبَّ إِلَى اللَّهِ مِنْ إِهْرَاقِ الدَّمِ",
+      "en": "No deed of the son of Adam on the day of sacrifice is dearer to Allah than the offering of the sacrifice.",
+      "id_translation": "Tidak ada amal anak Adam pada hari kurban yang lebih dicintai Allah daripada penyembelihan kurban.",
+      "source": "Tirmidhi 1493 · Aisha (RA)"
+    }
+  }
+]

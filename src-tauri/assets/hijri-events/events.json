@@ -1,0 +1,50 @@
+[
+  {
+    "id": "islamic_new_year",
+    "hijri_month": 1,
+    "hijri_day": 1,
+    "estimated": false
+  },
+  {
+    "id": "ashura",
+    "hijri_month": 1,
+    "hijri_day": 10,
+    "estimated": false
+  },
+  {
+    "id": "mawlid_an_nabi",
+    "hijri_month": 3,
+    "hijri_day": 12,
+    "estimated": false
+  },
+  {
+    "id": "ramadan_begins",
+    "hijri_month": 9,
+    "hijri_day": 1,
+    "estimated": false
+  },
+  {
+    "id": "laylat_al_qadr",
+    "hijri_month": 9,
+    "hijri_day": 27,
+    "estimated": true
+  },
+  {
+    "id": "eid_al_fitr",
+    "hijri_month": 10,
+    "hijri_day": 1,
+    "estimated": false
+  },
+  {
+    "id": "arafah",
+    "hijri_month": 12,
+    "hijri_day": 9,
+    "estimated": false
+  },
+  {
+    "id": "eid_al_adha",
+    "hijri_month": 12,
+    "hijri_day": 10,
+    "estimated": false
+  }
+]

@@ -52,3 +52,17 @@ then cached permanently in the user's local app-data directory (`recitation/`).
 - **Compliance (EN):** Rafiq bundles a single selection of 40 individual hadith for a free, personal, didactic app — not mass reproduction, not a website mirror, no scraping (one-time transcription into a static asset). sunnah.com is credited in this file and in the in-app source lines.
 - **Indonesian translations:** **original in-house translation by the Rafiq team** from the public-domain Arabic originals. Verified 2026-08-21: no third-party Indonesian edition of this collection is available under verifiable permissive terms (blog editions carry no license; the Internet Archive edition is CC BY-NC-ND 4.0, unsuitable for open-source redistribution). Copyright vests in the Rafiq project; distributed under the app's license.
 - **Curated ayahs (`daily/ayahs.json`):** `surah_id` / `ayah_number` references **only** into the already-bundled Quran text (Tanzil — public domain). No Quran text is duplicated and no new copyrighted material is introduced.
+
+## Hijri Event Content (Observance Overrides)
+
+**Files:** `hijri-events/events.json` (8 observance date definitions), `hijri-events/content.json` (per-event thematic ayah reference + hadith) — bundled "Hijri Events" feature content.
+
+### Source & Licensing
+
+- **Arabic hadith originals:** classical texts from the canonical collections (*Sahih al-Bukhari*, *Sahih Muslim*, *Jami' at-Tirmidhi*, *Musnad Ahmad*) — **public domain** (medieval texts). Transcribed and verified against sunnah.com's collection pages (https://sunnah.com), whose Arabic text is sourced from public-domain editions.
+- **English translations:** concise in-house renderings by the Rafiq team, adapted from standard public-domain translation conventions; verified 2026-08-24 against the sunnah.com *About* page, Section 8 "Reproduction, Copying, Scraping" (https://sunnah.com/about):
+  > "Reproducing individual hadith or selections of hadith for a teaching/didactic/presentation purpose is permitted."
+- **Compliance:** Rafiq bundles one individual hadith per observance (8 total) for a free, personal, didactic app — not mass reproduction or mirroring. sunnah.com is credited here; source lines in-app cite the canonical collection.
+- **Indonesian translations:** **original in-house translation by the Rafiq team** from the public-domain Arabic originals. Copyright vests in the Rafiq project; distributed under the app's license.
+- **Event ayahs:** `surah_id` / `ayah_number` references **only** into the already-bundled Quran text (Tanzil — public domain). No Quran text duplicated.
+- **Date definitions (`events.json`):** factual Hijri calendar data keyed to Rafiq's Umm al-Qura engine (ICU4X); Laylat al-Qadr carries an explicit `estimated: true` flag surfaced in the UI as "(estimated)".

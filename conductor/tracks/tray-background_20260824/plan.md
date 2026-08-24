@@ -29,9 +29,9 @@ the loop since OS trays cannot be scripted by Playwright.
 
 ## Phase 3 — Localized labels & Settings autostart card (frontend)
 
-- [ ] Task: i18n catalog keys EN + ID (tray items, tooltip, placeholder, hint notification, settings labels) with parity check (NFR-1)
-- [ ] Task: Send localized labels on startup and on language change via `set_tray_labels` (NFR-1, AC-6)
-- [ ] Task: "Launch at login" toggle in Settings General area wired to autostart plugin enable/disable, reflecting current registration state, off by default — component tests first (`src/pages/settings.tsx`, `src/lib/autostart.ts`, helpers `tauri-driver`) (FR-7, AC-7)
+- [x] Task: i18n catalog keys EN + ID (tray items, tooltip, placeholder, hint notification, settings labels) with parity check (NFR-1) (78cb0b9)
+- [x] Task: Send localized labels on startup and on language change via `set_tray_labels` (NFR-1, AC-6) (78cb0b9)
+- [x] Task: "Launch at login" toggle in Settings General area wired to autostart plugin enable/disable, reflecting current registration state, off by default — lib tests first per repo convention (tauri-driver n/a; plugin mocked in vitest) (`src/pages/settings.tsx`, `src/lib/autostart.ts`) (FR-7, AC-7) (fd6c25c)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4 — Smoke documentation & final gate

@@ -62,6 +62,7 @@
     "saveLocation": "Save location",
     "locationSaved": "Location saved",
     "locationError": "Could not save location: {{message}}",
+    "locationInvalidNumbers": "Enter valid numbers",
     "notifications": "Prayer notifications",
     "notificationsHint": "Show a notification at each prayer time",
     "adhan": "Adhan sound",

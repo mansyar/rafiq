@@ -83,7 +83,7 @@ export function LocationPicker({ idPrefix }: { idPrefix: string }) {
       lon < -180 ||
       lon > 180
     ) {
-      setError(t('settings.locationError', { message: 'Enter valid numbers' }));
+      setError(t('settings.locationInvalidNumbers'));
       return;
     }
     try {
@@ -121,8 +121,9 @@ export function LocationPicker({ idPrefix }: { idPrefix: string }) {
               <div key={city.id}>
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                  className="flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={() => handleSelectCity(city.id)}
+                  disabled={locationMutation.isPending}
                 >
                   <span>
                     {city.name}, {city.country}

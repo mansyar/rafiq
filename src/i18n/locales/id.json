@@ -62,6 +62,7 @@
     "saveLocation": "Simpan lokasi",
     "locationSaved": "Lokasi disimpan",
     "locationError": "Gagal menyimpan lokasi: {{message}}",
+    "locationInvalidNumbers": "Masukkan angka yang valid",
     "notifications": "Notifikasi salat",
     "notificationsHint": "Tampilkan notifikasi setiap waktu salat",
     "adhan": "Suara azan",

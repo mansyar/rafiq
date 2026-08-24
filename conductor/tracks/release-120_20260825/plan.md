@@ -15,9 +15,9 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] `tauri.conf.json`: `1.1.0` -> `1.2.0`
   - [x] `Cargo.toml`: `1.1.0` -> `1.2.0`
   - Verify: grep confirms all three at `1.2.0`; no other version references left stale
-- [ ] Task: Finalize CHANGELOG (Keep a Changelog format)
-  - [ ] Move `[Unreleased]` section to `[1.2.0] - 2026-08-25` (no rewording)
-  - [ ] Verify `[Unreleased]` is empty / removed
+- [x] Task: Finalize CHANGELOG (Keep a Changelog format) (7ddcf1e)
+  - [x] Move `[Unreleased]` section to `[1.2.0] - 2026-08-25` (no rewording)
+  - [x] Verify `[Unreleased]` is empty / removed
 - [ ] Task: Regression gates
   - [ ] `pnpm check` (Biome lint + format)
   - [ ] `pnpm test` (Vitest suite green)

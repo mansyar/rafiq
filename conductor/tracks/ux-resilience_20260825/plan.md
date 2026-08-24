@@ -1,0 +1,70 @@
+# Plan — UX polish: Error Resilience & Feedback
+
+Track ID: `ux-resilience_20260825` · Type: Chore / polish · Date: 2026-08-25
+
+TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
+
+## Phase 1 — Shared `QueryError` component & i18n foundation
+
+- [ ] Task: Write failing component tests for `QueryError`
+  - [ ] Tests: renders localized message + Retry button with `role="alert"`; button disabled while refetching; click calls `refetch()`; keyboard accessible
+  - [ ] Confirm tests fail (Red phase)
+- [ ] Task: Implement `src/components/query-error.tsx`
+  - [ ] Green: component passes tests; styled with existing `ui/button` + `text-destructive` patterns
+- [ ] Task: Add shared i18n keys (`common.retry`, `common.logging`, error strings) to `en.json` + `id.json`
+  - [ ] Verify parity via existing `locale.test.ts` (keys added to both files, no placeholder drift)
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase 2 — Sticky error states: every page recovers
+
+- [ ] Task: Today page — single error branch
+  - [ ] Collapse duplicate error paragraphs into one `QueryError` wired to `times.refetch()` + `resolved.refetch()`
+  - [ ] Guard "set your location" banner with `!isError` (never misleads on failure)
+- [ ] Task: Daily reflection card — friendly copy + retry
+  - [ ] Map known failures to localized messages (no raw `String(error)`); wire `daily.refetch()`
+- [ ] Task: Log analytics — `isError` branch
+  - [ ] Replace eternal "Loading…" fallback with `QueryError` + retry
+- [ ] Task: Calendar — `todayHijri` failure state
+  - [ ] Include `todayQuery.isError` in error handling; render `QueryError` + retry instead of blank body
+- [ ] Task: Upcoming events strip — error + retry row
+  - [ ] On error: stable card with `QueryError` + retry (empty state still hides)
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase 3 — Silent failure fixes
+
+- [ ] Task: Update banner install-failure state (TDD)
+  - [ ] Failing tests in `update-store.test.ts`: `kind === 'error'` remains visible/actionable; retry action re-triggers install; banner test updated
+  - [ ] Implement: store exposes retry; banner renders "Try again" error state, never auto-dismisses on failure
+- [ ] Task: Adhan player blocked-playback notice
+  - [ ] Component test: `play()` rejection surfaces visible notice
+  - [ ] Implement non-intrusive notice (reuse existing i18n); keep next-prayer retry behavior
+- [ ] Task: Recitation playback errors → store error path (TDD)
+  - [ ] Failing tests in `player-store.test.ts`: playback failure transitions status to error with retry
+  - [ ] Wire `<audio onError>` + `play().catch()` into store error path; footer shows retry
+- [ ] Task: Settings toggles — pending + inline error
+  - [ ] Disable toggle while mutation pending; inline error text on `onError` (notifications / adhan / autostart)
+- [ ] Task: Quran translation switcher — pending + inline error
+  - [ ] Disable group while `translationMutation.isPending`; surface failure inline
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase 4 — Double-submit guards & i18n leak
+
+- [ ] Task: Prayer prompt pending state (TDD)
+  - [ ] Test: button disabled + "Logging…" while `logPrayer` in flight; no double submission
+  - [ ] Implement `isSubmitting` state in `prayer-prompt.tsx`
+- [ ] Task: Log delete cancel path (TDD)
+  - [ ] Tests: arm → confirm → cancel resets; Escape/blur resets; no accidental delete
+  - [ ] Implement explicit cancel affordance in `log.tsx`
+- [ ] Task: Location picker double-save guard + i18n
+  - [ ] Disable city result buttons + manual save while `locationMutation.isPending`
+  - [ ] Replace hardcoded `'Enter valid numbers'` with `settings.locationInvalidNumbers` key (EN + ID)
+- [ ] Task: i18n parity gate
+  - [ ] Run `locale.test.ts` + add any missing keys; verify zero hardcoded user-facing strings (grep)
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase 5 — Full gate, docs & completion
+
+- [ ] Task: Full frontend gate
+  - [ ] `pnpm check` (Biome lint + format), typecheck, full Vitest suite, coverage >80%
+- [ ] Task: Update `CHANGELOG.md` [Unreleased] with resilience/polish summary
+- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

@@ -205,50 +205,71 @@ export function Settings() {
 
           {/* Toggles */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">{t('settings.notifications')}</p>
-                <p className="text-xs text-muted-foreground">{t('settings.notificationsHint')}</p>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">{t('settings.notifications')}</p>
+                  <p className="text-xs text-muted-foreground">{t('settings.notificationsHint')}</p>
+                </div>
+                <Button
+                  variant={notifQuery.data ? 'default' : 'outline'}
+                  size="sm"
+                  aria-pressed={!!notifQuery.data}
+                  disabled={notifQuery.isLoading || notifMutation.isPending}
+                  onClick={() => notifMutation.mutate(!notifQuery.data)}
+                >
+                  {notifQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
+                </Button>
               </div>
-              <Button
-                variant={notifQuery.data ? 'default' : 'outline'}
-                size="sm"
-                aria-pressed={!!notifQuery.data}
-                disabled={notifQuery.isLoading || notifMutation.isPending}
-                onClick={() => notifMutation.mutate(!notifQuery.data)}
-              >
-                {notifQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
-              </Button>
+              {notifMutation.isError && (
+                <p className="text-xs text-destructive" role="alert">
+                  {t('settings.toggleError', { message: String(notifMutation.error) })}
+                </p>
+              )}
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">{t('settings.adhan')}</p>
-                <p className="text-xs text-muted-foreground">{t('settings.adhanHint')}</p>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">{t('settings.adhan')}</p>
+                  <p className="text-xs text-muted-foreground">{t('settings.adhanHint')}</p>
+                </div>
+                <Button
+                  variant={adhanQuery.data ? 'default' : 'outline'}
+                  size="sm"
+                  aria-pressed={!!adhanQuery.data}
+                  disabled={adhanQuery.isLoading || adhanMutation.isPending}
+                  onClick={() => adhanMutation.mutate(!adhanQuery.data)}
+                >
+                  {adhanQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
+                </Button>
               </div>
-              <Button
-                variant={adhanQuery.data ? 'default' : 'outline'}
-                size="sm"
-                aria-pressed={!!adhanQuery.data}
-                disabled={adhanQuery.isLoading || adhanMutation.isPending}
-                onClick={() => adhanMutation.mutate(!adhanQuery.data)}
-              >
-                {adhanQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
-              </Button>
+              {adhanMutation.isError && (
+                <p className="text-xs text-destructive" role="alert">
+                  {t('settings.toggleError', { message: String(adhanMutation.error) })}
+                </p>
+              )}
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">{t('settings.launchAtLogin')}</p>
-                <p className="text-xs text-muted-foreground">{t('settings.launchAtLoginHint')}</p>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">{t('settings.launchAtLogin')}</p>
+                  <p className="text-xs text-muted-foreground">{t('settings.launchAtLoginHint')}</p>
+                </div>
+                <Button
+                  variant={autostartQuery.data ? 'default' : 'outline'}
+                  size="sm"
+                  aria-pressed={!!autostartQuery.data}
+                  disabled={autostartQuery.isLoading || autostartMutation.isPending}
+                  onClick={() => autostartMutation.mutate(!autostartQuery.data)}
+                >
+                  {autostartQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
+                </Button>
               </div>
-              <Button
-                variant={autostartQuery.data ? 'default' : 'outline'}
-                size="sm"
-                aria-pressed={!!autostartQuery.data}
-                disabled={autostartQuery.isLoading || autostartMutation.isPending}
-                onClick={() => autostartMutation.mutate(!autostartQuery.data)}
-              >
-                {autostartQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
-              </Button>
+              {autostartMutation.isError && (
+                <p className="text-xs text-destructive" role="alert">
+                  {t('settings.toggleError', { message: String(autostartMutation.error) })}
+                </p>
+              )}
             </div>
           </div>
 

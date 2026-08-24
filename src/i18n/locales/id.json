@@ -68,6 +68,7 @@
     "adhanHint": "Putar azan saat notifikasi salat muncul",
     "toggleOn": "Aktif",
     "toggleOff": "Nonaktif",
+    "toggleError": "Gagal memperbarui pengaturan ini: {{message}}",
     "launchAtLogin": "Jalankan saat masuk",
     "launchAtLoginHint": "Mulai Rafiq otomatis saat Anda masuk",
     "noResults": "Tidak ada hasil",

@@ -68,6 +68,7 @@
     "adhanHint": "Play adhan when a prayer notification fires",
     "toggleOn": "On",
     "toggleOff": "Off",
+    "toggleError": "Couldn't update this setting: {{message}}",
     "launchAtLogin": "Launch at login",
     "launchAtLoginHint": "Start Rafiq automatically when you sign in",
     "noResults": "No results",

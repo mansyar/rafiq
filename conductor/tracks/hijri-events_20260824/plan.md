@@ -68,7 +68,7 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 - [x] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
       *(checkpoint report attached to 0e46821)*
 
-## Phase 4 — Frontend UI & i18n (en/id)
+## Phase 4 — Frontend UI & i18n (en/id) [checkpoint: 185570c]
 
 - [x] Task: Add i18n catalog strings (en + id): 8 event names + one-line
       descriptions, strip labels, "Today:" prefix, "(estimated)" suffix

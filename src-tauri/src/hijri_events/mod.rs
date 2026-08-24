@@ -42,15 +42,13 @@ static EVENT_DEFS: OnceLock<Vec<HijriEventDef>> = OnceLock::new();
 static EVENT_CONTENT: OnceLock<Vec<EventContent>> = OnceLock::new();
 
 fn load_event_defs_inner() -> Vec<HijriEventDef> {
-    // Red-phase stub: Green phase parses EVENTS_JSON.
-    let _ = EVENTS_JSON;
-    Vec::new()
+    serde_json::from_str(EVENTS_JSON)
+        .expect("events.json must be valid JSON array of HijriEventDef")
 }
 
 fn load_event_content_inner() -> Vec<EventContent> {
-    // Red-phase stub: Green phase parses CONTENT_JSON.
-    let _ = CONTENT_JSON;
-    Vec::new()
+    serde_json::from_str(CONTENT_JSON)
+        .expect("content.json must be valid JSON array of EventContent")
 }
 
 pub fn all_event_defs() -> &'static [HijriEventDef] {

@@ -34,7 +34,8 @@ pub fn countdown_row(
 }
 
 /// Localized strings handed over from the frontend i18n catalog (NFR-1).
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TrayLabels {
     /// Countdown prefix, e.g. `"Next:"` / `"Berikutnya:"`.
     pub next_prefix: String,

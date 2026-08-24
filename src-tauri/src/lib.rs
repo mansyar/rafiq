@@ -20,10 +20,9 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
-            // Second instance focus request: bring the main window forward.
-            if let Some(window) = app.get_webview_window("main") {
-                let _ = window.set_focus();
-            }
+            // Second instance: restore + focus even if hidden in the tray
+            // (FR-6 / AC-4).
+            tray::runtime::show_main(app);
         }))
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
@@ -84,7 +83,8 @@ pub fn run() {
             commands::get_recitation_state,
             commands::report_played_position,
             commands::get_recitation_cache_summary,
-            commands::delete_recitation_cache
+            commands::delete_recitation_cache,
+            commands::set_tray_labels
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -545,6 +545,15 @@ pub fn set_setting(state: State<'_, AppState>, key: String, value: String) -> Re
 }
 
 #[tauri::command]
+pub fn set_tray_labels(
+    app: tauri::AppHandle,
+    labels: crate::tray::TrayLabels,
+) -> Result<(), String> {
+    crate::tray::runtime::apply_labels(&app, labels);
+    Ok(())
+}
+
+#[tauri::command]
 pub fn report_played_position(
     state: State<'_, AppState>,
     surah_id: u8,

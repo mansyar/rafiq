@@ -85,7 +85,20 @@ pub fn init(app: &AppHandle) -> tauri::Result<()> {
         quit_item,
         tray,
     });
+    // Populate the info row/tooltip immediately, then keep them fresh on a
+    // low-frequency tick (NFR-3).
+    refresh_once(app);
+    spawn_refresh(app.clone());
     Ok(())
+}
+
+/// Background tick refreshing the countdown row + tooltip every ~30 s from
+/// the scheduler data path (FR-3 / FR-5 / NFR-3). Exits with the process.
+fn spawn_refresh(app: AppHandle) {
+    std::thread::spawn(move || loop {
+        std::thread::sleep(std::time::Duration::from_secs(30));
+        refresh_once(&app);
+    });
 }
 
 /// Show, unminimize and focus the main window (also used by the

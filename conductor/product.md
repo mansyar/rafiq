@@ -55,6 +55,11 @@ never monetized or surveilled.
 7. **First-Run Onboarding** — guided setup wizard (welcome tour, language,
    location, calculation method); skippable with sensible defaults,
    re-runnable from Settings.
+8. **System Tray & Background Presence** — closing the window keeps Rafiq
+   running in the system tray so adhan reminders continue; one-time explainer
+   hint on first hide-to-tray; tray menu with next-prayer countdown, Show and
+   Quit; monochrome template icon adapting to light/dark trays; optional
+   launch-at-login toggle in Settings (off by default).
 
 ## Non-Goals (V1)
 - Mobile application

@@ -42,6 +42,18 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
   > notifications stay informational on desktop; prayer-time one-tap logging is
   > delivered as an in-app prompt driven by the scheduler's `prayer-fired`
   > event (prayer-log-analytics track spec, amendment 2026-08-20).
+  > **Note (2026-08-24):** Tray-background track — `tauri` dependency gains
+  > the `tray-icon` Cargo feature (alongside `protocol-asset`) and the
+  > frontend adds `@tauri-apps/plugin-autostart 2.5.1`. New Rust module
+  > `src-tauri/src/tray/`: `mod.rs` holds pure, unit-tested logic
+  > (countdown formatting, menu model, hint-once policy over the
+  > `tray_hint_shown` setting key); `runtime.rs` is OS glue (monochrome
+  > template icon via `include_image!`, close-to-tray intercept on
+  > `CloseRequested`, one-time explainer through the existing notification
+  > plugin, ~30 s countdown/tooltip refresh tick, single-instance callback
+  > upgraded to restore + focus a hidden window). Localized labels flow from
+  > the i18n catalog to Rust via the `set_tray_labels` command on mount and
+  > every `languageChanged` event.
 
 ## Data & Content
 - **City DB:** bundled ~3,000 cities (embedded SQLite/JSON asset, shipped with

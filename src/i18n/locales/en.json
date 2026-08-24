@@ -69,7 +69,7 @@
     "adhanHint": "Play adhan when a prayer notification fires",
     "toggleOn": "On",
     "toggleOff": "Off",
-    "toggleError": "Couldn't update this setting: {{message}}",
+    "toggleError": "Could not update this setting: {{message}}",
     "launchAtLogin": "Launch at login",
     "launchAtLoginHint": "Start Rafiq automatically when you sign in",
     "noResults": "No results",
@@ -99,7 +99,7 @@
     "notesFallback": "Version {{version}} is ready to install.",
     "restartToUpdate": "Restart to update",
     "installing": "Updating…",
-    "installFailed": "Couldn't install the update.",
+    "installFailed": "Could not install the update.",
     "tryAgain": "Try again"
   },
   "common": {
@@ -137,7 +137,7 @@
     "subtitle": "Ayah & hadith for today",
     "loading": "Loading daily reflection…",
     "error": "Could not load daily reflection: {{message}}",
-    "errorGeneric": "Couldn't load today's reflection.",
+    "errorGeneric": "Could not load today's reflection.",
     "ayahLabel": "Ayah of the Day",
     "hadithLabel": "Hadith of the Day",
     "openInQuran": "Open in Quran",
@@ -153,7 +153,7 @@
       "title": "Upcoming observances",
       "todayPrefix": "Today:",
       "estimatedSuffix": "(estimated)",
-      "error": "Couldn't load upcoming observances."
+      "error": "Could not load upcoming observances."
     },
     "markerLabel": "{{name}} — {{description}}",
     "events": {
@@ -210,7 +210,7 @@
       "kemenag": "Kemenag"
     },
     "translationLabel": "Translation",
-    "translationError": "Couldn't switch translation: {{message}}",
+    "translationError": "Could not switch translation: {{message}}",
     "readerTitle": "{{name}} — {{transliteration}}",
     "continuousHint": "Continuous scroll — {{count}} ayahs",
     "audio": {
@@ -242,7 +242,7 @@
     "empty": "No prayers logged yet. Tap a prayer above when you have prayed — every day is a fresh start.",
     "loading": "Loading your log\u2026",
     "error": "Couldn\u2019t load your log.",
-    "analyticsError": "Couldn't load your statistics.",
+    "analyticsError": "Could not load your statistics.",
     "noLocation": {
       "hint": "Set your location to start logging prayers.",
       "openSettings": "Open settings"

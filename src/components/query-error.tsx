@@ -30,7 +30,7 @@ export function QueryError({ message, onRetry, retrying = false, className }: Qu
       )}
     >
       <p>{message}</p>
-      <Button variant="outline" size="sm" disabled={retrying} onClick={() => onRetry()}>
+      <Button variant="outline" size="sm" disabled={retrying} onClick={onRetry}>
         {retrying ? t('common.retrying') : t('common.retry')}
       </Button>
     </div>

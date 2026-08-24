@@ -2,6 +2,7 @@ import { listen } from '@tauri-apps/api/event';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import adhanSrc from '@/assets/audio/adhan.mp3';
+import { Button } from '@/components/ui/button';
 import { getAdhanEnabled, getNotificationEnabled } from '@/lib/prayer';
 
 type PrayerTimeEvent = {
@@ -91,13 +92,14 @@ export function AdhanPlayer() {
         <div role="status" className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
           <div className="flex items-center gap-3 rounded-lg border border-destructive/30 bg-background/95 px-4 py-2 text-sm shadow-lg">
             <p className="text-muted-foreground">{t('adhan.blockedNotice')}</p>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={() => setBlocked(false)}
-              className="shrink-0 text-xs font-medium underline underline-offset-2"
+              className="shrink-0 text-xs underline underline-offset-2"
             >
               {t('adhan.dismiss')}
-            </button>
+            </Button>
           </div>
         </div>
       )}

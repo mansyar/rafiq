@@ -47,20 +47,22 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] Disable group while `translationMutation.isPending`; surface failure inline
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 4 — Double-submit guards & i18n leak
+## Phase 4 — Double-submit guards & i18n leak [checkpoint: edf6f96]
 
-- [ ] Task: Prayer prompt pending state (TDD)
-  - [ ] Test: button disabled + "Logging…" while `logPrayer` in flight; no double submission
-  - [ ] Implement `isSubmitting` state in `prayer-prompt.tsx`
-- [ ] Task: Log delete cancel path (TDD)
-  - [ ] Tests: arm → confirm → cancel resets; Escape/blur resets; no accidental delete
-  - [ ] Implement explicit cancel affordance in `log.tsx`
-- [ ] Task: Location picker double-save guard + i18n
-  - [ ] Disable city result buttons + manual save while `locationMutation.isPending`
-  - [ ] Replace hardcoded `'Enter valid numbers'` with `settings.locationInvalidNumbers` key (EN + ID)
-- [ ] Task: i18n parity gate
-  - [ ] Run `locale.test.ts` + add any missing keys; verify zero hardcoded user-facing strings (grep)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Prayer prompt pending state (TDD) (fed6cfd)
+  - [x] Test: button disabled + "Logging…" while `logPrayer` in flight; no double submission
+  - [x] Implement `isSubmitting` state in `prayer-prompt.tsx`
+- [x] Task: Log delete cancel path (TDD) (8395a09)
+  - [x] Test: arm → confirm → cancel resets; Escape/blur resets; no accidental delete
+  - [x] Implement explicit cancel affordance in `log.tsx`
+- [x] Task: Location picker double-save guard + i18n (edf6f96)
+  - [x] Disable city result buttons + manual save while `locationMutation.isPending`
+  - [x] Replace hardcoded `'Enter valid numbers'` with `settings.locationInvalidNumbers` key (EN + ID)
+- [x] Task: i18n parity gate
+  - [x] locale.test.ts structural parity (keys + placeholders) green
+  - [x] grep sweep: no hardcoded `message:` literals, English placeholders, or raw English JSX text remain in `src/`
+  - [x] Run `locale.test.ts` + add any missing keys; verify zero hardcoded user-facing strings (grep)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5 — Full gate, docs & completion
 

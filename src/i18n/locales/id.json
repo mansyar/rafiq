@@ -105,6 +105,10 @@
     "retrying": "Mencoba lagi…",
     "logging": "Mencatat…"
   },
+  "adhan": {
+    "blockedNotice": "Pemutaran azan diblokir. Berinteraksilah dengan aplikasi agar dapat berbunyi pada salat berikutnya.",
+    "dismiss": "Tutup"
+  },
   "prayer": {
     "fajr": "Subuh",
     "sunrise": "Terbit",

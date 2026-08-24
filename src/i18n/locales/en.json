@@ -105,6 +105,10 @@
     "retrying": "Retrying…",
     "logging": "Logging…"
   },
+  "adhan": {
+    "blockedNotice": "Adhan playback was blocked. Interact with the app so it can play at the next prayer.",
+    "dismiss": "Dismiss"
+  },
   "prayer": {
     "fajr": "Fajr",
     "sunrise": "Sunrise",

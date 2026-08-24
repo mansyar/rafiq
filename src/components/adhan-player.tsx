@@ -1,5 +1,6 @@
 import { listen } from '@tauri-apps/api/event';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import adhanSrc from '@/assets/audio/adhan.mp3';
 import { getAdhanEnabled, getNotificationEnabled } from '@/lib/prayer';
 
@@ -18,8 +19,10 @@ type PrayerTimeEvent = {
  * No UI chrome — hidden <audio>.
  */
 export function AdhanPlayer() {
+  const { t } = useTranslation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [canPlay, setCanPlay] = useState(false);
+  const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -32,6 +35,22 @@ export function AdhanPlayer() {
   useEffect(() => {
     let unlisten: (() => void) | undefined;
 
+    async function attemptPlay() {
+      const audio = audioRef.current;
+      if (!audio) return;
+      // Reset and play — WebView autoplay is enabled via
+      // additionalBrowserArgs in tauri.conf.json.
+      audio.currentTime = 0;
+      try {
+        await audio.play();
+        setBlocked(false);
+      } catch {
+        // Autoplay may still be blocked until first user gesture on some
+        // platforms; surface a dismissible notice — next prayer retries.
+        setBlocked(true);
+      }
+    }
+
     async function setup() {
       // Preload is handled by <audio preload="auto">, but also ensure the Tauri
       // event listener is registered for scheduler emissions.
@@ -41,24 +60,10 @@ export function AdhanPlayer() {
           const adhanEnabled = await getAdhanEnabled();
           // Only play when both toggles are enabled (per spec AC-7).
           if (!notificationEnabled || !adhanEnabled) return;
-          const audio = audioRef.current;
-          if (!audio) return;
-          // Reset and play — WebView autoplay is enabled via
-          // additionalBrowserArgs in tauri.conf.json.
-          audio.currentTime = 0;
-          const p = audio.play();
-          if (p && typeof (p as Promise<void>).catch === 'function') {
-            (p as Promise<void>).catch(() => {
-              // Autoplay may still be blocked until first user gesture on some
-              // platforms; swallow — next prayer will retry.
-            });
-          }
+          await attemptPlay();
         } catch {
           // Settings unavailable (e.g. browser preview) — attempt play anyway.
-          const audio = audioRef.current;
-          if (!audio) return;
-          audio.currentTime = 0;
-          void audio.play().catch(() => {});
+          await attemptPlay();
         }
       });
     }
@@ -70,16 +75,32 @@ export function AdhanPlayer() {
   }, []);
 
   return (
-    <audio
-      ref={audioRef}
-      src={adhanSrc}
-      preload="auto"
-      // Hidden, no controls — programmatic playback only.
-      style={{ display: 'none' }}
-      data-testid="adhan-audio"
-      data-canplay={canPlay ? 'true' : 'false'}
-    >
-      <track kind="captions" />
-    </audio>
+    <>
+      <audio
+        ref={audioRef}
+        src={adhanSrc}
+        preload="auto"
+        // Hidden, no controls — programmatic playback only.
+        style={{ display: 'none' }}
+        data-testid="adhan-audio"
+        data-canplay={canPlay ? 'true' : 'false'}
+      >
+        <track kind="captions" />
+      </audio>
+      {blocked && (
+        <div role="status" className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
+          <div className="flex items-center gap-3 rounded-lg border border-destructive/30 bg-background/95 px-4 py-2 text-sm shadow-lg">
+            <p className="text-muted-foreground">{t('adhan.blockedNotice')}</p>
+            <button
+              type="button"
+              onClick={() => setBlocked(false)}
+              className="shrink-0 text-xs font-medium underline underline-offset-2"
+            >
+              {t('adhan.dismiss')}
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

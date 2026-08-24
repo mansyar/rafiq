@@ -41,7 +41,17 @@ pub fn run() {
             });
             // Spawn the adhan + notification scheduler (background thread).
             scheduler::spawn_scheduler(app.handle().clone());
+            // System tray icon + menu (close-to-tray background presence).
+            tray::runtime::init(app.handle())?;
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            // Close-to-tray: intercepting the X button keeps adhan reminders
+            // alive; minimize is untouched (FR-2 / FR-8 / AC-1 / AC-8).
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                tray::runtime::on_close_requested(window.app_handle());
+            }
         })
         .invoke_handler(tauri::generate_handler![
             commands::get_setting,

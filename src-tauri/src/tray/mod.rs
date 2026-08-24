@@ -1,6 +1,8 @@
 //! Tray & background-presence support: pure formatting/policy logic plus the
 //! OS tray runtime wiring. Pure functions are unit-tested here; the runtime
-//! integration lives in [`runtime`] behind cfg(not(test)) where practical.
+//! integration lives in [`runtime`].
+
+pub mod runtime;
 
 use chrono::{DateTime, FixedOffset, Utc};
 
@@ -32,6 +34,7 @@ pub fn countdown_row(
 }
 
 /// Localized strings handed over from the frontend i18n catalog (NFR-1).
+#[derive(Clone)]
 pub struct TrayLabels {
     /// Countdown prefix, e.g. `"Next:"` / `"Berikutnya:"`.
     pub next_prefix: String,
@@ -41,6 +44,8 @@ pub struct TrayLabels {
     pub show: String,
     /// Menu action label for exiting the app.
     pub quit: String,
+    /// Body of the one-time hide-to-tray explainer notification (FR-2).
+    pub hint_body: String,
 }
 
 /// Identifies a clickable tray menu entry.
@@ -162,6 +167,7 @@ mod tests {
             complete_setup: "Complete setup in Rafiq".into(),
             show: "Show Rafiq".into(),
             quit: "Quit Rafiq".into(),
+            hint_body: "Rafiq is still running in the system tray.".into(),
         }
     }
 

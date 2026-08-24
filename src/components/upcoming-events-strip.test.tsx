@@ -38,7 +38,7 @@ describe('UpcomingEventsStrip error state', () => {
     vi.mocked(getUpcomingHijriEvents).mockRejectedValue(new Error('offline'));
     renderStrip();
     const alert = await screen.findByRole('alert');
-    expect(alert).toHaveTextContent("Couldn't load upcoming observances.");
+    expect(alert).toHaveTextContent('Could not load upcoming observances.');
     expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
   });
 

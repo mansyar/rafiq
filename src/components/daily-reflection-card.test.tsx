@@ -40,7 +40,7 @@ describe('DailyReflectionCard error state', () => {
     } as unknown as ReturnType<typeof useDailyContent>);
     renderCard();
     const alert = screen.getByRole('alert');
-    expect(alert).toHaveTextContent("Couldn't load today's reflection.");
+    expect(alert).toHaveTextContent("Could not load today's reflection.");
     expect(alert).not.toHaveTextContent('backend exploded');
   });
 

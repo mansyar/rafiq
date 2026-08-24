@@ -40,7 +40,7 @@ describe('UpdateBanner', () => {
     useUpdateStore.setState({ status: { kind: 'error', retryInstall: true } });
     render(<UpdateBanner />);
     const card = screen.getByRole('status');
-    expect(card).toHaveTextContent("Couldn't install the update.");
+    expect(card).toHaveTextContent('Could not install the update.');
     expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
   });
 

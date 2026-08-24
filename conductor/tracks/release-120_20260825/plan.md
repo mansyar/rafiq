@@ -18,10 +18,10 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 - [x] Task: Finalize CHANGELOG (Keep a Changelog format) (7ddcf1e)
   - [x] Move `[Unreleased]` section to `[1.2.0] - 2026-08-25` (no rewording)
   - [x] Verify `[Unreleased]` is empty / removed
-- [ ] Task: Regression gates
-  - [ ] `pnpm check` (Biome lint + format)
-  - [ ] `pnpm test` (Vitest suite green)
-  - [ ] `cargo fmt --check` + `cargo clippy` + `cargo test`
+- [x] Task: Regression gates (15e6abc)
+  - [x] `pnpm check` (Biome lint + format)
+  - [x] `pnpm test` (Vitest suite green)
+  - [x] `cargo fmt --check` + `cargo clippy` + `cargo test`
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2: Pre-release verification & smoke checklist

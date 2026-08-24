@@ -10,10 +10,10 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 
 ## Phase 1: Version bump & CHANGELOG
 
-- [ ] Task: Bump version to 1.2.0 (all three files must stay in sync - Cargo.toml drift was a review finding on v1-release)
-  - [ ] `package.json`: `1.1.0` -> `1.2.0`
-  - [ ] `tauri.conf.json`: `1.1.0` -> `1.2.0`
-  - [ ] `Cargo.toml`: `1.1.0` -> `1.2.0`
+- [x] Task: Bump version to 1.2.0 (all three files must stay in sync - Cargo.toml drift was a review finding on v1-release) (02758fa)
+  - [x] `package.json`: `1.1.0` -> `1.2.0`
+  - [x] `tauri.conf.json`: `1.1.0` -> `1.2.0`
+  - [x] `Cargo.toml`: `1.1.0` -> `1.2.0`
   - Verify: grep confirms all three at `1.2.0`; no other version references left stale
 - [ ] Task: Finalize CHANGELOG (Keep a Changelog format)
   - [ ] Move `[Unreleased]` section to `[1.2.0] - 2026-08-25` (no rewording)

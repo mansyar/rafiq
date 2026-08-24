@@ -38,4 +38,8 @@ the loop since OS trays cannot be scripted by Playwright.
 
 - [x] Task: Manual smoke checklist (Windows/macOS/Linux) walking through AC-1..AC-8, stored in the track folder (NFR-4) ([./smoke-checklist.md](./smoke-checklist.md); Windows executed during the track)
 - [x] Task: Full quality gate — fmt, clippy, biome, tsc, cargo test, vitest, production build (2026-08-24: fmt clean; clippy clean; cargo 211+6 green; biome 63 files clean; tsc clean; vitest 209/209; vite build ok 7.5s)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (full gate green at Phase 4 close and re-verified after review fix cb3ac84: fmt/clippy clean, cargo 211+6, vitest 209/209)
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions (cb3ac84) — scope close-to-tray intercept to `window.label() == "main"` so future auxiliary windows close normally; Low-severity findings documented in review report (hint check-then-set race unreachable; transient EN defaults intentional bootstrap)

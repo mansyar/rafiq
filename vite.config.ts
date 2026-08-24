@@ -11,6 +11,7 @@ export default defineConfig(async () => ({
   test: {
     include: ['src/**/*.{test,spec}.{ts,tsx}', 'e2e/helpers/**/*.{test,spec}.{ts,tsx}'],
     exclude: ['e2e/*.spec.ts', 'node_modules/**'],
+    setupFiles: ['./src/test/setup.ts'],
   },
 
   resolve: {

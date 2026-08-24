@@ -7,6 +7,7 @@ import { LocationPicker } from '@/components/location-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { getLaunchAtLogin, setLaunchAtLogin } from '@/lib/autostart';
 import { DEFAULT_LOCALE, isSupportedLocale, type Locale, SUPPORTED_LOCALES } from '@/lib/locale';
 import { useRecitationPlayer } from '@/lib/player-store';
 import {
@@ -75,6 +76,16 @@ export function Settings() {
   const adhanMutation = useMutation({
     mutationFn: (v: boolean) => setAdhanEnabled(v),
     onSuccess: async () => queryClient.invalidateQueries({ queryKey: ['adhan-enabled'] }),
+  });
+
+  // ── Launch at login ──────────────────────────────────────────────────
+  const autostartQuery = useQuery({
+    queryKey: ['launch-at-login'],
+    queryFn: getLaunchAtLogin,
+  });
+  const autostartMutation = useMutation({
+    mutationFn: (v: boolean) => setLaunchAtLogin(v),
+    onSuccess: async () => queryClient.invalidateQueries({ queryKey: ['launch-at-login'] }),
   });
 
   // ── Updates ───────────────────────────────────────────────────────────
@@ -222,6 +233,21 @@ export function Settings() {
                 onClick={() => adhanMutation.mutate(!adhanQuery.data)}
               >
                 {adhanQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium">{t('settings.launchAtLogin')}</p>
+                <p className="text-xs text-muted-foreground">{t('settings.launchAtLoginHint')}</p>
+              </div>
+              <Button
+                variant={autostartQuery.data ? 'default' : 'outline'}
+                size="sm"
+                aria-pressed={!!autostartQuery.data}
+                disabled={autostartQuery.isLoading || autostartMutation.isPending}
+                onClick={() => autostartMutation.mutate(!autostartQuery.data)}
+              >
+                {autostartQuery.data ? t('settings.toggleOn') : t('settings.toggleOff')}
               </Button>
             </div>
           </div>

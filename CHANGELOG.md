@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Resilience polish — every screen can now recover from errors, silent failures surface feedback, and repeated clicks can no longer double-submit.
+
+### Added
+
+- Shared error state with a retry button across Today, the daily reflection, Log statistics, the Hijri calendar and the upcoming observances strip.
+
+### Fixed
+
+- A failed update install now keeps the banner visible with a "Try again" action instead of hiding the error.
+- Adhan playback blocked by the platform now shows a dismissible notice instead of failing silently.
+- Recitation media errors (decode or blocked playback) now pause into a retryable state instead of appearing to play silently.
+- Settings toggles and the Quran translation switcher disable while pending and surface inline errors when they fail.
+- The prayer prompt's "Prayed" button can no longer double-log; prayer log deletion gained a Cancel path (Escape or clicking away also resets the confirmation).
+- City selection in the location picker can no longer double-save while a request is in flight; the invalid-coordinates message is now localized.
+
 ## [1.1.0] - 2026-08-23
 
 Recitation upgrades — more control over how you listen to the Qur'an, and easier management of downloaded audio.

@@ -4,7 +4,7 @@ Track ID: `ux-resilience_20260825` · Type: Chore / polish · Date: 2026-08-25
 
 TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
 
-## Phase 1 — Shared `QueryError` component & i18n foundation
+## Phase 1 — Shared `QueryError` component & i18n foundation [checkpoint: c703c87]
 
 - [x] Task: Write failing component tests for `QueryError` [c703c87]
   - [x] Tests: renders localized message + Retry button with `role="alert"`; button disabled while refetching; click calls `refetch()`; keyboard accessible

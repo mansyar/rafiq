@@ -49,9 +49,11 @@ never monetized or surveilled.
 4. **Prayer Log + Analytics** — log each prayer; track on-time vs qada; streak
    tracking; progress reports (daily / weekly / monthly).
 5. **Hijri Calendar** — Umm al-Qura basis; Hijri↔Gregorian conversion; today's
-   Hijri date.
+   Hijri date; bundled Islamic observance dates surfaced as gold calendar
+   markers and an "Upcoming observances" strip on Today.
 6. **Daily Ayah / Hadith** — fresh curated content each day to keep the user
-   connected.
+   connected; on Islamic observance days (e.g. Ramadan's start, Laylat al-Qadr,
+   both Eids) the card shows a thematic ayah & hadith for the occasion.
 7. **First-Run Onboarding** — guided setup wizard (welcome tour, language,
    location, calculation method); skippable with sensible defaults,
    re-runnable from Settings.

@@ -1859,6 +1859,18 @@ mod tests {
     }
 
     #[test]
+    fn hijri_month_grid_marks_qadr_estimated() {
+        // Ramadan 1448: day 27 is Laylat al-Qadr (estimated), day 1 ordinary.
+        let grid = super::hijri_month_grid_impl(1448, 9).unwrap();
+        let d27 = grid.days.iter().find(|d| d.hijri_day == 27).unwrap();
+        assert_eq!(d27.event_id.as_deref(), Some("laylat_al_qadr"));
+        assert!(d27.event_estimated, "Qadr grid cell must be estimated");
+        let d1 = grid.days.iter().find(|d| d.hijri_day == 1).unwrap();
+        assert!(d1.event_id.is_none());
+        assert!(!d1.event_estimated);
+    }
+
+    #[test]
     fn daily_content_command_includes_event_override_on_observance() {
         let conn = conn("daily-event");
         let event_day = chrono::NaiveDate::from_ymd_opt(2026, 6, 16).unwrap();

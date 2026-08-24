@@ -44,6 +44,9 @@ pub struct UpcomingEvent {
     pub gregorian_date: String,
     /// True when the occurrence is `today` itself.
     pub is_today: bool,
+    /// True when the underlying observance date is an estimate
+    /// (`events.json`); rendered as a "(estimated)" suffix (spec FR-4).
+    pub estimated: bool,
 }
 
 // Bundled assets — validated by tests in this module.
@@ -112,6 +115,8 @@ pub fn upcoming_events(today: NaiveDate, limit: usize) -> Vec<UpcomingEvent> {
             hijri_year: h.year,
             gregorian_date: day.format("%Y-%m-%d").to_string(),
             is_today: offset == 0,
+            // Red-phase stub: Green reads def.estimated.
+            estimated: false,
         });
         if out.len() == limit {
             break;
@@ -423,6 +428,21 @@ mod tests {
             prev = Some(d);
         }
         assert!(upcoming_events(ymd(2026, 6, 17), 0).is_empty());
+    }
+
+    #[test]
+    fn upcoming_flags_laylat_al_qadr_as_estimated() {
+        // On the night itself the first upcoming event is Qadr, estimated.
+        let qadr = crate::hijri::hijri_to_gregorian(1448, 9, 27).unwrap();
+        let today = NaiveDate::from_ymd_opt(qadr.year, qadr.month as u32, qadr.day as u32).unwrap();
+        let up = upcoming_events(today, 1);
+        assert_eq!(up[0].id, "laylat_al_qadr");
+        assert!(up[0].estimated, "Laylat al-Qadr must carry estimated=true");
+
+        // Ordinary observances are not flagged.
+        let new_year = upcoming_events(ymd(2026, 6, 16), 1);
+        assert_eq!(new_year[0].id, "islamic_new_year");
+        assert!(!new_year[0].estimated);
     }
 
     #[test]

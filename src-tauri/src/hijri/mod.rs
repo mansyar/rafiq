@@ -45,6 +45,9 @@ pub struct GridDay {
     /// Observance id when this civil date hosts a bundled Hijri event
     /// (spec FR-2); `None` on ordinary days.
     pub event_id: Option<String>,
+    /// Mirrors the `estimated` flag of the referenced observance
+    /// (false when `event_id` is None).
+    pub event_estimated: bool,
 }
 
 /// All days of one Hijri month with their Gregorian counterparts.
@@ -112,6 +115,7 @@ pub fn month_grid(year: i32, month: u8, today: NaiveDate) -> Result<MonthGrid, S
                 // Filled by the command layer (hijri_month_grid_impl), which
                 // composes the calendar engine with bundled event data.
                 event_id: None,
+                event_estimated: false,
             })
         })
         .collect::<Result<Vec<_>, String>>()?;

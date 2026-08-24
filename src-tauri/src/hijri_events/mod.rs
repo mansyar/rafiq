@@ -115,8 +115,7 @@ pub fn upcoming_events(today: NaiveDate, limit: usize) -> Vec<UpcomingEvent> {
             hijri_year: h.year,
             gregorian_date: day.format("%Y-%m-%d").to_string(),
             is_today: offset == 0,
-            // Red-phase stub: Green reads def.estimated.
-            estimated: false,
+            estimated: def.estimated,
         });
         if out.len() == limit {
             break;

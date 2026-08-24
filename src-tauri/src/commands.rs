@@ -417,7 +417,10 @@ pub fn hijri_month_grid_impl(year: i32, month: u8) -> Result<crate::hijri::Month
             day.gregorian_day as u32,
         )
         .ok_or("grid produced an invalid civil date")?;
-        day.event_id = crate::hijri_events::event_def_for_date(date).map(|def| def.id.to_string());
+        if let Some(def) = crate::hijri_events::event_def_for_date(date) {
+            day.event_id = Some(def.id.to_string());
+            day.event_estimated = def.estimated;
+        }
     }
     Ok(grid)
 }
@@ -1865,9 +1868,13 @@ mod tests {
         let d27 = grid.days.iter().find(|d| d.hijri_day == 27).unwrap();
         assert_eq!(d27.event_id.as_deref(), Some("laylat_al_qadr"));
         assert!(d27.event_estimated, "Qadr grid cell must be estimated");
+        // Day 1 of Ramadan is itself the ramadan_begins observance.
         let d1 = grid.days.iter().find(|d| d.hijri_day == 1).unwrap();
-        assert!(d1.event_id.is_none());
+        assert_eq!(d1.event_id.as_deref(), Some("ramadan_begins"));
         assert!(!d1.event_estimated);
+        let d5 = grid.days.iter().find(|d| d.hijri_day == 5).unwrap();
+        assert!(d5.event_id.is_none());
+        assert!(!d5.event_estimated);
     }
 
     #[test]

@@ -17,18 +17,18 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
 
 ## Phase 2 — Sticky error states: every page recovers
 
-- [ ] Task: Today page — single error branch
-  - [ ] Collapse duplicate error paragraphs into one `QueryError` wired to `times.refetch()` + `resolved.refetch()`
-  - [ ] Guard "set your location" banner with `!isError` (never misleads on failure)
-- [ ] Task: Daily reflection card — friendly copy + retry
-  - [ ] Map known failures to localized messages (no raw `String(error)`); wire `daily.refetch()`
-- [ ] Task: Log analytics — `isError` branch
-  - [ ] Replace eternal "Loading…" fallback with `QueryError` + retry
-- [ ] Task: Calendar — `todayHijri` failure state
-  - [ ] Include `todayQuery.isError` in error handling; render `QueryError` + retry instead of blank body
-- [ ] Task: Upcoming events strip — error + retry row
-  - [ ] On error: stable card with `QueryError` + retry (empty state still hides)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Today page — single error branch (405de87)
+  - [x] Collapse duplicate error paragraphs into one `QueryError` wired to `times.refetch()` + `resolved.refetch()`
+  - [x] Guard "set your location" banner with `!isError` (never misleads on failure)
+- [x] Task: Daily reflection card — friendly copy + retry (405de87)
+  - [x] Map known failures to localized messages (no raw `String(error)`); wire `daily.refetch()`
+- [x] Task: Log analytics — `isError` branch (405de87)
+  - [x] Replace eternal "Loading…" fallback with `QueryError` + retry
+- [x] Task: Calendar — `todayHijri` failure state (405de87)
+  - [x] Include `todayQuery.isError` in error handling; render `QueryError` + retry instead of blank body
+- [x] Task: Upcoming events strip — error + retry row (405de87)
+  - [x] On error: stable card with `QueryError` + retry (empty state still hides)
+- [~] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Silent failure fixes
 

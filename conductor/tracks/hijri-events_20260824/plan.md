@@ -88,9 +88,17 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 
 ## Phase 5 — E2E, docs & full gate
 
-- [ ] Task: Extend browser mock with deterministic event/clock fixture
-- [ ] Task: Create `e2e/hijri-events.spec.ts` covering AC-1…AC-3, AC-7
-- [ ] Task: Sync docs — dated tech-stack note (asset dir + command additions)
-- [ ] Task: Run full gate: `cargo test` + clippy · Biome · `tsc --noEmit` ·
-      Vitest · Playwright suite
+- [x] Task: Extend browser mock with deterministic event/clock fixture
+      [1a1c4a1] *(mock reads real bundled `hijri-events` assets; fixed two
+      latent mock-engine bugs — naive +30 Gregorian carry and the
+      month-boundary-swallowing Hijri normalization loop)*
+- [x] Task: Create `e2e/hijri-events.spec.ts` covering AC-1…AC-3, AC-7
+      [1a1c4a1] *(7 tests; all passing; calendar.spec regression-checked)*
+- [x] Task: Sync docs — dated tech-stack note (asset dir + command additions)
+      [82f7e87]
+- [x] Task: Run full gate: `cargo test` + clippy · Biome · `tsc --noEmit` ·
+      Vitest · Playwright suite *(236 lib + 6 integration · clippy -D warnings
+      clean · Biome clean (one pre-existing warning in recitation.spec.ts,
+      non-blocking, file untouched by this track) · tsc clean · Vitest 209/209 ·
+      Playwright 41/41 chromium)*
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*

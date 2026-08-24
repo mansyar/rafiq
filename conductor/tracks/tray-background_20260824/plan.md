@@ -25,7 +25,7 @@ the loop since OS trays cannot be scripted by Playwright.
 - [x] Task: `set_tray_labels` command accepting localized strings; rebuild menu live (NFR-1) (102b7cb)
 - [x] Task: Upgrade `single_instance` handler → show + focus hidden window (FR-6, AC-4) (102b7cb)
 - [x] Task: Quit path exits process cleanly — tray dropped, scheduler thread terminated (AC-5, NFR-5) (32214a1)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (report attached as git note on 102b7cb; approved)
 
 ## Phase 3 — Localized labels & Settings autostart card (frontend)
 

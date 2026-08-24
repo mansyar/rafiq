@@ -54,7 +54,7 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
       `hijri_events/mod.rs`; no refactor needed)
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
-## Phase 3 — Command surface (TDD)
+## Phase 3 — Command surface (TDD) [checkpoint: 0e46821]
 
 - [x] Task: Write failing tests for commands *(Red)* [77ac89c]
   - [x] `get_upcoming_hijri_events(limit)` impl; `MonthGrid` day entries carry

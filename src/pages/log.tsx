@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { QueryError } from '@/components/query-error';
@@ -125,6 +125,15 @@ export function LogPage() {
     }
   }
 
+  useEffect(() => {
+    if (!confirmDelete) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setConfirmDelete(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [confirmDelete]);
+
   if (locationQuery.data === null) {
     return (
       <section aria-labelledby="page-log-title" className="mx-auto max-w-2xl space-y-6">
@@ -219,17 +228,39 @@ export function LogPage() {
                             {t('log.today.log')}
                           </Button>
                         ) : (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() =>
-                              deleting ? void handleDelete(today, prayer) : setConfirmDelete(key)
-                            }
-                            disabled={busy !== null}
-                            aria-label={`${t('log.today.delete')} ${t(`prayer.${prayer}`)}`}
+                          <fieldset
+                            className="m-0 flex items-center gap-2 border-0 p-0"
+                            onBlur={(e) => {
+                              // Leaving the row (clicking elsewhere) drops the
+                              // armed confirm so an accidental double-click
+                              // cannot delete.
+                              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                                setConfirmDelete(null);
+                              }
+                            }}
                           >
-                            {deleting ? t('log.today.confirmDelete') : t('log.today.delete')}
-                          </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() =>
+                                deleting ? void handleDelete(today, prayer) : setConfirmDelete(key)
+                              }
+                              disabled={busy !== null}
+                              aria-label={`${deleting ? t('log.today.confirmDelete') : t('log.today.delete')} ${t(`prayer.${prayer}`)}`}
+                            >
+                              {deleting ? t('log.today.confirmDelete') : t('log.today.delete')}
+                            </Button>
+                            {deleting && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setConfirmDelete(null)}
+                                disabled={busy !== null}
+                              >
+                                {t('common.cancel')}
+                              </Button>
+                            )}
+                          </fieldset>
                         )}
                       </li>
                     );

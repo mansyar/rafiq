@@ -104,7 +104,8 @@
   "common": {
     "retry": "Coba lagi",
     "retrying": "Mencoba lagi…",
-    "logging": "Mencatat…"
+    "logging": "Mencatat…",
+    "cancel": "Batal"
   },
   "adhan": {
     "blockedNotice": "Pemutaran azan diblokir. Berinteraksilah dengan aplikasi agar dapat berbunyi pada salat berikutnya.",

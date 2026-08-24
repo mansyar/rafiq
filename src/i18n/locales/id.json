@@ -133,6 +133,48 @@
     "dateLabel": "{{date}}",
     "sourceLabel": "{{source}}"
   },
+  "hijriEvents": {
+    "strip": {
+      "title": "Peringatan mendatang",
+      "todayPrefix": "Hari ini:",
+      "estimatedSuffix": "(perkiraan)"
+    },
+    "markerLabel": "{{name}} — {{description}}",
+    "events": {
+      "islamic_new_year": {
+        "name": "Tahun Baru Islam",
+        "description": "1 Muharram — tahun Hijriah berganti."
+      },
+      "ashura": {
+        "name": "Hari Asyura",
+        "description": "10 Muharram — hari yang dianjurkan untuk berpuasa."
+      },
+      "mawlid_an_nabi": {
+        "name": "Maulid Nabi",
+        "description": "12 Rabiul Awal — kelahiran Nabi Muhammad ﷺ."
+      },
+      "ramadan_begins": {
+        "name": "Awal Ramadan",
+        "description": "1 Ramadan — tiba bulan puasa."
+      },
+      "laylat_al_qadr": {
+        "name": "Lailatul Qadar",
+        "description": "27 Ramadan — lebih baik dari seribu bulan."
+      },
+      "eid_al_fitr": {
+        "name": "Idul Fitri",
+        "description": "1 Syawal — hari raya usai menjalankan puasa."
+      },
+      "arafah": {
+        "name": "Hari Arafah",
+        "description": "9 Zulhijah — wukuf di Padang Arafah."
+      },
+      "eid_al_adha": {
+        "name": "Idul Adha",
+        "description": "10 Zulhijah — hari raya kurban."
+      }
+    }
+  },
   "quran": {
     "title": "Al-Qur'an",
     "subtitle": "114 surah — Uthmani + 3 terjemahan",

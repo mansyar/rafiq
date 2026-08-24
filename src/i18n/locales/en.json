@@ -133,6 +133,48 @@
     "dateLabel": "{{date}}",
     "sourceLabel": "{{source}}"
   },
+  "hijriEvents": {
+    "strip": {
+      "title": "Upcoming observances",
+      "todayPrefix": "Today:",
+      "estimatedSuffix": "(estimated)"
+    },
+    "markerLabel": "{{name}} — {{description}}",
+    "events": {
+      "islamic_new_year": {
+        "name": "Islamic New Year",
+        "description": "1 Muharram — the Hijri year turns."
+      },
+      "ashura": {
+        "name": "Day of Ashura",
+        "description": "10 Muharram — a recommended day of fasting."
+      },
+      "mawlid_an_nabi": {
+        "name": "Mawlid an-Nabi",
+        "description": "12 Rabi al-Awwal — the birth of the Prophet ﷺ."
+      },
+      "ramadan_begins": {
+        "name": "Ramadan begins",
+        "description": "1 Ramadan — the month of fasting arrives."
+      },
+      "laylat_al_qadr": {
+        "name": "Laylat al-Qadr",
+        "description": "27 Ramadan — better than a thousand months."
+      },
+      "eid_al_fitr": {
+        "name": "Eid al-Fitr",
+        "description": "1 Shawwal — the festival after the fast."
+      },
+      "arafah": {
+        "name": "Day of Arafah",
+        "description": "9 Dhu al-Hijjah — the standing at Arafat."
+      },
+      "eid_al_adha": {
+        "name": "Eid al-Adha",
+        "description": "10 Dhu al-Hijjah — the festival of sacrifice."
+      }
+    }
+  },
   "quran": {
     "title": "Quran",
     "subtitle": "114 surahs — Uthmani + 3 translations",

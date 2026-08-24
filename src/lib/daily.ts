@@ -23,10 +23,18 @@ export interface DailyHadith {
   source: string;
 }
 
+export interface EventOverride {
+  event_id: string;
+  ayah: DailyAyah;
+  hadith: DailyHadith;
+}
+
 export interface DailyContent {
   date: string;
   ayah: DailyAyah;
   hadith: DailyHadith;
+  /** Present only on a bundled observance day (spec FR-5); omitted otherwise. */
+  event?: EventOverride;
 }
 
 // ── Tauri invoke wrappers ─────────────────────────────────────────────────

@@ -30,16 +30,50 @@ function CalendarCell({
   showGregMonth: boolean;
   gregMonths: string[];
 }) {
+  const { t } = useTranslation();
+  const eventName = day.event_id ? t(`hijriEvents.events.${day.event_id}.name`) : null;
+  const eventDescription = day.event_id
+    ? t(`hijriEvents.events.${day.event_id}.description`)
+    : null;
+  const estimatedSuffix =
+    day.event_id && day.event_estimated ? ` ${t('hijriEvents.strip.estimatedSuffix')}` : '';
+  const markerLabel =
+    eventName && eventDescription
+      ? t('hijriEvents.markerLabel', {
+          name: `${eventName}${estimatedSuffix}`,
+          description: eventDescription,
+        })
+      : null;
+
   return (
     <div
       aria-current={day.is_today ? 'date' : undefined}
       className={cn(
-        'flex flex-col items-center rounded-lg border px-1 py-2',
+        'group relative flex flex-col items-center rounded-lg border px-1 py-2',
         day.is_today
           ? 'border-gold-500/60 bg-gold-500/10 ring-1 ring-gold-500/40'
           : 'border-border bg-background',
       )}
     >
+      {/* Observance marker: gold dot button + accessible tooltip
+          (hover / keyboard focus / touch — info also in aria-label). */}
+      {eventName && markerLabel && (
+        <>
+          <button
+            type="button"
+            aria-label={markerLabel}
+            className="absolute right-0.5 top-0.5 flex size-3 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold-500"
+          >
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-gold-500" />
+          </button>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-1 left-1/2 z-10 hidden w-44 -translate-x-1/2 -translate-y-full rounded-md border border-gold-200 bg-popover px-2 py-1 text-center text-[11px] font-medium leading-snug text-popover-foreground shadow-md group-focus-within:block group-hover:block dark:border-gold-900/60"
+          >
+            {markerLabel}
+          </span>
+        </>
+      )}
       <span
         className={cn(
           'text-base font-semibold tabular-nums',

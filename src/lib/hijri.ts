@@ -25,6 +25,10 @@ export interface GridDay {
   /** 0 = Sunday .. 6 = Saturday. */
   weekday: number;
   is_today: boolean;
+  /** Bundled observance id hosted on this civil date (spec FR-2), else null. */
+  event_id?: string | null;
+  /** Mirrors the observance's `estimated` flag (false when event_id is null). */
+  event_estimated?: boolean;
 }
 
 export interface MonthGrid {
@@ -63,4 +67,21 @@ export async function getMonthGrid(year: number, month: number): Promise<MonthGr
 /** Today's local date expressed in the Umm al-Qura Hijri calendar. */
 export async function todayHijri(): Promise<HijriDate> {
   return invoke<HijriDate>('today_hijri');
+}
+
+// ── Hijri events (spec FR-2/FR-3) ─────────────────────────────────────────
+
+export interface UpcomingEvent {
+  /** Stable observance id — keys into `hijriEvents.events.*` i18n entries. */
+  id: string;
+  hijri_year: number;
+  /** Civil date, YYYY-MM-DD. */
+  gregorian_date: string;
+  is_today: boolean;
+  estimated: boolean;
+}
+
+/** Upcoming Hijri observances starting today, chronological (default 3). */
+export async function getUpcomingHijriEvents(limit = 3): Promise<UpcomingEvent[]> {
+  return invoke<UpcomingEvent[]>('get_upcoming_hijri_events', { limit });
 }

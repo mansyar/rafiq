@@ -68,7 +68,11 @@ export function DailyReflectionCard() {
   const content = daily.data;
   if (!content) return null;
 
-  const { ayah, hadith } = content;
+  // Observance override (spec FR-5): when present, the themed ayah/hadith
+  // replace the rotation and the event label is surfaced as a badge.
+  const override = content.event;
+  const { ayah, hadith } = override ?? content;
+  const eventName = override ? t(`hijriEvents.events.${override.event_id}.name`) : null;
   const ayahRef = formatAyahReference(ayah);
   const surahLabel = ayah.surah_name_en;
   const hadithTranslation = getHadithTranslation(hadith, locale);
@@ -102,6 +106,13 @@ export function DailyReflectionCard() {
           )}
         </div>
         <p className="text-sm text-muted-foreground">{t('daily.subtitle')}</p>
+        {eventName && (
+          <p className="pt-0.5">
+            <span className="rounded-full bg-gold-100 px-2.5 py-0.5 text-xs font-semibold text-gold-800 ring-1 ring-gold-500/30 dark:bg-gold-900/40 dark:text-gold-200">
+              {eventName}
+            </span>
+          </p>
+        )}
       </CardHeader>
 
       <CardContent className="space-y-6 pt-5">

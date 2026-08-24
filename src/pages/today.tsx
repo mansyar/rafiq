@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { DailyReflectionCard } from '@/components/daily-reflection-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { UpcomingEventsStrip } from '@/components/upcoming-events-strip';
 import {
   formatPrayerTime,
   getCalculationMethod,
@@ -232,6 +233,8 @@ export function Today() {
           )}
         </CardContent>
       </Card>
+
+      <UpcomingEventsStrip />
 
       <DailyReflectionCard />
     </section>

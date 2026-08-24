@@ -85,6 +85,24 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
   > (single-pass per-surah aggregation) and `delete_recitation_cache`
   > (per-surah or whole-cache; deletes rows **and** files, tolerates missing
   > files) commands. E2E mock now serves recitation globals 1–10.
+  > **Note (2026-08-24):** Track `hijri-events_20260824`: bundled observance
+  > assets live at `src-tauri/assets/hijri-events/` (`events.json` — 8 Umm
+  > al-Qura date definitions `{id, hijri_month, hijri_day, estimated}`;
+  > `content.json` — thematic ayah-reference + hadith overrides per event;
+  > licensing recorded in `ATTRIBUTION.md`). New Rust module
+  > `src-tauri/src/hijri_events/` mirrors the `daily/` loader pattern
+  > (`include_str!` + `OnceLock`) and exposes pure resolution helpers:
+  > `event_def_for_date` (civil-date matcher), `upcoming_events` (bounded
+  > ~370-day forward walk, deduped, chronological), `daily_content_with_event`
+  > (additive override on observance days only — rotation untouched).
+  > Command surface additions: `get_upcoming_hijri_events(limit)` (default 3);
+  > `hijri_month_grid` cells gain `event_id`/`event_estimated`;
+  > `get_daily_content` responses gain an optional `event` field.
+  > Frontend: Today "Upcoming observances" strip, calendar gold-dot markers
+  > with accessible tooltips ("(estimated)" suffix is data-driven), and a
+  > reflection-card event badge; all strings under the `hijriEvents.*` i18n
+  > namespace (en/id). By design there are no OS notifications and no
+  > settings toggle — observances are ambient in-app info.
 - **Licensing:** per `product.md` Content Licensing Notes
 
 ## Dev Tools
@@ -114,9 +132,9 @@ webview frontend (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux).
 - Linux (WebKitGTK) — AppImage / deb / rpm
 
 ## Testing
-- **Rust:** `cargo test` — unit tests for calculation engines and storage (189 tests as of 2026-08-22, includes `TAURI_E2E_APP_DATA_DIR` isolation; +6 integration tests)
-- **Frontend:** Vitest + React Testing Library (134 tests as of 2026-08-22, helpers `tauri-driver`/`isolated-dir`/`fixtures`/`tauri`/`prayer`)
-- **E2E:** Playwright + `@playwright/test` harness — blocking 3-OS matrix (windows/macos/ubuntu) in CI, Vite + mocked Tauri by default (no `tauri-driver` needed). See `e2e/README.md`.
+- **Rust:** `cargo test` — unit tests for calculation engines and storage (236 lib tests as of 2026-08-24, includes `TAURI_E2E_APP_DATA_DIR` isolation; +6 integration tests)
+- **Frontend:** Vitest + React Testing Library (209 tests as of 2026-08-24, helpers `tauri-driver`/`isolated-dir`/`fixtures`/`tauri`/`prayer`)
+- **E2E:** Playwright + `@playwright/test` harness — blocking 3-OS matrix (windows/macos/ubuntu) in CI, Vite + mocked Tauri by default (no `tauri-driver` needed). Suite is 33 tests / 9 specs (adds `hijri-events` as of 2026-08-24, driven by the deterministic clock fixture `window.__RAFIQ_MOCK_TODAY__`). See `e2e/README.md`.
   > **Note (2026-08-22):** E2E hardened for track `v1-release_20260821`: `.github/workflows/e2e.yml` now runs a **blocking matrix** on windows/macos/ubuntu with per-OS failure artifacts. Suite is 26 tests / 8 specs (`onboarding`, `today`, `quran`, `log`, `calendar`, `settings`, `recitation`, `adhan`). The browser mock delivers real Tauri events (`plugin:event|listen`/`unlisten` registry + `emitTauriEvent`; `trigger_test_prayer` emits `prayer-fired`/`prayer-time`) and serves a fully playable recitation state — complete `get_recitation_state` with reciter/per-surah global offsets/cache, `fetch_ayah_audio` for Al-Fatiha globals 1–7 from `/tmp/mock/recitation/N.mp3` (fulfilled in-spec by the decodable silent fixture `e2e/fixtures/silence.mp3`), and a `convertFileSrc` identity stub. `E2E_REAL_CDN=1` opts the recitation spec into proxying the production CDN (`cdn.islamic.network/…/128/ar.alafasy/<global>.mp3`) as a pre-release manual gate.
 
   > **Note (2026-08-23):** Track `recitation-follow-scroll_20260823`: pure follow-state machine in `src/lib/follow-scroll.ts` (following⇄suspended; suspend on viewport exit, auto-resume on any overlap, button resume, reset on stop/new-play/surah-change) + `scrollBehaviorFor` honoring `prefers-reduced-motion`. Reader wires a passive scroll/resize observer and centers the active card via `scrollIntoView`; fixed jump-back pill appears only while playback is active and suspended. E2E: recitation mock also serves Baqarah globals 8–10; new describe covers AC-1..AC-4.

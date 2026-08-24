@@ -64,9 +64,9 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] Run `locale.test.ts` + add any missing keys; verify zero hardcoded user-facing strings (grep)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 5 — Full gate, docs & completion
+## Phase 5 — Full gate, docs & completion [checkpoint: b155251]
 
 - [x] Task: Full frontend gate
   - [x] `pnpm check` (Biome lint + format), typecheck, full Vitest suite, coverage >80%
 - [x] Task: Update `CHANGELOG.md` [Unreleased] with resilience/polish summary (b155251)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)

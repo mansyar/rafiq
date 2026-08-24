@@ -31,6 +31,62 @@ pub fn countdown_row(
     )
 }
 
+/// Localized strings handed over from the frontend i18n catalog (NFR-1).
+pub struct TrayLabels {
+    /// Countdown prefix, e.g. `"Next:"` / `"Berikutnya:"`.
+    pub next_prefix: String,
+    /// Placeholder shown before location/method setup completes.
+    pub complete_setup: String,
+    /// Menu action label for restoring the window.
+    pub show: String,
+    /// Menu action label for exiting the app.
+    pub quit: String,
+}
+
+/// Identifies a clickable tray menu entry.
+#[derive(Debug, PartialEq, Eq)]
+pub enum TrayAction {
+    Show,
+    Quit,
+}
+
+/// One row of the tray context menu (FR-3).
+#[derive(Debug, PartialEq, Eq)]
+pub enum TrayMenuItem {
+    /// Disabled informational row (next-prayer countdown or placeholder).
+    Info { text: String },
+    /// Clickable action row.
+    Action { action: TrayAction, text: String },
+}
+
+/// Build the ordered tray menu model: disabled info row, then Show, then
+/// Quit. `None` renders the setup placeholder instead of a countdown.
+pub fn build_tray_menu(
+    labels: &TrayLabels,
+    next: Option<(&str, DateTime<Utc>)>,
+    offset: FixedOffset,
+) -> Vec<TrayMenuItem> {
+    let info = match next {
+        Some((prayer, instant)) => TrayMenuItem::Info {
+            text: countdown_row(&labels.next_prefix, prayer, instant, offset),
+        },
+        None => TrayMenuItem::Info {
+            text: labels.complete_setup.clone(),
+        },
+    };
+    vec![
+        info,
+        TrayMenuItem::Action {
+            action: TrayAction::Show,
+            text: labels.show.clone(),
+        },
+        TrayMenuItem::Action {
+            action: TrayAction::Quit,
+            text: labels.quit.clone(),
+        },
+    ]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -84,5 +140,75 @@ mod tests {
             offset_hours(0),
         );
         assert_eq!(got, "Berikutnya: Maghrib \u{b7} 12:10");
+    }
+
+    // ── build_tray_menu ─────────────────────────────────────────────────────
+
+    fn labels() -> TrayLabels {
+        TrayLabels {
+            next_prefix: "Next:".into(),
+            complete_setup: "Complete setup in Rafiq".into(),
+            show: "Show Rafiq".into(),
+            quit: "Quit Rafiq".into(),
+        }
+    }
+
+    #[test]
+    fn menu_with_next_prayer_is_info_then_show_then_quit() {
+        let got = build_tray_menu(
+            &labels(),
+            Some(("asr", utc("2025-08-20T09:30:00Z"))),
+            offset_hours(0),
+        );
+        assert_eq!(
+            got,
+            vec![
+                TrayMenuItem::Info {
+                    text: "Next: Asr \u{b7} 09:30".into()
+                },
+                TrayMenuItem::Action {
+                    action: TrayAction::Show,
+                    text: "Show Rafiq".into()
+                },
+                TrayMenuItem::Action {
+                    action: TrayAction::Quit,
+                    text: "Quit Rafiq".into()
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn menu_without_location_shows_complete_setup_placeholder() {
+        let got = build_tray_menu(&labels(), None, offset_hours(0));
+        assert_eq!(
+            got[0],
+            TrayMenuItem::Info {
+                text: "Complete setup in Rafiq".into()
+            }
+        );
+    }
+
+    #[test]
+    fn menu_always_keeps_show_and_quit_after_the_info_row() {
+        for next in [None, Some(("isha", utc("2025-08-20T09:30:00Z")))] {
+            let got = build_tray_menu(&labels(), next, offset_hours(0));
+            assert_eq!(got.len(), 3);
+            assert!(matches!(&got[0], TrayMenuItem::Info { .. }));
+            assert_eq!(
+                got[1],
+                TrayMenuItem::Action {
+                    action: TrayAction::Show,
+                    text: "Show Rafiq".into()
+                }
+            );
+            assert_eq!(
+                got[2],
+                TrayMenuItem::Action {
+                    action: TrayAction::Quit,
+                    text: "Quit Rafiq".into()
+                }
+            );
+        }
     }
 }

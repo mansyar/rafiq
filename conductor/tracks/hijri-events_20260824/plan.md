@@ -65,20 +65,25 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
 - [x] Task: Refactor + verify coverage ≥80% for touched modules
       (cargo llvm-cov under `hijri daily` filter: hijri/mod.rs 94.83%,
       hijri_events 89.47%, daily 89.77%; no refactor needed)
-- [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
+- [x] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
+      *(checkpoint report attached to 0e46821)*
 
 ## Phase 4 — Frontend UI & i18n (en/id)
 
-- [ ] Task: Add i18n catalog strings (en + id): 8 event names + one-line
+- [x] Task: Add i18n catalog strings (en + id): 8 event names + one-line
       descriptions, strip labels, "Today:" prefix, "(estimated)" suffix
-- [ ] Task: Today page "Upcoming observances" strip via
+      [185570c]
+- [x] Task: Today page "Upcoming observances" strip via
       `get_upcoming_hijri_events(3)` — name, description, Gregorian date;
-      distinct Today-lead emphasis *(FR-3)*
-- [ ] Task: Calendar gold-dot markers from extended `MonthGrid` — accessible
+      distinct Today-lead emphasis *(FR-3)* [185570c]
+- [x] Task: Calendar gold-dot markers from extended `MonthGrid` — accessible
       tooltip on hover/focus/tap, estimated suffix, ±1-day footnote reuse
-      *(FR-4)*
-- [ ] Task: Daily Reflection card renders event label + themed pair when
-      `event` is present *(FR-5)*
+      *(FR-4)* [185570c]
+      *(backend amendment: `estimated` added to `UpcomingEvent` and
+      `GridDay.event_estimated` so the suffix is data-driven —
+      Red 08bb4a8 → Green 605a13d, 236 lib tests passing)*
+- [x] Task: Daily Reflection card renders event label + themed pair when
+      `event` is present *(FR-5)* [185570c]
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
 ## Phase 5 — E2E, docs & full gate

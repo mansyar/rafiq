@@ -33,7 +33,7 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
       refactor needed — minimal serde parsers)
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
-## Phase 2 — Resolution logic (pure functions, TDD)
+## Phase 2 — Resolution logic (pure functions, TDD) [checkpoint: e07a6ac]
 
 - [x] Task: Write failing tests for event-for-date resolution *(Red)* [2f4901a]
   - [x] Verified anchor: 2026-06-16 → Islamic New Year (1 Muḥarram 1448);

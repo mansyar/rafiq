@@ -14,7 +14,7 @@ the loop since OS trays cannot be scripted by Playwright.
 - [x] Task: Tray-menu model builder — localized labels + optional next-prayer info → ordered items (disabled info row / Show Rafiq / Quit Rafiq) — tests first (`src-tauri/src/tray/mod.rs`) (FR-3) (9fb54b0)
 - [x] Task: Hint-once policy — read/flip persisted `tray_hint_shown` key, restart-stable — tests first (`src-tauri/src/tray/mod.rs`) (FR-2, AC-2) (c83cd1f)
 - [x] Task: Verify coverage (>80% changed logic) & quality gates (clippy, cargo test) (c83cd1f: clippy clean, 211/211 green, llvm-cov tray 98.94%)
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md) (report attached as git note on c83cd1f; approved)
 
 ## Phase 2 — Tray runtime integration (Rust)
 

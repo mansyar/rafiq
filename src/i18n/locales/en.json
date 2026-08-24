@@ -96,7 +96,9 @@
     "title": "Update available",
     "notesFallback": "Version {{version}} is ready to install.",
     "restartToUpdate": "Restart to update",
-    "installing": "Updating…"
+    "installing": "Updating…",
+    "installFailed": "Couldn't install the update.",
+    "tryAgain": "Try again"
   },
   "common": {
     "retry": "Retry",

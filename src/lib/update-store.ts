@@ -18,7 +18,7 @@ export type UpdateStatus =
   | { kind: 'checking' }
   | { kind: 'available'; version: string; notes: string | null }
   | { kind: 'latest' }
-  | { kind: 'error' };
+  | { kind: 'error'; retryInstall?: boolean };
 
 interface UpdateStore {
   status: UpdateStatus;
@@ -69,7 +69,10 @@ export const useUpdateStore = create<UpdateStore>((set, get) => ({
   },
 
   installUpdate: async (ports = tauriUpdatePorts) => {
-    if (get().status.kind !== 'available') {
+    const { status } = get();
+    const canInstall =
+      status.kind === 'available' || (status.kind === 'error' && status.retryInstall === true);
+    if (!canInstall) {
       return;
     }
     set({ installing: true });
@@ -78,10 +81,11 @@ export const useUpdateStore = create<UpdateStore>((set, get) => ({
       await ports.installRemote();
     } catch (err) {
       // Same diagnosability contract as performCheck: UI stays calm, console
-      // carries the raw error.
+      // carries the raw error. The status stays retryable so the banner can
+      // offer "Try again" instead of silently dismissing the failure.
       console.error('[updater] install failed:', err);
       set({ installing: false });
-      set({ status: { kind: 'error' } });
+      set({ status: { kind: 'error', retryInstall: true } });
     }
   },
 

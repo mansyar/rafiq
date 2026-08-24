@@ -19,8 +19,28 @@ export function UpdateBanner() {
     void autoCheck();
   }, [autoCheck]);
 
-  if (status.kind !== 'available') {
+  if (status.kind !== 'available' && !(status.kind === 'error' && status.retryInstall === true)) {
     return null;
+  }
+
+  if (status.kind === 'error') {
+    return (
+      <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
+        <Card
+          role="status"
+          className="w-full max-w-md border-destructive/40 shadow-lg dark:border-destructive/60"
+        >
+          <CardContent className="flex items-center justify-between gap-3 p-4">
+            <div className="min-w-0">
+              <p className="font-medium">{t('update.installFailed')}</p>
+            </div>
+            <Button variant="outline" disabled={installing} onClick={() => void installUpdate()}>
+              {installing ? t('update.installing') : t('update.tryAgain')}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (

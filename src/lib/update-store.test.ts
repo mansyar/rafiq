@@ -162,6 +162,52 @@ describe('installUpdate (one-click restart-to-update)', () => {
     expect(statusKinds()).toEqual(['error']);
   });
 
+  it('a failed install marks the status retryable so the banner stays actionable', async () => {
+    useUpdateStore.setState(AVAILABLE);
+    const failing: UpdatePorts = {
+      ...gatedInstallPorts(),
+      installRemote: async () => {
+        throw new Error('download failed');
+      },
+    };
+    await useUpdateStore.getState().installUpdate(failing);
+    expect(useUpdateStore.getState().status).toEqual({
+      kind: 'error',
+      retryInstall: true,
+    });
+  });
+
+  it('a failed check does not mark the status retryable', async () => {
+    const ports = deferredPorts(async () => {
+      throw new Error('offline');
+    });
+    ports.release();
+    await useUpdateStore.getState().manualCheck(NOW_MS, ports);
+    expect(useUpdateStore.getState().status).toEqual({ kind: 'error' });
+  });
+
+  it('retry after a failed install re-triggers installRemote', async () => {
+    useUpdateStore.setState(AVAILABLE);
+    const failing: UpdatePorts = {
+      ...gatedInstallPorts(),
+      installRemote: async () => {
+        throw new Error('download failed');
+      },
+    };
+    await useUpdateStore.getState().installUpdate(failing);
+    expect(statusKinds()).toEqual(['error']);
+
+    const retry = gatedInstallPorts();
+    const done = useUpdateStore.getState().installUpdate(retry);
+    expect(useUpdateStore.getState().installing).toBe(true);
+    retry.release();
+    await done;
+    expect(retry.calls()).toBe(1);
+    // Success path ends at relaunch: status stays retryable until the app quits.
+    expect(useUpdateStore.getState().status).toEqual({ kind: 'error', retryInstall: true });
+    expect(useUpdateStore.getState().installing).toBe(true);
+  });
+
   it('reset clears the installing flag', () => {
     useUpdateStore.setState({ installing: true });
     useUpdateStore.getState().reset();

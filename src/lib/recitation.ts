@@ -122,6 +122,7 @@ export type PlayerEvent =
   | { type: 'advance'; position: PlayerPosition; cachedGlobals: number[]; surahEndGlobal: number }
   | { type: 'fetchSucceeded'; global: number }
   | { type: 'fetchFailed'; global: number; error: string }
+  | { type: 'playbackFailed'; error: string }
   | { type: 'retry'; cachedGlobals: number[]; surahEndGlobal: number }
   | { type: 'audioStarted' }
   | { type: 'pause' }
@@ -242,6 +243,10 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
         error: isTarget ? event.error : state.error,
       };
     }
+    case 'playbackFailed':
+      // Media error / play() rejection: keep the position so the transport
+      // can retry; the paused state makes Play re-attempt the same file.
+      return state.current ? { ...state, status: 'paused', error: event.error } : state;
     case 'retry':
       if (!state.current) {
         return state;
@@ -258,7 +263,7 @@ export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerSta
     case 'pause':
       return state.status === 'playing' ? { ...state, status: 'paused' } : state;
     case 'resume':
-      return state.status === 'paused' ? { ...state, status: 'playing' } : state;
+      return state.status === 'paused' ? { ...state, status: 'playing', error: null } : state;
     case 'stop':
       // Transport state clears; user preferences persist across stops.
       return {

@@ -569,6 +569,42 @@ describe('offline & failure playback (AC-5, AC-6)', () => {
   });
 });
 
+describe('playbackFailed (media error path)', () => {
+  it('pauses with the error surfaced, keeping the position for retry', () => {
+    let state = playerReducer(
+      initialPlayerState(),
+      requestPlay(pos(2, 2, SURAH2_START), cached(8, 9, 10), SURAH2_END),
+    );
+    state = playerReducer(state, { type: 'audioStarted' });
+    const failed = playerReducer(state, { type: 'playbackFailed', error: 'media decode error' });
+    expect(failed.status).toBe('paused');
+    expect(failed.error).toBe('media decode error');
+    expect(failed.current).toEqual(pos(2, 2, SURAH2_START));
+  });
+
+  it('resume clears the surfaced error and re-attempts playback', () => {
+    const failed = playerReducer(
+      playerReducer(
+        playerReducer(
+          initialPlayerState(),
+          requestPlay(pos(2, 1, SURAH2_START), cached(), SURAH2_END),
+        ),
+        { type: 'audioStarted' },
+      ),
+      { type: 'playbackFailed', error: 'media decode error' },
+    );
+    expect(failed.status).toBe('paused');
+    const resumed = playerReducer(failed, { type: 'resume' });
+    expect(resumed.status).toBe('playing');
+    expect(resumed.error).toBeNull();
+  });
+
+  it('is a no-op when nothing is playing', () => {
+    const next = playerReducer(initialPlayerState(), { type: 'playbackFailed', error: 'boom' });
+    expect(next).toEqual(initialPlayerState());
+  });
+});
+
 // ── Local file URL helper ────────────────────────────────────────────────────
 
 describe('localAudioUrl', () => {

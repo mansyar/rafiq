@@ -21,6 +21,7 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
   const autoAdvance = useRecitationPlayer((s) => s.autoAdvance);
   const repeatMode = useRecitationPlayer((s) => s.repeatMode);
   const audioStarted = useRecitationPlayer((s) => s.audioStarted);
+  const playbackFailed = useRecitationPlayer((s) => s.playbackFailed);
   const handleEnded = useRecitationPlayer((s) => s.handleEnded);
   const pause = useRecitationPlayer((s) => s.pause);
   const stop = useRecitationPlayer((s) => s.stop);
@@ -32,11 +33,11 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
       return;
     }
     if (status === 'playing' && audioUrl) {
-      void el.play().catch(() => {});
+      void el.play().catch(() => playbackFailed('media-playback-error'));
     } else if (status === 'paused' && !el.paused) {
       el.pause();
     }
-  }, [status, audioUrl]);
+  }, [status, audioUrl, playbackFailed]);
 
   // FR-2: apply the selected speed instantly, including mid-playback.
   useEffect(() => {
@@ -52,9 +53,9 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
     const el = audioRef.current;
     if (el && replayToken > 0 && status === 'playing') {
       el.currentTime = 0;
-      void el.play().catch(() => {});
+      void el.play().catch(() => playbackFailed('media-playback-error'));
     }
-  }, [replayToken, status]);
+  }, [replayToken, status, playbackFailed]);
 
   // Leaving the reader pauses playback and keeps the position (FR-4.2).
   useEffect(() => () => pause(), [pause]);
@@ -86,6 +87,7 @@ export function RecitationAudio({ surahId }: { surahId: number }) {
       style={{ display: 'none' }}
       onPlay={audioStarted}
       onEnded={handleEnded}
+      onError={() => playbackFailed('media-playback-error')}
       data-testid="recitation-audio"
     >
       <track kind="captions" />

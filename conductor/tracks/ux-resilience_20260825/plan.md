@@ -32,10 +32,10 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
 
 ## Phase 3 — Silent failure fixes
 
-- [ ] Task: Update banner install-failure state (TDD)
-  - [ ] Failing tests in `update-store.test.ts`: `kind === 'error'` remains visible/actionable; retry action re-triggers install; banner test updated
-  - [ ] Implement: store exposes retry; banner renders "Try again" error state, never auto-dismisses on failure
-- [ ] Task: Adhan player blocked-playback notice
+- [x] Task: Update banner install-failure state (TDD) (315eeed)
+  - [x] Failing tests in `update-store.test.ts`: `kind === 'error'` remains visible/actionable; retry action re-triggers install; banner test updated
+  - [x] Implement: store exposes retry; banner renders "Try again" error state, never auto-dismisses on failure
+- [~] Task: Adhan player blocked-playback notice
   - [ ] Component test: `play()` rejection surfaces visible notice
   - [ ] Implement non-intrusive notice (reuse existing i18n); keep next-prayer retry behavior
 - [ ] Task: Recitation playback errors → store error path (TDD)

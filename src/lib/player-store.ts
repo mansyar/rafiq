@@ -60,6 +60,8 @@ interface RecitationPlayerStore extends PlayerState {
   retry: () => void;
   /** Called from the `<audio>` element's `play` event. */
   audioStarted: () => void;
+  /** Media error / `play()` rejection: pause with the error surfaced (FR-3). */
+  playbackFailed: (error: string) => void;
   /** Cycles/sets the playback-rate preset (FR-2). */
   setSpeed: (speed: PlaybackSpeed) => void;
   /** Switches repeat mode (FR-3). */
@@ -302,7 +304,7 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
     },
 
     retry: () => {
-      const { current, surahEndGlobal } = get();
+      const { current, surahEndGlobal, audioUrl } = get();
       if (!current || surahEndGlobal === null) {
         return;
       }
@@ -310,12 +312,20 @@ export const useRecitationPlayer = create<RecitationPlayerStore>((set, get) => {
       dispatch({ type: 'retry', cachedGlobals: globals, surahEndGlobal });
       if (!globals.includes(current.global)) {
         startFetch(current.global);
+      } else if (audioUrl) {
+        // File is already local but playback failed — re-attempt it directly
+        // instead of getting stuck in the fetching state.
+        dispatch({ type: 'audioStarted' });
       }
       fetchPending();
     },
 
     audioStarted: () => {
       dispatch({ type: 'audioStarted' });
+    },
+
+    playbackFailed: (error: string) => {
+      dispatch({ type: 'playbackFailed', error });
     },
 
     setSpeed: (speed) => {

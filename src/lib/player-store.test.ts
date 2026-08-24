@@ -325,3 +325,61 @@ describe('handleEnded boundary routing (FR-3/FR-4)', () => {
     expect(useRecitationPlayer.getState().pendingAutoNav).toBeNull();
   });
 });
+
+describe('playback failure handling (media errors)', () => {
+  beforeEach(() => {
+    getSettingMock.mockReset();
+    setSettingMock.mockReset();
+    getRecitationStateMock.mockReset();
+    fetchAyahAudioMock.mockReset();
+    setSettingMock.mockResolvedValue(undefined);
+    getSettingMock.mockResolvedValue(null);
+    fetchAyahAudioMock.mockImplementation((global: number) =>
+      Promise.resolve({ global_ayah: global, file_path: `/cache/recitation/${global}.mp3` }),
+    );
+    useRecitationPlayer.setState({
+      speed: 1,
+      repeatMode: 'off',
+      autoAdvance: false,
+      status: 'playing',
+      current: pos(2, 1, S2_START),
+      pendingGlobals: [9, 10, 11],
+      fetchingTarget: false,
+      error: null,
+      audioUrl: '/cache/recitation/8.mp3',
+      cachedFiles: [file(S2_START), file(S2_START + 1), file(S2_START + 2)],
+      surahEndGlobal: S2_END,
+      surahStartGlobal: S2_START,
+      pendingAutoNav: null,
+      replayToken: 0,
+    });
+  });
+
+  it('playbackFailed surfaces the error through the store error path', () => {
+    useRecitationPlayer.getState().playbackFailed('media decode error');
+    const s = useRecitationPlayer.getState();
+    expect(s.status).toBe('paused');
+    expect(s.error).toBe('media decode error');
+    expect(s.current).toEqual(pos(2, 1, S2_START));
+  });
+
+  it('retry re-attempts local playback without re-downloading the current file', () => {
+    useRecitationPlayer.setState({ status: 'paused', error: 'media decode error' });
+    useRecitationPlayer.getState().retry();
+    const s = useRecitationPlayer.getState();
+    expect(s.status).toBe('playing');
+    expect(s.error).toBeNull();
+    // The current file (global 8) is cached — no re-download. Only the
+    // re-planned lookahead is fetched: 9 and 10 are cached, so just 11.
+    expect(fetchAyahAudioMock).not.toHaveBeenCalledWith(S2_START);
+    expect(fetchAyahAudioMock.mock.calls.map(([g]) => g)).toEqual([11]);
+  });
+
+  it('resume from the transport re-attempts playback and clears the error', () => {
+    useRecitationPlayer.setState({ status: 'paused', error: 'media decode error' });
+    useRecitationPlayer.getState().resume();
+    const s = useRecitationPlayer.getState();
+    expect(s.status).toBe('playing');
+    expect(s.error).toBeNull();
+  });
+});

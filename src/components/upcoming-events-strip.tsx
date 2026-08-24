@@ -35,7 +35,10 @@ function EventItem({ event, locale }: { event: UpcomingEvent; locale: string }) 
     >
       <p className="flex flex-wrap items-baseline gap-x-2 text-sm font-semibold text-ink-900 dark:text-ink-50">
         {event.is_today && (
-          <span className="rounded-full bg-gold-500 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
+          <span
+            data-testid="today-pill"
+            className="rounded-full bg-gold-500 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white"
+          >
             {t('hijriEvents.strip.todayPrefix')}
           </span>
         )}
@@ -76,6 +79,7 @@ export function UpcomingEventsStrip() {
   return (
     <Card
       aria-labelledby="upcoming-events-title"
+      data-testid="upcoming-events-strip"
       className="border-gold-200/60 dark:border-gold-900/40"
     >
       <CardHeader className="pb-3">

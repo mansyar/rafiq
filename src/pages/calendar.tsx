@@ -61,6 +61,7 @@ function CalendarCell({
         <>
           <button
             type="button"
+            data-testid="event-marker"
             aria-label={markerLabel}
             className="absolute right-0.5 top-0.5 flex size-3 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold-500"
           >

@@ -108,7 +108,10 @@ export function DailyReflectionCard() {
         <p className="text-sm text-muted-foreground">{t('daily.subtitle')}</p>
         {eventName && (
           <p className="pt-0.5">
-            <span className="rounded-full bg-gold-100 px-2.5 py-0.5 text-xs font-semibold text-gold-800 ring-1 ring-gold-500/30 dark:bg-gold-900/40 dark:text-gold-200">
+            <span
+              data-testid="event-badge"
+              className="rounded-full bg-gold-100 px-2.5 py-0.5 text-xs font-semibold text-gold-800 ring-1 ring-gold-500/30 dark:bg-gold-900/40 dark:text-gold-200"
+            >
               {eventName}
             </span>
           </p>

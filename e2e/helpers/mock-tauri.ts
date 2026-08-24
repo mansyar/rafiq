@@ -112,7 +112,53 @@ export async function installMockTauri(page: Page): Promise<void> {
       const DAILY_AYAHS: Array<{ surah_id: number; ayah_number: number; id?: string }> = ayahsJson
         ? JSON.parse(ayahsJson as string)
         : [];
-      const DAILY_HADITHS: Array<unknown> = hadithsJson ? JSON.parse(hadithsJson as string) : [];
+      const DAILY_HADITHS: Array<unknown> = hadithsJson ? JSON.parse(hadithsJson) : [];
+
+      // ── Hijri events fixture (mirrors src-tauri/assets/hijri-events/) ─────
+      const HIJRI_EVENTS: Array<{
+        id: string;
+        hijri_month: number;
+        hijri_day: number;
+        estimated: boolean;
+      }> = [
+        { id: 'islamic_new_year', hijri_month: 1, hijri_day: 1, estimated: false },
+        { id: 'ashura', hijri_month: 1, hijri_day: 10, estimated: false },
+        { id: 'mawlid_an_nabi', hijri_month: 3, hijri_day: 12, estimated: false },
+        { id: 'ramadan_begins', hijri_month: 9, hijri_day: 1, estimated: false },
+        { id: 'laylat_al_qadr', hijri_month: 9, hijri_day: 27, estimated: true },
+        { id: 'eid_al_fitr', hijri_month: 10, hijri_day: 1, estimated: false },
+        { id: 'arafah', hijri_month: 12, hijri_day: 9, estimated: false },
+        { id: 'eid_al_adha', hijri_month: 12, hijri_day: 10, estimated: false },
+      ];
+      /** Thematic ayah refs per event (real refs from hijri-events/content.json). */
+      const EVENT_CONTENT: Record<string, { surah_id: number; ayah_number: number }> = {
+        islamic_new_year: { surah_id: 9, ayah_number: 36 },
+        ashura: { surah_id: 2, ayah_number: 183 },
+        mawlid_an_nabi: { surah_id: 21, ayah_number: 107 },
+        ramadan_begins: { surah_id: 2, ayah_number: 185 },
+        laylat_al_qadr: { surah_id: 97, ayah_number: 1 },
+        eid_al_fitr: { surah_id: 14, ayah_number: 7 },
+        arafah: { surah_id: 5, ayah_number: 3 },
+        eid_al_adha: { surah_id: 37, ayah_number: 107 },
+      };
+      /**
+       * Deterministic clock override (spec FR-5/e2e): when
+       * `window.__RAFIQ_MOCK_TODAY__` holds an ISO date (YYYY-MM-DD), every
+       * mock "today" derivation uses it instead of the real clock.
+       */
+      function mockToday(): Date {
+        const iso = (globalThis as Record<string, unknown>).__RAFIQ_MOCK_TODAY__;
+        if (typeof iso === 'string') {
+          const d = new Date(`${iso}T12:00:00Z`);
+          if (!Number.isNaN(d.getTime())) return d;
+        }
+        return new Date();
+      }
+      function eventForHijri(hijriMonth: number, hijriDay: number) {
+        return (
+          HIJRI_EVENTS.find((e) => e.hijri_month === hijriMonth && e.hijri_day === hijriDay) ?? null
+        );
+      }
 
       function findCityById(id: string) {
         const t = String(id).trim();
@@ -182,28 +228,32 @@ export async function installMockTauri(page: Page): Promise<void> {
         const anchorMs = Date.UTC(2026, 5, 16);
         const targetMs = Date.UTC(year, month - 1, day);
         const deltaDays = Math.round((targetMs - anchorMs) / 86_400_000);
+        const daysInMockMonth = (m: number) => (m % 2 === 1 ? 30 : 29);
         let hYear = 1448;
         let hMonth = 1;
         let hDay = 1 + deltaDays;
-        while (hDay > 30) {
-          const daysInMonth = hMonth % 2 === 1 ? 30 : 29;
-          if (hDay > daysInMonth) {
-            hDay -= daysInMonth;
-            hMonth += 1;
-            if (hMonth > 12) {
-              hMonth = 1;
-              hYear += 1;
-            }
-          } else break;
+        // Month-length-aware normalization (mirrors the backend engine).
+        // A previous naive "> 30" loop swallowed each month's final day,
+        // mis-mapping every Hijri month boundary (e.g. 1 Ramadan resolved
+        // to 30 Rajab, hiding the observance from forward walks).
+        let guard = 0;
+        while (hDay > daysInMockMonth(hMonth) && guard < 2400) {
+          hDay -= daysInMockMonth(hMonth);
+          hMonth += 1;
+          if (hMonth > 12) {
+            hMonth = 1;
+            hYear += 1;
+          }
+          guard += 1;
         }
-        while (hDay < 1) {
+        while (hDay < 1 && guard < 4800) {
           hMonth -= 1;
           if (hMonth < 1) {
             hMonth = 12;
             hYear -= 1;
           }
-          const daysInMonth = hMonth % 2 === 1 ? 30 : 29;
-          hDay += daysInMonth;
+          hDay += daysInMockMonth(hMonth);
+          guard += 1;
         }
         return { year: hYear, month: hMonth, day: hDay };
       }
@@ -244,10 +294,11 @@ export async function installMockTauri(page: Page): Promise<void> {
         };
       }
       function getMonthGrid(year: number, month: number) {
+        const nowD = mockToday();
         const today = hijriFromGregorian(
-          new Date().getUTCFullYear(),
-          new Date().getUTCMonth() + 1,
-          new Date().getUTCDate(),
+          nowD.getUTCFullYear(),
+          nowD.getUTCMonth() + 1,
+          nowD.getUTCDate(),
         );
         const dayCount = month === 12 && year === 1447 ? 30 : month % 2 === 1 ? 30 : 29;
         const firstGreg = hijriToGregorian(year, month, 1);
@@ -258,21 +309,22 @@ export async function installMockTauri(page: Page): Promise<void> {
           gregorian_day: number;
           weekday: number;
           is_today: boolean;
+          event_id: string | null;
+          event_estimated: boolean;
         }> = [];
+        // Real calendar-day arithmetic (UTC noon-free midnight): the mock's
+        // Hijri engine is day-based from the verified anchor, so each grid
+        // cell's civil date is anchor + offset days. The previous naive
+        // "+30 carry" corrupted dates in deep months and broke event stamping.
+        const firstGregMs = Date.UTC(firstGreg.year, firstGreg.month - 1, firstGreg.day);
         for (let i = 1; i <= dayCount; i++) {
           const isToday = today.year === year && today.month === month && today.day === i;
-          const gregDay = firstGreg.day + (i - 1);
-          let gYear = firstGreg.year;
-          let gMonth = firstGreg.month;
-          let gDay = gregDay;
-          while (gDay > 30) {
-            gDay -= 30;
-            gMonth += 1;
-            if (gMonth > 12) {
-              gMonth = 1;
-              gYear += 1;
-            }
-          }
+          const gd = new Date(firstGregMs + (i - 1) * 86_400_000);
+          const gYear = gd.getUTCFullYear();
+          const gMonth = gd.getUTCMonth() + 1;
+          const gDay = gd.getUTCDate();
+          const cellH = hijriFromGregorian(gYear, gMonth, gDay);
+          const cellEvent = eventForHijri(cellH.month, cellH.day);
           days.push({
             hijri_day: i,
             gregorian_year: gYear,
@@ -280,6 +332,8 @@ export async function installMockTauri(page: Page): Promise<void> {
             gregorian_day: gDay,
             weekday: (firstGreg.weekday + (i - 1)) % 7,
             is_today: isToday,
+            event_id: cellEvent ? cellEvent.id : null,
+            event_estimated: cellEvent ? cellEvent.estimated : false,
           });
         }
         return { hijri_year: year, hijri_month: month, day_count: dayCount, days };
@@ -326,56 +380,83 @@ export async function installMockTauri(page: Page): Promise<void> {
         scored.sort((a, b) => a.score - b.score);
         return scored.slice(0, capped).map((x) => x.s);
       }
+      /** Resolve a curated ayah reference into the full response shape. */
+      function resolveAyahRef(ref: { surah_id: number; ayah_number: number; id?: string }) {
+        try {
+          const surah = getSurah(ref.surah_id) as {
+            id: number;
+            name_en: string;
+            name_ar: string;
+            ayahs: Array<{
+              number: number;
+              arabic: string;
+              sahih: string;
+              clear: string;
+              kemenag: string;
+            }>;
+          };
+          const ayah = surah.ayahs.find((a) => a.number === ref.ayah_number);
+          if (!ayah) return null;
+          const tKey = (quranTranslation as string).toLowerCase() as 'sahih' | 'clear' | 'kemenag';
+          const translation = (ayah as Record<string, string>)[tKey] ?? ayah.sahih;
+          return {
+            id: ref.id ?? `${ref.surah_id}:${ref.ayah_number}`,
+            surah_id: ref.surah_id,
+            ayah_number: ref.ayah_number,
+            arabic: ayah.arabic,
+            translation,
+            surah_name_en: surah.name_en,
+            surah_name_ar: surah.name_ar,
+          };
+        } catch {
+          return null;
+        }
+      }
       function getDailyContent() {
         const lenAyah = DAILY_AYAHS.length || 1;
         const lenHadith = DAILY_HADITHS.length || 1;
         const start = Date.UTC(2026, 0, 1);
-        const now = Date.now();
-        const days = Math.floor((now - start) / 86_400_000);
+        const nowD = mockToday();
+        const days = Math.floor((nowD.getTime() - start) / 86_400_000);
         const ayahRef = DAILY_AYAHS[((days % lenAyah) + lenAyah) % lenAyah];
         const hadith = DAILY_HADITHS[((days % lenHadith) + lenHadith) % lenHadith];
-        const dateStr = new Date().toISOString().slice(0, 10);
-        let ayahResolved: unknown = ayahRef;
-        if (
-          ayahRef &&
-          typeof ayahRef === 'object' &&
-          'surah_id' in (ayahRef as Record<string, unknown>)
-        ) {
-          const sid = (ayahRef as { surah_id: number }).surah_id;
-          const anum = (ayahRef as { ayah_number: number }).ayah_number;
-          try {
-            const surah = getSurah(sid) as {
-              id: number;
-              name_en: string;
-              name_ar: string;
-              ayahs: Array<{
-                number: number;
-                arabic: string;
-                sahih: string;
-                clear: string;
-                kemenag: string;
-              }>;
-            };
-            const ayah = surah.ayahs.find((a) => a.number === anum);
-            if (ayah) {
-              const tKey = (quranTranslation as string).toLowerCase() as
-                | 'sahih'
-                | 'clear'
-                | 'kemenag';
-              const translation = (ayah as Record<string, string>)[tKey] ?? ayah.sahih;
-              ayahResolved = {
-                id: (ayahRef as { id?: string }).id ?? `${sid}:${anum}`,
-                surah_id: sid,
-                ayah_number: anum,
-                arabic: ayah.arabic,
-                translation,
-                surah_name_en: surah.name_en,
-                surah_name_ar: surah.name_ar,
-              };
-            }
-          } catch {}
+        const dateStr = nowD.toISOString().slice(0, 10);
+        const ayahResolved =
+          ayahRef && typeof ayahRef === 'object' && 'surah_id' in (ayahRef as object)
+            ? (resolveAyahRef(ayahRef as { surah_id: number; ayah_number: number; id?: string }) ??
+              ayahRef)
+            : ayahRef;
+        // Observance-day override (spec FR-5): thematic pair replaces rotation.
+        let eventOverride: Record<string, unknown> | null = null;
+        const th = hijriFromGregorian(
+          nowD.getUTCFullYear(),
+          nowD.getUTCMonth() + 1,
+          nowD.getUTCDate(),
+        );
+        const todaysEvent = eventForHijri(th.month, th.day);
+        if (todaysEvent) {
+          const ref = EVENT_CONTENT[todaysEvent.id];
+          eventOverride = {
+            event_id: todaysEvent.id,
+            ayah: (ref ? resolveAyahRef(ref) : null) ?? {
+              surah_id: ref?.surah_id ?? 1,
+              ayah_number: ref?.ayah_number ?? 1,
+            },
+            hadith: {
+              id: `hevent-fixture-${todaysEvent.id}`,
+              arabic: '(e2e fixture)',
+              en: `Fixture hadith for ${todaysEvent.id}.`,
+              id_translation: `Hadis fixture untuk ${todaysEvent.id}.`,
+              source: `E2E fixture · ${todaysEvent.id}`,
+            },
+          };
         }
-        return { date: dateStr, ayah: ayahResolved, hadith };
+        return {
+          date: dateStr,
+          ayah: ayahResolved,
+          hadith,
+          ...(eventOverride ? { event: eventOverride } : {}),
+        };
       }
       function prayerLogEntries(from: string, to: string) {
         return prayerLog.filter((e) => e.date >= from && e.date <= to);
@@ -505,12 +586,37 @@ export async function installMockTauri(page: Page): Promise<void> {
             return hijriToGregorian(Number(args.year), Number(args.month), Number(args.day));
           case 'hijri_month_grid':
             return getMonthGrid(Number(args.year), Number(args.month));
-          case 'today_hijri':
-            return hijriFromGregorian(
-              new Date().getUTCFullYear(),
-              new Date().getUTCMonth() + 1,
-              new Date().getUTCDate(),
-            );
+          case 'today_hijri': {
+            const d = mockToday();
+            return hijriFromGregorian(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+          }
+          case 'get_upcoming_hijri_events': {
+            const limit = Math.max(0, Number(args.limit ?? 3));
+            if (!limit) return [];
+            const base = mockToday();
+            const out: Array<{
+              id: string;
+              hijri_year: number;
+              gregorian_date: string;
+              is_today: boolean;
+              estimated: boolean;
+            }> = [];
+            for (let offset = 0; offset <= 370 && out.length < limit; offset++) {
+              const d = new Date(base.getTime() + offset * 86_400_000);
+              const h = hijriFromGregorian(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+              const ev = eventForHijri(h.month, h.day);
+              if (!ev) continue;
+              if (out.some((u) => u.id === ev.id)) continue;
+              out.push({
+                id: ev.id,
+                hijri_year: h.year,
+                gregorian_date: d.toISOString().slice(0, 10),
+                is_today: offset === 0,
+                estimated: ev.estimated,
+              });
+            }
+            return out;
+          }
           case 'list_surahs':
             return listSurahs();
           case 'get_surah':

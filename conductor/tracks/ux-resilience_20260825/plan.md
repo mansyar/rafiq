@@ -70,3 +70,7 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] `pnpm check` (Biome lint + format), typecheck, full Vitest suite, coverage >80%
 - [x] Task: Update `CHANGELOG.md` [Unreleased] with resilience/polish summary (b155251)
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+
+## Phase: Review Fixes
+
+- [x] Task: Apply review suggestions e622223

@@ -42,6 +42,7 @@ const FEEDBACK_TIMEOUT_MS = 4000;
 export function PrayerPrompt() {
   const { t } = useTranslation();
   const [prompt, setPrompt] = useState<PromptState | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dismissedRef = useRef<Set<string>>(new Set());
 
@@ -101,7 +102,8 @@ export function PrayerPrompt() {
   }, [prompt, dismiss]);
 
   async function handlePrayed() {
-    if (prompt?.phase !== 'ask') return;
+    if (prompt?.phase !== 'ask' || submitting) return;
+    setSubmitting(true);
     try {
       // Tap moment is the logged_at — classification happens on the Rust side.
       await logPrayer(prompt.prayer, todayDateString());
@@ -110,6 +112,8 @@ export function PrayerPrompt() {
     } catch {
       setPrompt({ ...prompt, phase: 'error' });
       scheduleDismiss(FEEDBACK_TIMEOUT_MS * 2);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -124,8 +128,8 @@ export function PrayerPrompt() {
         </CardHeader>
         {prompt.phase === 'ask' && !prompt.needLocation && (
           <CardContent>
-            <Button className="w-full" onClick={() => void handlePrayed()}>
-              {t('log.prompt.prayed')}
+            <Button className="w-full" disabled={submitting} onClick={() => void handlePrayed()}>
+              {submitting ? t('common.logging') : t('log.prompt.prayed')}
             </Button>
           </CardContent>
         )}

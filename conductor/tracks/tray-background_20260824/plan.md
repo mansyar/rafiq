@@ -36,6 +36,6 @@ the loop since OS trays cannot be scripted by Playwright.
 
 ## Phase 4 — Smoke documentation & final gate
 
-- [ ] Task: Manual smoke checklist (Windows/macOS/Linux) walking through AC-1..AC-8, stored in the track folder (NFR-4)
-- [ ] Task: Full quality gate — fmt, clippy, biome, tsc, cargo test, vitest, production build
+- [x] Task: Manual smoke checklist (Windows/macOS/Linux) walking through AC-1..AC-8, stored in the track folder (NFR-4) ([./smoke-checklist.md](./smoke-checklist.md); Windows executed during the track)
+- [x] Task: Full quality gate — fmt, clippy, biome, tsc, cargo test, vitest, production build (2026-08-24: fmt clean; clippy clean; cargo 211+6 green; biome 63 files clean; tsc clean; vitest 209/209; vite build ok 7.5s)
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

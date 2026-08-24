@@ -86,7 +86,7 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
       `event` is present *(FR-5)* [185570c]
 - [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
 
-## Phase 5 — E2E, docs & full gate
+## Phase 5 — E2E, docs & full gate [checkpoint: 1a1c4a1]
 
 - [x] Task: Extend browser mock with deterministic event/clock fixture
       [1a1c4a1] *(mock reads real bundled `hijri-events` assets; fixed two
@@ -101,4 +101,5 @@ rule. Each phase ends with the Phase Verification & Checkpointing Protocol.
       clean · Biome clean (one pre-existing warning in recitation.spec.ts,
       non-blocking, file untouched by this track) · tsc clean · Vitest 209/209 ·
       Playwright 41/41 chromium)*
-- [ ] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
+- [x] Task: Phase Verification & Checkpoint *(Refer to workflow.md)*
+      *(checkpoint report attached to 1a1c4a1)*

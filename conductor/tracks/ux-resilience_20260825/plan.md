@@ -35,12 +35,12 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
 - [x] Task: Update banner install-failure state (TDD) (315eeed)
   - [x] Failing tests in `update-store.test.ts`: `kind === 'error'` remains visible/actionable; retry action re-triggers install; banner test updated
   - [x] Implement: store exposes retry; banner renders "Try again" error state, never auto-dismisses on failure
-- [~] Task: Adhan player blocked-playback notice
-  - [ ] Component test: `play()` rejection surfaces visible notice
-  - [ ] Implement non-intrusive notice (reuse existing i18n); keep next-prayer retry behavior
-- [ ] Task: Recitation playback errors → store error path (TDD)
-  - [ ] Failing tests in `player-store.test.ts`: playback failure transitions status to error with retry
-  - [ ] Wire `<audio onError>` + `play().catch()` into store error path; footer shows retry
+- [x] Task: Adhan player blocked-playback notice (c0f4128)
+  - [x] Component test: `play()` rejection surfaces visible notice
+  - [x] Implement non-intrusive notice (reuse existing i18n); keep next-prayer retry behavior
+- [x] Task: Recitation playback errors → store error path (TDD) (1713e0c)
+  - [x] Failing tests in `player-store.test.ts`: playback failure transitions status to error with retry
+  - [x] Wire `<audio onError>` + `play().catch()` into store error path; footer shows retry
 - [ ] Task: Settings toggles — pending + inline error
   - [ ] Disable toggle while mutation pending; inline error text on `onError` (notifications / adhan / autostart)
 - [ ] Task: Quran translation switcher — pending + inline error

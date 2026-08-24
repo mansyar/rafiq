@@ -41,8 +41,8 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
 - [x] Task: Recitation playback errors → store error path (TDD) (1713e0c)
   - [x] Failing tests in `player-store.test.ts`: playback failure transitions status to error with retry
   - [x] Wire `<audio onError>` + `play().catch()` into store error path; footer shows retry
-- [ ] Task: Settings toggles — pending + inline error
-  - [ ] Disable toggle while mutation pending; inline error text on `onError` (notifications / adhan / autostart)
+- [x] Task: Settings toggles — pending + inline error (b5a423e)
+  - [x] Disable toggle while mutation pending; inline error text on `onError` (notifications / adhan / autostart)
 - [ ] Task: Quran translation switcher — pending + inline error
   - [ ] Disable group while `translationMutation.isPending`; surface failure inline
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

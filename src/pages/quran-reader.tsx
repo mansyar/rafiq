@@ -205,9 +205,11 @@ export function QuranReader() {
                     key={tr}
                     type="button"
                     aria-pressed={active}
+                    disabled={translationMutation.isPending}
                     onClick={() => translationMutation.mutate(tr)}
                     className={cn(
                       'rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+                      'disabled:cursor-not-allowed disabled:opacity-50',
                       active
                         ? 'bg-gold-500 text-white shadow-sm'
                         : 'text-muted-foreground hover:bg-background hover:text-foreground',
@@ -218,6 +220,11 @@ export function QuranReader() {
                 );
               })}
             </div>
+            {translationMutation.isError && (
+              <p className="text-xs text-destructive" role="alert">
+                {t('quran.translationError', { message: String(translationMutation.error) })}
+              </p>
+            )}
           </div>
 
           {surahQuery.isLoading && (

@@ -208,6 +208,7 @@
       "kemenag": "Kemenag"
     },
     "translationLabel": "Translation",
+    "translationError": "Couldn't switch translation: {{message}}",
     "readerTitle": "{{name}} — {{transliteration}}",
     "continuousHint": "Continuous scroll — {{count}} ayahs",
     "audio": {

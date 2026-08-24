@@ -208,6 +208,7 @@
       "kemenag": "Kemenag"
     },
     "translationLabel": "Terjemahan",
+    "translationError": "Gagal mengganti terjemahan: {{message}}",
     "readerTitle": "{{name}} — {{transliteration}}",
     "continuousHint": "Gulir kontinyu — {{count}} ayat",
     "audio": {

@@ -47,9 +47,13 @@ pub fn run() {
         .on_window_event(|window, event| {
             // Close-to-tray: intercepting the X button keeps adhan reminders
             // alive; minimize is untouched (FR-2 / FR-8 / AC-1 / AC-8).
+            // Scoped to the main window so any future auxiliary window
+            // closes normally.
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-                api.prevent_close();
-                tray::runtime::on_close_requested(window.app_handle());
+                if window.label() == "main" {
+                    api.prevent_close();
+                    tray::runtime::on_close_requested(window.app_handle());
+                }
             }
         })
         .invoke_handler(tauri::generate_handler![

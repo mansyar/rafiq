@@ -43,8 +43,8 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] Wire `<audio onError>` + `play().catch()` into store error path; footer shows retry
 - [x] Task: Settings toggles — pending + inline error (b5a423e)
   - [x] Disable toggle while mutation pending; inline error text on `onError` (notifications / adhan / autostart)
-- [ ] Task: Quran translation switcher — pending + inline error
-  - [ ] Disable group while `translationMutation.isPending`; surface failure inline
+- [x] Task: Quran translation switcher — pending + inline error (1a5c204)
+  - [x] Disable group while `translationMutation.isPending`; surface failure inline
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4 — Double-submit guards & i18n leak

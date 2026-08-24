@@ -15,7 +15,7 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] Verify parity via existing `locale.test.ts` (keys added to both files, no placeholder drift) — added a structural parity test (identical key paths + placeholder-token match) backing AC-7
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 2 — Sticky error states: every page recovers
+## Phase 2 — Sticky error states: every page recovers [checkpoint: 405de87]
 
 - [x] Task: Today page — single error branch (405de87)
   - [x] Collapse duplicate error paragraphs into one `QueryError` wired to `times.refetch()` + `resolved.refetch()`
@@ -28,7 +28,7 @@ TDD-first, per `conductor/workflow.md`. Frontend-only track (no Rust changes).
   - [x] Include `todayQuery.isError` in error handling; render `QueryError` + retry instead of blank body
 - [x] Task: Upcoming events strip — error + retry row (405de87)
   - [x] On error: stable card with `QueryError` + retry (empty state still hides)
-- [~] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3 — Silent failure fixes
 

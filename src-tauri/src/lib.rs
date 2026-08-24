@@ -3,6 +3,7 @@ pub mod city;
 pub mod commands;
 pub mod daily;
 pub mod hijri;
+pub mod hijri_events;
 pub mod log;
 pub mod prayer;
 pub mod quran;

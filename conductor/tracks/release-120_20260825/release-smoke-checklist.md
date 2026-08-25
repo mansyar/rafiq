@@ -34,3 +34,21 @@ directive in `tauri.release.json`, rebuild, repeat.
 > Resilience behaviors (rows 7–13) are primarily verified by the automated
 > suite (249 frontend tests, incl. component tests for retry/error states);
 > the rows above are manual spot-checks against the release build.
+
+## Smoke pass results — 2026-08-25 (local Windows x64, release build)
+
+Build: `pnpm tauri build --config src-tauri/tauri.release.json` → bundles
+produced (MSI + NSIS at `Rafiq_1.2.0_x64-*`, `rafiq.exe` 23.7 MiB). Updater
+signing step skipped locally: `TAURI_SIGNING_PRIVATE_KEY` is a GitHub secret
+(CI) and is not set in the dev shell; signed updater artifacts are produced by
+`release.yml` in Phase 3.
+
+| # | Result | Notes |
+|---|--------|-------|
+| 1 | PASS | App boots, window "Rafiq - Muslim Companion", Today renders, console clean |
+| 2 | PASS | Prayer times + next-prayer badge render |
+| 3 | PASS | Al-Fatiha: Uthmani text + translations render (fonts OK) |
+| 4 | PASS | Ayah recitation plays; UI reflects playback (cached-offline replay: Phase 4) |
+| 5 | PASS | Language switch EN/ID, method + toggles interact |
+| 6 | PASS | Calendar month navigation + converter work |
+| 7–13 | deferred | Covered by automated suite (249 tests); full spot-check on the real machine in Phase 4 |

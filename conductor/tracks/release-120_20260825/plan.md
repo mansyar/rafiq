@@ -32,9 +32,9 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 - [x] Task: Refresh `release-smoke-checklist.md` for 1.2.0 (d2c9d0a)
   - [x] Add error-resilience steps: retryable states surface on failure, double-submit guards, updater "Try again" path
   - [x] Keep release-CSP build instructions (`--config src-tauri/tauri.release.json`)
-- [~] Task: Local release build + smoke pass
-  - [ ] `pnpm tauri build --config src-tauri/tauri.release.json`
-  - [ ] Run smoke checklist against the release build; document results in the checklist file
+- [x] Task: Local release build + smoke pass
+  - [x] `pnpm tauri build --config src-tauri/tauri.release.json`
+  - [x] Run smoke checklist against the release build; document results in the checklist file
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: Cut & publish v1.2.0

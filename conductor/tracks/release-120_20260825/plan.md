@@ -60,11 +60,11 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 
 ## Phase 5: Docs & completion
 
-- [ ] Task: Docs sync
-  - [ ] CHANGELOG `[1.2.0]` final (date + entries correct)
-  - [ ] README unsigned-build caveats remain accurate (no changes expected)
-  - [ ] `tech-stack.md` dated note if anything material changed (expected: none)
-- [ ] Task: Final gate & completion
-  - [ ] Definition of Done: all checks green, docs complete, release verified
-  - [ ] Mark track complete in plan, archive per project convention
+- [x] Task: Docs sync
+  - [x] CHANGELOG `[1.2.0]` final (date + entries correct)
+  - [x] README unsigned-build caveats remain accurate (no changes expected)
+  - [x] `tech-stack.md` dated note if anything material changed (expected: none)
+- [x] Task: Final gate & completion
+  - [x] Definition of Done: all checks green, docs complete, release verified
+  - [x] Mark track complete in plan, archive per project convention
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)

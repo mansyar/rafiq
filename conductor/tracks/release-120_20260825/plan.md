@@ -48,7 +48,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] Release notes pulled from the `[1.2.0]` CHANGELOG section
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 4: Real-machine verification
+## Phase 4: Real-machine verification [checkpoint: 60108cf]
 
 - [x] Task: Verify in-app updater flow 1.1.0 -> 1.2.0
   - [x] Install v1.1.0 (or use existing install) on a real machine
@@ -56,7 +56,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] Document result; note the install-failure "Try again" retry path (resilience batch behavior)
 - [x] Task: Release smoke pass on the real machine
   - [x] Run the updated 1.2.0 checklist: error-resilience UI, cached recitation with network blocked, offline updater silence
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5: Docs & completion
 

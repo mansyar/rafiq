@@ -58,7 +58,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] Run the updated 1.2.0 checklist: error-resilience UI, cached recitation with network blocked, offline updater silence
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 5: Docs & completion
+## Phase 5: Docs & completion [checkpoint: b1d7216]
 
 - [x] Task: Docs sync
   - [x] CHANGELOG `[1.2.0]` final (date + entries correct)
@@ -67,4 +67,4 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 - [x] Task: Final gate & completion
   - [x] Definition of Done: all checks green, docs complete, release verified
   - [x] Mark track complete in plan, archive per project convention
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)

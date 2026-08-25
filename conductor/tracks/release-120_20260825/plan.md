@@ -50,12 +50,12 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 
 ## Phase 4: Real-machine verification
 
-- [ ] Task: Verify in-app updater flow 1.1.0 -> 1.2.0
-  - [ ] Install v1.1.0 (or use existing install) on a real machine
-  - [ ] Silent check -> update banner -> one-click download -> install -> relaunch -> app reports 1.2.0
-  - [ ] Document result; note the install-failure "Try again" retry path (resilience batch behavior)
-- [ ] Task: Release smoke pass on the real machine
-  - [ ] Run the updated 1.2.0 checklist: error-resilience UI, cached recitation with network blocked, offline updater silence
+- [x] Task: Verify in-app updater flow 1.1.0 -> 1.2.0
+  - [x] Install v1.1.0 (or use existing install) on a real machine
+  - [x] Silent check -> update banner -> one-click download -> install -> relaunch -> app reports 1.2.0
+  - [x] Document result; note the install-failure "Try again" retry path (resilience batch behavior)
+- [x] Task: Release smoke pass on the real machine
+  - [x] Run the updated 1.2.0 checklist: error-resilience UI, cached recitation with network blocked, offline updater silence
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 5: Docs & completion

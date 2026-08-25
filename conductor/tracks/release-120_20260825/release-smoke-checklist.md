@@ -52,3 +52,23 @@ signing step skipped locally: `TAURI_SIGNING_PRIVATE_KEY` is a GitHub secret
 | 5 | PASS | Language switch EN/ID, method + toggles interact |
 | 6 | PASS | Calendar month navigation + converter work |
 | 7–13 | deferred | Covered by automated suite (249 tests); full spot-check on the real machine in Phase 4 |
+
+## Phase 4 results — real-machine verification (2026-08-25, Windows x64)
+
+**In-app updater flow 1.1.0 → 1.2.0 (row 8 + updater flow):**
+
+| Step | Result |
+|------|--------|
+| Start state | Rafiq 1.1.0 installed (`C:\Users\Ansyar\AppData\Local\Rafiq`) |
+| Manual check (Settings → Updates → Check for updates) | Banner appeared |
+| One-click download + install | Succeeded (app relaunched) |
+| Post-update state | Registry `DisplayVersion` = **1.2.0**, fresh process |
+| Install-failure "Try again" path | Covered by component tests (banner persists with retry instead of vanishing); no failure occurred on the real machine |
+
+**Offline-first checks:**
+
+| Check | Result |
+|-------|--------|
+| Cached recitation replays with network blocked (row 4/12) | PASS — plays from asset-protocol cache |
+| Offline updater silence (row 13) | PASS — no update errors/banners while offline |
+| Resilience spot-checks (rows 7, 9, 10) | PASS — retryable error states, double-submit guards, pending-disable toggles |

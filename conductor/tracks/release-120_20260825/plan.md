@@ -24,7 +24,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] `cargo fmt --check` + `cargo clippy` + `cargo test`
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 2: Pre-release verification & smoke checklist
+## Phase 2: Pre-release verification & smoke checklist [checkpoint: 13bff1e]
 
 - [x] Task: Confirm CI green before tagging
   - [x] Latest `ci.yml` run green on windows/macos/ubuntu
@@ -35,7 +35,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 - [x] Task: Local release build + smoke pass
   - [x] `pnpm tauri build --config src-tauri/tauri.release.json`
   - [x] Run smoke checklist against the release build; document results in the checklist file
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 3: Cut & publish v1.2.0
 

@@ -39,13 +39,13 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 
 ## Phase 3: Cut & publish v1.2.0
 
-- [ ] Task: Tag and push
-  - [ ] `git tag v1.2.0` + push tag (triggers `.github/workflows/release.yml`)
-- [ ] Task: Verify release pipeline
-  - [ ] `release.yml` run green on windows/macos/ubuntu
-  - [ ] GitHub Release `v1.2.0` live: Windows NSIS, macOS dmg, Linux AppImage/deb/rpm
-  - [ ] Updater artifacts: `latest.json` with signed per-platform entries
-  - [ ] Release notes pulled from the `[1.2.0]` CHANGELOG section
+- [x] Task: Tag and push
+  - [x] `git tag v1.2.0` + push tag (triggers `.github/workflows/release.yml`)
+- [x] Task: Verify release pipeline
+  - [x] `release.yml` run green on windows/macos/ubuntu
+  - [x] GitHub Release `v1.2.0` live: Windows NSIS, macOS dmg, Linux AppImage/deb/rpm
+  - [x] Updater artifacts: `latest.json` with signed per-platform entries
+  - [x] Release notes pulled from the `[1.2.0]` CHANGELOG section
 - [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4: Real-machine verification

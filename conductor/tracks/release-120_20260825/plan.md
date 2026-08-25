@@ -26,12 +26,12 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
 
 ## Phase 2: Pre-release verification & smoke checklist
 
-- [ ] Task: Confirm CI green before tagging
+- [~] Task: Confirm CI green before tagging
   - [ ] Latest `ci.yml` run green on windows/macos/ubuntu
   - [ ] Latest `e2e.yml` run green on windows/macos/ubuntu (blocking matrix)
-- [ ] Task: Refresh `release-smoke-checklist.md` for 1.2.0
-  - [ ] Add error-resilience steps: retryable states surface on failure, double-submit guards, updater "Try again" path
-  - [ ] Keep release-CSP build instructions (`--config src-tauri/tauri.release.json`)
+- [x] Task: Refresh `release-smoke-checklist.md` for 1.2.0 (d2c9d0a)
+  - [x] Add error-resilience steps: retryable states surface on failure, double-submit guards, updater "Try again" path
+  - [x] Keep release-CSP build instructions (`--config src-tauri/tauri.release.json`)
 - [ ] Task: Local release build + smoke pass
   - [ ] `pnpm tauri build --config src-tauri/tauri.release.json`
   - [ ] Run smoke checklist against the release build; document results in the checklist file

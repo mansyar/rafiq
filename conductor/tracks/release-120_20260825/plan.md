@@ -8,7 +8,7 @@ the release through the proven pipeline, Phase 4 verifies the real upgrade
 path on a machine, Phase 5 closes docs and archives. TDD does not apply to new
 logic (there is none); the full test suites run as regression gates (NFR-4).
 
-## Phase 1: Version bump & CHANGELOG
+## Phase 1: Version bump & CHANGELOG [checkpoint: 15e6abc]
 
 - [x] Task: Bump version to 1.2.0 (all three files must stay in sync - Cargo.toml drift was a review finding on v1-release) (02758fa)
   - [x] `package.json`: `1.1.0` -> `1.2.0`
@@ -22,7 +22,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] `pnpm check` (Biome lint + format)
   - [x] `pnpm test` (Vitest suite green)
   - [x] `cargo fmt --check` + `cargo clippy` + `cargo test`
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 2: Pre-release verification & smoke checklist
 

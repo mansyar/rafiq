@@ -37,7 +37,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] Run smoke checklist against the release build; document results in the checklist file
 - [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
-## Phase 3: Cut & publish v1.2.0
+## Phase 3: Cut & publish v1.2.0 [checkpoint: 8982861]
 
 - [x] Task: Tag and push
   - [x] `git tag v1.2.0` + push tag (triggers `.github/workflows/release.yml`)
@@ -46,7 +46,7 @@ logic (there is none); the full test suites run as regression gates (NFR-4).
   - [x] GitHub Release `v1.2.0` live: Windows NSIS, macOS dmg, Linux AppImage/deb/rpm
   - [x] Updater artifacts: `latest.json` with signed per-platform entries
   - [x] Release notes pulled from the `[1.2.0]` CHANGELOG section
-- [ ] Task: Phase Verification & Checkpoint (Refer to workflow.md)
+- [x] Task: Phase Verification & Checkpoint (Refer to workflow.md)
 
 ## Phase 4: Real-machine verification
 
